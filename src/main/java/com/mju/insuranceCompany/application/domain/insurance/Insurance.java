@@ -53,30 +53,6 @@ public class Insurance {
 				.build();
 	}
 
-	public InsuranceHealthDetailDto toInsuranceHealthDetailDto() {
-		return InsuranceHealthDetailDto.builder()
-				.id(this.getId())
-				.insuranceType(this.getInsuranceType())
-				.insuranceDetailList(this.getInsuranceDetailList().stream().map(e->(HealthDetail)e).map(HealthDetail::toDto).toList())
-				.build();
-	}
-
-	public InsuranceFireDetailDto toInsuranceFireDetailDto() {
-		return InsuranceFireDetailDto.builder()
-				.id(this.getId())
-				.insuranceType(this.getInsuranceType())
-				.insuranceDetailList(this.getInsuranceDetailList().stream().map(e->(FireDetail)e).map(FireDetail::toDto).toList())
-				.build();
-	}
-
-	public InsuranceCarDetailDto toInsuranceCarDetailDto() {
-		return InsuranceCarDetailDto.builder()
-				.id(this.getId())
-				.insuranceType(this.getInsuranceType())
-				.insuranceDetailList(this.getInsuranceDetailList().stream().map(e->(CarDetail)e).map(CarDetail::toDto).toList())
-				.build();
-	}
-
 	public InsuranceGuaranteeDto toInsuranceGuaranteeDto() {
 		return InsuranceGuaranteeDto.builder()
 				.name(this.getName())

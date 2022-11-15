@@ -17,20 +17,12 @@ import javax.persistence.PrimaryKeyJoinColumn;
 @AllArgsConstructor
 @Entity
 @Builder
+@ToString
 @PrimaryKeyJoinColumn(name = "health_detail_id")
 public class HealthDetail extends InsuranceDetail {
 
 	private int targetAge;
 	private boolean targetSex;
 	private boolean riskCriterion;
-
-	public HealthDetailDto toDto() {
-		return (HealthDetailDto) HealthDetailDto.builder()
-				.targetAge(this.getTargetAge())
-				.targetSex(this.isTargetSex())
-				.riskCriterion(this.isRiskCriterion())
-				.build()
-				.setPremium(getPremium());
-	}
 
 }

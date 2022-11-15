@@ -27,12 +27,4 @@ public class CarDetail extends InsuranceDetail {
 	private int targetAge;
 	private long valueCriterion;
 
-	public CarDetailDto toDto() {
-		return (CarDetailDto) CarDetailDto.builder()
-				.targetAge(this.getTargetAge())
-				.valueCriterion(this.getValueCriterion())
-				.build()
-				.setPremium(getPremium());
-	}
-
 }

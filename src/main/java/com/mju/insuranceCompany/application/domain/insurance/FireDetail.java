@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.PrimaryKeyJoinColumn;
 
 /**
@@ -22,15 +24,8 @@ import javax.persistence.PrimaryKeyJoinColumn;
 @PrimaryKeyJoinColumn(name = "fire_detail_id")
 public class FireDetail extends InsuranceDetail {
 
+	@Enumerated(value = EnumType.STRING)
 	private BuildingType targetBuildingType;
 	private long collateralAmountCriterion;
-
-	public FireDetailDto toDto() {
-		return (FireDetailDto) FireDetailDto.builder()
-				.targetBuildingType(this.getTargetBuildingType())
-				.collateralAmountCriterion(this.getCollateralAmountCriterion())
-				.build()
-				.setPremium(getPremium());
-	}
 
 }

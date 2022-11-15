@@ -50,17 +50,15 @@ public class Customer {
 	@OneToMany
 	private List<Complain> complainList;
 
-	// 변경: Insurance -> InsuranceHealthDetailDto
-	public int inquireHealthPremium(String ssn, int riskCount, InsuranceHealthDetailDto insurance){
+	public int inquireHealthPremium(String ssn, int riskCount, List<InsuranceDetail> insuranceDetails){
 		int premium = 0;
 		int targetAge = CriterionSetUtil.setTargetAge((TargetInfoCalculator.targetAgeCalculator(ssn)));
 		boolean targetSex = TargetInfoCalculator.targetSexCalculator(ssn);
 		boolean riskCriterion = CriterionSetUtil.setRiskCriterion(riskCount);
 
-		// 변경 : InsuranceDetailDto -> HealthDetailDto
-		List<HealthDetailDto> insuranceDetails = insurance.getInsuranceDetailList();
-		for (HealthDetailDto healthDetail : insuranceDetails) {
-//			HealthDetailDto healthDetail = (HealthDetailDto) insuranceDetail;
+//		List<InsuranceDetailDto> insuranceDetails = insurance.getInsuranceDetailList();
+		for (InsuranceDetail insuranceDetail : insuranceDetails) {
+			HealthDetail healthDetail = (HealthDetail) insuranceDetail;
 			if (healthDetail.getTargetAge() == targetAge && healthDetail.isTargetSex() == targetSex && (healthDetail.isRiskCriterion()) == riskCriterion) {
 				premium = healthDetail.getPremium();
 				break;
@@ -71,15 +69,13 @@ public class Customer {
 		return premium;
 	}
 
-	// 변경 : Insurance -> InsuranceFireDetailDto
-	public int inquireFirePremium(BuildingType buildingType, Long collateralAmount, InsuranceFireDetailDto insurance){
+	public int inquireFirePremium(BuildingType buildingType, Long collateralAmount, List<InsuranceDetail> insuranceDetails){
 		int premium = 0;
 		Long collateralAmountCriterion = CriterionSetUtil.setCollateralAmountCriterion(collateralAmount);
 
-		// 변경 : InsuranceDetailDto -> FireDetailDto
-		List<FireDetailDto> insuranceDetails = insurance.getInsuranceDetailList();
-		for (FireDetailDto fireDetail : insuranceDetails) {
-//			FireDetail fireDetail = (FireDetail) insuranceDetail;
+//		List<FireDetailDto> insuranceDetails = insurance.getInsuranceDetailList();
+		for (InsuranceDetail insuranceDetail : insuranceDetails) {
+			FireDetail fireDetail = (FireDetail) insuranceDetail;
 			if (fireDetail.getTargetBuildingType() == buildingType && fireDetail.getCollateralAmountCriterion() == collateralAmountCriterion) {
 				premium = fireDetail.getPremium();
 				break;
@@ -90,16 +86,13 @@ public class Customer {
 		return premium;
 	}
 
-	// 변경 : Insurance -> InsuranceCarDetailDto
-	public int inquireCarPremium(String ssn, Long value, InsuranceCarDetailDto insurance){
+	public int inquireCarPremium(String ssn, Long value, List<InsuranceDetail> insuranceDetails){
 		int premium = 0;
 		int targetAge = CriterionSetUtil.setTargetAge(TargetInfoCalculator.targetAgeCalculator(ssn));
 		Long valueCriterion = CriterionSetUtil.setValueCriterion(value);
 
-		// 변경 : InsuranceDetailDto -> CarDetailDto
-		List<CarDetailDto> insuranceDetails = insurance.getInsuranceDetailList();
-		for (CarDetailDto carDetail : insuranceDetails) {
-//			CarDetail carDetail = (CarDetail) insuranceDetail;
+		for (InsuranceDetail insuranceDetail : insuranceDetails) {
+			CarDetail carDetail = (CarDetail) insuranceDetail;
 			if (carDetail.getTargetAge() == targetAge && carDetail.getValueCriterion() == valueCriterion) {
 				premium = carDetail.getPremium();
 				break;
