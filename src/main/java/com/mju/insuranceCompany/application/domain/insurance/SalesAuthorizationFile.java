@@ -1,5 +1,11 @@
 package com.mju.insuranceCompany.application.domain.insurance;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.time.LocalDateTime;
 
 /**
@@ -7,8 +13,13 @@ import java.time.LocalDateTime;
  * @version 1.0
  * @created 09-5-2022 ���� 4:39:02
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
 public class SalesAuthorizationFile {
 
+	@Id
 	private int insuranceId;
 
 	/**
@@ -35,86 +46,6 @@ public class SalesAuthorizationFile {
 	private String fssOfficialDoc;
 	private LocalDateTime modifiedFss;
 
-	public int getInsuranceId() {
-		return insuranceId;
-	}
-
-	public SalesAuthorizationFile setInsuranceId(int insuranceId) {
-		this.insuranceId = insuranceId;
-		return this;
-	}
-
-	public String getProdDeclaration() {
-		return prodDeclaration;
-	}
-
-	public SalesAuthorizationFile setProdDeclaration(String prodDeclaration) {
-		this.prodDeclaration = prodDeclaration;
-		return this;
-	}
-
-	public LocalDateTime getModifiedProd() {
-		return modifiedProd;
-	}
-
-	public SalesAuthorizationFile setModifiedProd(LocalDateTime modifiedProd) {
-		this.modifiedProd = modifiedProd;
-		return this;
-	}
-
-	public String getIsoVerification() {
-		return isoVerification;
-	}
-
-	public SalesAuthorizationFile setIsoVerification(String isoVerification) {
-		this.isoVerification = isoVerification;
-		return this;
-	}
-
-	public LocalDateTime getModifiedIso() {
-		return modifiedIso;
-	}
-
-	public SalesAuthorizationFile setModifiedIso(LocalDateTime modifiedIso) {
-		this.modifiedIso = modifiedIso;
-		return this;
-	}
-
-	public String getSrActuaryVerification() {
-		return srActuaryVerification;
-	}
-
-	public SalesAuthorizationFile setSrActuaryVerification(String srActuaryVerification) {
-		this.srActuaryVerification = srActuaryVerification;
-		return this;
-	}
-
-	public LocalDateTime getModifiedSrActuary() {
-		return modifiedSrActuary;
-	}
-
-	public SalesAuthorizationFile setModifiedSrActuary(LocalDateTime modifiedSrActuary) {
-		this.modifiedSrActuary = modifiedSrActuary;
-		return this;
-	}
-
-	public String getFssOfficialDoc() {
-		return fssOfficialDoc;
-	}
-
-	public SalesAuthorizationFile setFssOfficialDoc(String fSSOfficialDoc) {
-		this.fssOfficialDoc = fSSOfficialDoc;
-		return this;
-	}
-
-	public LocalDateTime getModifiedFss() {
-		return modifiedFss;
-	}
-
-	public SalesAuthorizationFile setModifiedFss(LocalDateTime modifiedFss) {
-		this.modifiedFss = modifiedFss;
-		return this;
-	}
 
 	public String print() {
 		String print = "{";

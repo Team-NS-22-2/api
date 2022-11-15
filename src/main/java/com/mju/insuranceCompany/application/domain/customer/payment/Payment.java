@@ -1,49 +1,31 @@
 package com.mju.insuranceCompany.application.domain.customer.payment;
 
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
 /**
  * @author 규현
  * @version 1.0
  * @created 09-5-2022 오전 2:42:25
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
 public abstract class Payment {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	protected int id;
 	protected PayType paytype;
 	protected int customerId;
 
-	public int getId() {
-		return id;
-	}
-
-	public Payment setId(int id) {
-		this.id = id;
-		return this;
-	}
-
-	public PayType getPaytype() {
-		return paytype;
-	}
-
-	public Payment setPaytype(PayType paytype) {
-		this.paytype = paytype;
-		return this;
-	}
-
-
-	public int getCustomerId() {
-		return customerId;
-	}
-
-	public Payment setCustomerId(int customerId) {
-		this.customerId = customerId;
-		return this;
-	}
-
-	@Override
-	public abstract String toString();
-
-	public abstract String toStringForPay();
-
-	public abstract String toStringForValid();
 }

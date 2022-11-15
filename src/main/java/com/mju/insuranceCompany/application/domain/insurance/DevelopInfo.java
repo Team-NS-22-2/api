@@ -1,6 +1,14 @@
 package com.mju.insuranceCompany.application.domain.insurance;
 
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import java.time.LocalDate;
 
 /**
@@ -8,68 +16,20 @@ import java.time.LocalDate;
  * @version 1.0
  * @created 09-5-2022 ���� 4:38:59
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Builder
 public class DevelopInfo {
 
-	private int id;
+	@Id
+	@JoinColumn(name = "insurance_id")
 	private int insuranceId;
 	private int employeeId;
 	private LocalDate developDate;
 	private SalesAuthorizationState salesAuthorizationState;
 	private LocalDate salesStartDate;
-
-	public int getId() {
-		return id;
-	}
-
-	public DevelopInfo setId(int id) {
-		this.id = id;
-		return this;
-	}
-
-	public int getInsuranceId() {
-		return insuranceId;
-	}
-
-	public DevelopInfo setInsuranceId(int insuranceId) {
-		this.insuranceId = insuranceId;
-		return this;
-	}
-
-	public int getEmployeeId() {
-		return employeeId;
-	}
-
-	public DevelopInfo setEmployeeId(int employeeId) {
-		this.employeeId = employeeId;
-		return this;
-	}
-
-	public LocalDate getDevelopDate() {
-		return developDate;
-	}
-
-	public DevelopInfo setDevelopDate(LocalDate developDate) {
-		this.developDate = developDate;
-		return this;
-	}
-
-	public SalesAuthorizationState getSalesAuthorizationState() {
-		return salesAuthorizationState;
-	}
-
-	public DevelopInfo setSalesAuthorizationState(SalesAuthorizationState salesAuthorizationState) {
-		this.salesAuthorizationState = salesAuthorizationState;
-		return this;
-	}
-
-	public LocalDate getSalesStartDate() {
-		return salesStartDate;
-	}
-
-	public DevelopInfo setSalesStartDate(LocalDate salesStartDate) {
-		this.salesStartDate = salesStartDate;
-		return this;
-	}
 
 	public String print() {
 		String value =

@@ -1,9 +1,25 @@
 package com.mju.insuranceCompany.application.login;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.time.LocalDateTime;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Builder
 public class User {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String userId;
     private String password;
@@ -11,60 +27,4 @@ public class User {
     private LocalDateTime modifyDate;
     private int roleId;
 
-    public User(){
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public User setId(int id) {
-        this.id = id;
-        return this;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public User setUserId(String userId) {
-        this.userId = userId;
-        return this;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public User setPassword(String password) {
-        this.password = password;
-        return this;
-    }
-
-    public LocalDateTime getCreateDate() {
-        return createDate;
-    }
-
-    public User setCreateDate(LocalDateTime createDate) {
-        this.createDate = createDate;
-        return this;
-    }
-
-    public LocalDateTime getModifyDate() {
-        return modifyDate;
-    }
-
-    public User setModifyDate(LocalDateTime modifyDate) {
-        this.modifyDate = modifyDate;
-        return this;
-    }
-
-    public int getRoleId() {
-        return roleId;
-    }
-
-    public User setRoleId(int role_id) {
-        this.roleId = role_id;
-        return this;
-    }
 }

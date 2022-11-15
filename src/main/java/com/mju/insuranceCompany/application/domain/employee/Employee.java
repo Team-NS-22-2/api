@@ -1,44 +1,11 @@
 package com.mju.insuranceCompany.application.domain.employee;
 
-import com.mju.insuranceCompany.application.dao.accident.AccidentDao;
-import com.mju.insuranceCompany.application.dao.accident.AccidentDaoImpl;
-import com.mju.insuranceCompany.application.dao.accident.AccidentDocumentFileDao;
-import com.mju.insuranceCompany.application.dao.accident.AccidentDocumentFileDaoImpl;
-import com.mju.insuranceCompany.application.dao.contract.ContractDaoImpl;
-import com.mju.insuranceCompany.application.dao.customer.CustomerDaoImpl;
-import com.mju.insuranceCompany.application.dao.insurance.InsuranceDaoImpl;
-import com.mju.insuranceCompany.application.dao.user.UserDaoImpl;
-import com.mju.insuranceCompany.application.domain.accident.Accident;
-import com.mju.insuranceCompany.application.domain.accident.AccidentType;
-import com.mju.insuranceCompany.application.domain.accident.CarAccident;
-import com.mju.insuranceCompany.application.domain.accident.accidentDocumentFile.AccDocType;
-import com.mju.insuranceCompany.application.domain.accident.accidentDocumentFile.AccidentDocumentFile;
-import com.mju.insuranceCompany.application.domain.contract.*;
-import com.mju.insuranceCompany.application.domain.customer.Customer;
-import com.mju.insuranceCompany.application.domain.customer.payment.Account;
-import com.mju.insuranceCompany.application.domain.insurance.*;
-import com.mju.insuranceCompany.application.global.constant.CompensationViewLogicConstants;
-import com.mju.insuranceCompany.application.global.constant.DevelopViewLogicConstants;
-import com.mju.insuranceCompany.application.global.exception.*;
-import com.mju.insuranceCompany.application.global.utility.CriterionSetUtil;
-import com.mju.insuranceCompany.application.global.utility.FileDialogUtil;
-import com.mju.insuranceCompany.application.login.User;
-import com.mju.insuranceCompany.application.viewlogic.dto.UserDto.UserDto;
-import com.mju.insuranceCompany.application.viewlogic.dto.compDto.AccountRequestDto;
-import com.mju.insuranceCompany.application.viewlogic.dto.compDto.AssessDamageResponseDto;
-import com.mju.insuranceCompany.application.viewlogic.dto.compDto.InvestigateDamageRequestDto;
-import com.mju.insuranceCompany.application.viewlogic.dto.contractDto.CarContractDto;
-import com.mju.insuranceCompany.application.viewlogic.dto.contractDto.ContractDto;
-import com.mju.insuranceCompany.application.viewlogic.dto.contractDto.FireContractDto;
-import com.mju.insuranceCompany.application.viewlogic.dto.contractDto.HealthContractDto;
-import com.mju.insuranceCompany.application.viewlogic.dto.customerDto.CustomerDto;
-import com.mju.insuranceCompany.application.viewlogic.dto.insuranceDto.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.util.Objects;
 
 /**
@@ -46,71 +13,31 @@ import java.util.Objects;
  * @version 1.0
  * @created 09-5-2022 오후 4:38:59
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
 public class Employee {
 
+	@Id
 	private int id;
 	private String name;
 	private String phone;
 	private Department department;
 	private Position position;
 
-	public Employee(){
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public Employee setId(int id) {
-		this.id = id;
-		return this;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public Employee setName(String name) {
-		this.name = name;
-		return this;
-	}
-
-	public String getPhone() {
-		return phone;
-	}
-
-	public Employee setPhone(String phone) {
-		this.phone = phone;
-		return this;
-	}
-
-	public Department getDepartment() {
-		return department;
-	}
-
-	public Employee setDepartment(Department department) {
-		this.department = department;
-		return this;
-	}
-
-	public Position getPosition() {
-		return position;
-	}
-
-	public Employee setPosition(Position position) {
-		this.position = position;
-		return this;
-	}
+	/*
 
 	public void develop(InsuranceType type, DtoBasicInfo basicInfo, ArrayList<DtoGuarantee> guaranteeInfoList, ArrayList<DtoTypeInfo> typeInfoList){
-		Insurance insurance = new Insurance();
-		insurance.setName(basicInfo.getName())
-				.setDescription(basicInfo.getDescription())
-				.setContractPeriod(basicInfo.getContractPeriod())
-				.setPaymentPeriod(basicInfo.getPaymentPeriod())
-				.setGuaranteeList(developGuarantee(guaranteeInfoList))
-				.setDevelopInfo(developDevInfo())
-				.setSalesAuthorizationFile(new SalesAuthorizationFile());
+		Insurance insurance = Insurance.builder()
+				.name(basicInfo.getName())
+				.description(basicInfo.getDescription())
+				.contractPeriod(basicInfo.getContractPeriod())
+				.paymentPeriod(basicInfo.getPaymentPeriod())
+				.guaranteeList(developGuarantee(guaranteeInfoList))
+				.developInfo(developDevInfo())
+				.salesAuthorizationFile(new SalesAuthorizationFile())
+				.build();
 		switch (type) {
 			case HEALTH -> developHealth(insurance, typeInfoList);
 			case CAR -> developCar(insurance, typeInfoList);
@@ -122,18 +49,18 @@ public class Employee {
 	private ArrayList<Guarantee> developGuarantee(ArrayList<DtoGuarantee> guaranteeInfoList) {
 		ArrayList<Guarantee> guaranteeList = new ArrayList<>();
 		for(int i=0; i<guaranteeInfoList.size(); i++) {
-			guaranteeList.add(new Guarantee().setName(guaranteeInfoList.get(i).getName())
-					.setDescription(guaranteeInfoList.get(i).getDescription())
-					.setGuaranteeAmount(guaranteeInfoList.get(i).getGuaranteeAmount())
+			guaranteeList.add(Guarantee.builder().name(guaranteeInfoList.get(i).getName())
+					.description(guaranteeInfoList.get(i).getDescription())
+					.guaranteeAmount(guaranteeInfoList.get(i).getGuaranteeAmount()).build()
 			);
 		}
 		return guaranteeList;
 	}
 
 	private DevelopInfo developDevInfo() {
-		return new DevelopInfo().setEmployeeId(this.id)
-				.setDevelopDate(LocalDate.now())
-				.setSalesAuthorizationState(SalesAuthorizationState.WAIT);
+		return DevelopInfo.builder().employeeId(this.id)
+				.developDate(LocalDate.now())
+				.salesAuthorizationState(SalesAuthorizationState.WAIT).build();
 	}
 
 	private Insurance developHealth(Insurance insurance, ArrayList<DtoTypeInfo> typeInfoList) {
@@ -633,6 +560,8 @@ public class Employee {
 		}
 		return insurance;
 	}
+
+	 */
 
 	public String print() {
 		return "직원 정보 {" +

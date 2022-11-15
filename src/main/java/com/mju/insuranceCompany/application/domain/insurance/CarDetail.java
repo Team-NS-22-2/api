@@ -1,36 +1,24 @@
 package com.mju.insuranceCompany.application.domain.insurance;
 
 
+import lombok.*;
+
+import javax.persistence.Entity;
+
 /**
  * @author ����
  * @version 1.0
  * @created 09-5-2022 ���� 4:38:57
  */
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Builder
 public class CarDetail extends InsuranceDetail {
 
 	private int targetAge;
 	private long valueCriterion;
-
-	public CarDetail(){
-	}
-
-	public int getTargetAge() {
-		return targetAge;
-	}
-
-	public CarDetail setTargetAge(int targetAge) {
-		this.targetAge = targetAge;
-		return this;
-	}
-
-	public long getValueCriterion() {
-		return valueCriterion;
-	}
-
-	public CarDetail setValueCriterion(long valueCriterion) {
-		this.valueCriterion = valueCriterion;
-		return this;
-	}
 
 	public String printTargetAge() {
 		String ageRange = switch (targetAge) {
@@ -58,13 +46,4 @@ public class CarDetail extends InsuranceDetail {
 		return valueRange;
 	}
 
-	public String print() {
-		return "자동차보험 정보 {" +
-				"자동차보험정보 ID:" + getId() +
-				", 보험료: " + getPremium() +
-				", 대상나이: " + targetAge +
-				", 차량가액 기준: " + valueCriterion +
-				", 보험ID: " + getInsuranceId() +
-				"}";
-	}
 }

@@ -1,37 +1,26 @@
 package com.mju.insuranceCompany.application.domain.customer.payment;
 
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.Entity;
+
 /**
  * @author 규현
  * @version 1.0
  * @created 09-5-2022 오전 2:42:22
  */
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Builder
 public class Account extends Payment {
 
 	private String accountNo;
 	private BankType bankType;
-
-	public Account(){
-
-	}
-
-	public String getAccountNo() {
-		return accountNo;
-	}
-
-	public Account setAccountNo(String accountNo) {
-		this.accountNo = accountNo;
-		return this;
-	}
-
-	public BankType getBankType() {
-		return bankType;
-	}
-
-	public Account setBankType(BankType bankType) {
-		this.bankType = bankType;
-		return this;
-	}
 
 	@Override
 	public String toString() {
@@ -39,14 +28,4 @@ public class Account extends Payment {
 
 	}
 
-	@Override
-	public String toStringForPay() {
-		return "[" + bankType.name() + "] " + accountNo + " 계좌에서 ";
-
-	}
-
-	@Override
-	public String toStringForValid() {
-		return "[" + bankType.name() + "] " + accountNo;
-	}
 }

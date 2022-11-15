@@ -1,15 +1,5 @@
 package com.mju.insuranceCompany.application.global.utility;
 
-import com.mju.insuranceCompany.application.global.exception.NoResultantException;
-import com.mju.insuranceCompany.application.dao.accident.AccidentDaoImpl;
-import com.mju.insuranceCompany.application.dao.employee.EmployeeDaoImpl;
-import com.mju.insuranceCompany.application.domain.accident.Accident;
-import com.mju.insuranceCompany.application.dao.accident.AccidentDao;
-import com.mju.insuranceCompany.application.domain.employee.Employee;
-import com.mju.insuranceCompany.application.dao.employee.EmployeeDao;
-
-import java.util.List;
-
 /**
  * packageName :  utility
  * fileName : CompAssignUtil
@@ -25,6 +15,8 @@ public class CompAssignUtil {
     private CompAssignUtil() {
 
     }
+
+    /*
 
     public static Employee changeCompEmployee(Employee employee) {
         EmployeeDao employeeDao = new EmployeeDaoImpl();
@@ -63,6 +55,8 @@ public class CompAssignUtil {
         employeeDao = new EmployeeDaoImpl();
         return employeeDao.read(minId);
     }
+    
+     */
 
 
 }

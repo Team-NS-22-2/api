@@ -1,42 +1,29 @@
 package com.mju.insuranceCompany.application.domain.customer;
 
 
-import com.mju.insuranceCompany.application.dao.accident.*;
-import com.mju.insuranceCompany.application.dao.contract.ContractDao;
-import com.mju.insuranceCompany.application.dao.contract.ContractDaoImpl;
-import com.mju.insuranceCompany.application.dao.customer.CustomerDaoImpl;
-import com.mju.insuranceCompany.application.dao.customer.PaymentDao;
-import com.mju.insuranceCompany.application.dao.customer.PaymentDaoImpl;
-import com.mju.insuranceCompany.application.dao.insurance.InsuranceDaoImpl;
-import com.mju.insuranceCompany.application.dao.user.UserDaoImpl;
-import com.mju.insuranceCompany.application.domain.accident.*;
-import com.mju.insuranceCompany.application.domain.accident.accidentDocumentFile.AccDocType;
-import com.mju.insuranceCompany.application.domain.accident.accidentDocumentFile.AccidentDocumentFile;
 import com.mju.insuranceCompany.application.domain.accident.complain.Complain;
 import com.mju.insuranceCompany.application.domain.contract.*;
-import com.mju.insuranceCompany.application.domain.customer.payment.*;
-import com.mju.insuranceCompany.application.domain.employee.Employee;
+import com.mju.insuranceCompany.application.domain.customer.payment.Payment;
 import com.mju.insuranceCompany.application.domain.insurance.*;
-import com.mju.insuranceCompany.application.global.constant.DocUtilConstants;
-import com.mju.insuranceCompany.application.global.constant.ExceptionConstants;
-import com.mju.insuranceCompany.application.global.exception.MyIllegalArgumentException;
 import com.mju.insuranceCompany.application.global.exception.NoResultantException;
-import com.mju.insuranceCompany.application.global.utility.CompAssignUtil;
 import com.mju.insuranceCompany.application.global.utility.CriterionSetUtil;
-import com.mju.insuranceCompany.application.global.utility.FileDialogUtil;
 import com.mju.insuranceCompany.application.global.utility.TargetInfoCalculator;
 import com.mju.insuranceCompany.application.login.User;
-import com.mju.insuranceCompany.application.viewlogic.dto.UserDto.UserDto;
-import com.mju.insuranceCompany.application.viewlogic.dto.accidentDto.AccidentReportDto;
-import com.mju.insuranceCompany.application.viewlogic.dto.contractDto.CarContractDto;
-import com.mju.insuranceCompany.application.viewlogic.dto.contractDto.ContractDto;
-import com.mju.insuranceCompany.application.viewlogic.dto.contractDto.FireContractDto;
-import com.mju.insuranceCompany.application.viewlogic.dto.contractDto.HealthContractDto;
-import com.mju.insuranceCompany.application.viewlogic.dto.customerDto.CustomerDto;
-import com.mju.insuranceCompany.outerSystem.ElectronicPaymentSystem;
-import com.mju.insuranceCompany.outerSystem.FinancialInstitute;
+import com.mju.insuranceCompany.application.viewlogic.dto.contract.CarContractDto;
+import com.mju.insuranceCompany.application.viewlogic.dto.contract.ContractDto;
+import com.mju.insuranceCompany.application.viewlogic.dto.contract.FireContractDto;
+import com.mju.insuranceCompany.application.viewlogic.dto.contract.HealthContractDto;
+import com.mju.insuranceCompany.application.viewlogic.dto.customer.request.CustomerBasicRequestDto;
+import com.mju.insuranceCompany.application.viewlogic.dto.insurance.response.HealthDetailDto;
+import com.mju.insuranceCompany.application.viewlogic.dto.insurance.response.InsuranceDetailDto;
+import com.mju.insuranceCompany.application.viewlogic.dto.insurance.response.InsuranceDto;
+import com.mju.insuranceCompany.application.viewlogic.dto.user.UserRequestDto;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
+import javax.persistence.*;
 import java.util.List;
 
 /**
@@ -44,8 +31,15 @@ import java.util.List;
  * @version 1.0
  * @created 09-5-2022 오전 2:42:24
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Builder
 public class Customer {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	private String name;
 	private String ssn;
@@ -53,113 +47,21 @@ public class Customer {
 	private String phone;
 	private String email;
 	private String job;
-	private ArrayList<Payment> paymentList = new ArrayList<>();
-	private ArrayList<Complain> complainList = new ArrayList<>();
+	@OneToMany
+	private List<Payment> paymentList;
+	@OneToMany
+	private List<Complain> complainList;
 
-	public ArrayList<Complain> getComplainList() {
-		return complainList;
-	}
-
-	public Customer setComplainList(ArrayList<Complain> complainList) {
-		this.complainList = complainList;
-		return this;
-	}
-
-	public ArrayList<Payment> getPaymentList() {
-		return paymentList;
-	}
-
-	public Customer setPaymentList(ArrayList<Payment> paymentList) {
-		this.paymentList = paymentList;
-		return this;
-	}
-	public String getAddress() {
-		return address;
-	}
-
-	public Customer setAddress(String address) {
-		this.address = address;
-		return this;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public Customer setEmail(String email) {
-		this.email = email;
-		return this;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public Customer setId(int id) {
-		this.id = id;
-		return this;
-	}
-
-	public String getJob() {
-		return job;
-	}
-
-	public Customer setJob(String job) {
-		this.job = job;
-		return this;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public Customer setName(String name) {
-		this.name = name;
-		return this;
-	}
-
-	public String getPhone() {
-		return phone;
-	}
-
-	public Customer setPhone(String phone) {
-		this.phone = phone;
-		return this;
-	}
-
-	public String getSsn() {
-		return ssn;
-	}
-
-	public Customer setSsn(String ssn) {
-		this.ssn = ssn;
-		return this;
-	}
-
-	public Customer(){
-
-	}
-
-	public ArrayList<Insurance> readInsurances() {
-		InsuranceDaoImpl insuranceDao = new InsuranceDaoImpl();
-		return insuranceDao.readAll();
-	}
-
-	public Insurance readInsurance(int insuranceId) {
-		InsuranceDaoImpl insuranceDao = new InsuranceDaoImpl();
-		return insuranceDao.read(insuranceId);
-	}
-
-	public int inquireHealthPremium(String ssn, int riskCount, Insurance insurance){
+	public int inquireHealthPremium(String ssn, int riskCount, InsuranceDto insurance){
 		int premium = 0;
-		int targerAge = CriterionSetUtil.setTargetAge((TargetInfoCalculator.targetAgeCalculator(ssn)));
+		int targetAge = CriterionSetUtil.setTargetAge((TargetInfoCalculator.targetAgeCalculator(ssn)));
 		boolean targetSex = TargetInfoCalculator.targetSexCalculator(ssn);
 		boolean riskCriterion = CriterionSetUtil.setRiskCriterion(riskCount);
 
-		ArrayList<InsuranceDetail> insuranceDetails = insurance.getInsuranceDetailList();
-		for (InsuranceDetail insuranceDetail : insuranceDetails) {
-			HealthDetail healthDetail = (HealthDetail) insuranceDetail;
-			if (healthDetail.getTargetAge() == targerAge && healthDetail.isTargetSex() == targetSex && (healthDetail.isRiskCriterion()) == riskCriterion) {
+		List<InsuranceDetailDto> insuranceDetails = insurance.getInsuranceDetailList();
+		for (InsuranceDetailDto insuranceDetail : insuranceDetails) {
+			HealthDetailDto healthDetail = (HealthDetailDto) insuranceDetail;
+			if (healthDetail.getTargetAge() == targetAge && healthDetail.isTargetSex() == targetSex && (healthDetail.isRiskCriterion()) == riskCriterion) {
 				premium = healthDetail.getPremium();
 				break;
 			}
@@ -173,7 +75,7 @@ public class Customer {
 		int premium = 0;
 		Long collateralAmountCriterion = CriterionSetUtil.setCollateralAmountCriterion(collateralAmount);
 
-		ArrayList<InsuranceDetail> insuranceDetails = insurance.getInsuranceDetailList();
+		List<InsuranceDetail> insuranceDetails = insurance.getInsuranceDetailList();
 		for (InsuranceDetail insuranceDetail : insuranceDetails) {
 			FireDetail fireDetail = (FireDetail) insuranceDetail;
 			if (fireDetail.getTargetBuildingType() == buildingType && fireDetail.getCollateralAmountCriterion() == collateralAmountCriterion) {
@@ -191,7 +93,7 @@ public class Customer {
 		int targetAge = CriterionSetUtil.setTargetAge(TargetInfoCalculator.targetAgeCalculator(ssn));
 		Long valueCriterion = CriterionSetUtil.setValueCriterion(value);
 
-		ArrayList<InsuranceDetail> insuranceDetails = insurance.getInsuranceDetailList();
+		List<InsuranceDetail> insuranceDetails = insurance.getInsuranceDetailList();
 		for (InsuranceDetail insuranceDetail : insuranceDetails) {
 			CarDetail carDetail = (CarDetail) insuranceDetail;
 			if (carDetail.getTargetAge() == targetAge && carDetail.getValueCriterion() == valueCriterion) {
@@ -204,90 +106,88 @@ public class Customer {
 		return premium;
 	}
 
-	public Customer registerCustomer(CustomerDto customerDto) {
-		Customer customer = new Customer();
-		customer.setName(customerDto.getName())
-				.setSsn(customerDto.getSsn())
-				.setAddress(customerDto.getAddress())
-				.setPhone(customerDto.getPhone())
-				.setEmail(customerDto.getEmail())
-				.setJob(customerDto.getJob());
-		CustomerDaoImpl customerDao = new CustomerDaoImpl();
-		customerDao.create(customer);
-		return customer;
+	public Customer registerCustomer(CustomerBasicRequestDto customerDto) {
+		return Customer.builder()
+				.name(customerDto.getName())
+				.ssn(customerDto.getSsn())
+				.address(customerDto.getAddress())
+				.phone(customerDto.getPhone())
+				.email(customerDto.getEmail())
+				.job(customerDto.getJob())
+				.build();
 	}
 
-	public User registerUser(UserDto userDto) {
-		User user = new User();
-		user.setUserId(userDto.getUserId())
-			.setPassword(userDto.getPassword())
-				.setRoleId(userDto.getRoleId());
-		UserDaoImpl userDao = new UserDaoImpl();
-		userDao.create(user);
-		return user;
+	public User registerUser(UserRequestDto userDto) {
+		return User.builder()
+				.userId(userDto.getUserId())
+				.password(userDto.getPassword())
+				.roleId(userDto.getRoleId())
+				.build();
 	}
 
 	public Contract registerContract(Customer customer, ContractDto contractDto, Insurance insurance) {
 		Contract contract = null;
 		switch (insurance.getInsuranceType()){
 			case HEALTH -> {
-				HealthContract healthContract = new HealthContract();
-
-				healthContract.setHeight(((HealthContractDto) contractDto).getHeight())
-						.setWeight(((HealthContractDto) contractDto).getWeight())
-						.setDrinking(((HealthContractDto) contractDto).isDrinking())
-						.setSmoking(((HealthContractDto) contractDto).isSmoking())
-						.setDriving(((HealthContractDto) contractDto).isDriving())
-						.setDangerActivity(((HealthContractDto) contractDto).isDangerActivity())
-						.setHavingDisease(((HealthContractDto) contractDto).isHavingDisease())
-						.setTakingDrug(((HealthContractDto) contractDto).isTakingDrug())
-						.setDiseaseDetail(((HealthContractDto) contractDto).getDiseaseDetail())
-						.setInsuranceId(insurance.getId())
+				HealthContract healthContract = HealthContract.builder()
+						.height(((HealthContractDto) contractDto).getHeight())
+						.weight(((HealthContractDto) contractDto).getWeight())
+						.isDrinking(((HealthContractDto) contractDto).isDrinking())
+						.isSmoking(((HealthContractDto) contractDto).isSmoking())
+						.isDriving(((HealthContractDto) contractDto).isDriving())
+						.isDangerActivity(((HealthContractDto) contractDto).isDangerActivity())
+						.isHavingDisease(((HealthContractDto) contractDto).isHavingDisease())
+						.isTakingDrug(((HealthContractDto) contractDto).isTakingDrug())
+						.diseaseDetail(((HealthContractDto) contractDto).getDiseaseDetail())
+						.build();
+				healthContract.setInsuranceId(insurance.getId())
 						.setCustomerId(customer.getId())
 						.setPremium(contractDto.getPremium())
 						.setConditionOfUw(ConditionOfUw.WAIT);
 
-				ContractDaoImpl contractDao = new ContractDaoImpl();
-				contractDao.create(healthContract);
+//				ContractDaoImpl contractDao = new ContractDaoImpl();
+//				contractDao.create(healthContract);
 				contract = healthContract;
 			}
 			case FIRE -> {
-				FireContract fireContract = new FireContract();
-
-				fireContract.setBuildingArea(((FireContractDto) contractDto).getBuildingArea())
-						.setBuildingType(((FireContractDto) contractDto).getBuildingType())
-						.setCollateralAmount(((FireContractDto) contractDto).getCollateralAmount())
-						.setActualResidence(((FireContractDto) contractDto).isActualResidence())
-						.setSelfOwned(((FireContractDto) contractDto).isSelfOwned())
-						.setInsuranceId(insurance.getId())
+				FireContract fireContract = FireContract.builder()
+						.buildingArea(((FireContractDto) contractDto).getBuildingArea())
+						.buildingType(((FireContractDto) contractDto).getBuildingType())
+						.collateralAmount(((FireContractDto) contractDto).getCollateralAmount())
+						.isActualResidence(((FireContractDto) contractDto).isActualResidence())
+						.isSelfOwned(((FireContractDto) contractDto).isSelfOwned())
+						.build();
+				fireContract.setInsuranceId(insurance.getId())
 						.setCustomerId(customer.getId())
 						.setPremium(contractDto.getPremium())
 						.setConditionOfUw(ConditionOfUw.WAIT);
 
-				ContractDaoImpl contractDao = new ContractDaoImpl();
-				contractDao.create(fireContract);
+//				ContractDaoImpl contractDao = new ContractDaoImpl();
+//				contractDao.create(fireContract);
 				contract = fireContract;
 			}
 			case CAR -> {
-				CarContract carContract = new CarContract();
-
-				carContract.setCarNo(((CarContractDto) contractDto).getCarNo())
-						.setCarType(((CarContractDto) contractDto).getCarType())
-						.setModelName(((CarContractDto) contractDto).getModelName())
-						.setModelYear(((CarContractDto) contractDto).getModelYear())
-						.setValue(((CarContractDto) contractDto).getValue())
-						.setInsuranceId(insurance.getId())
+				CarContract carContract = CarContract.builder()
+						.carNo(((CarContractDto) contractDto).getCarNo())
+						.carType(((CarContractDto) contractDto).getCarType())
+						.modelName(((CarContractDto) contractDto).getModelName())
+						.modelYear(((CarContractDto) contractDto).getModelYear())
+						.value(((CarContractDto) contractDto).getValue())
+						.build();
+				carContract.setInsuranceId(insurance.getId())
 						.setCustomerId(customer.getId())
 						.setPremium(contractDto.getPremium())
 						.setConditionOfUw(ConditionOfUw.WAIT);
 
-				ContractDaoImpl contractDao = new ContractDaoImpl();
-				contractDao.create(carContract);
+//				ContractDaoImpl contractDao = new ContractDaoImpl();
+//				contractDao.create(carContract);
 				contract = carContract;
 			}
 		}
 		return contract;
 	}
+
+	/*
 
 	public Employee changeCompEmp(String reason, Employee compEmployee){
 		Complain complain = Complain.builder().reason(reason)
@@ -344,26 +244,27 @@ public class Customer {
 	public void readPayments(){
 		PaymentDao paymentDao = new PaymentDaoImpl();
 		List<Payment> payments = paymentDao.findAllByCustomerId(this.id);
-		this.setPaymentList((ArrayList<Payment>) payments);
+		this.setPaymentList((List<Payment>) payments);
 	}
 
 	private Payment createPayment(PaymentDto paymentDto) {
 		PayType payType = paymentDto.getPayType();
 		Payment payment;
 		if (payType.equals(PayType.CARD)) {
-			payment = new Card();
-			((Card)payment).setCardNo(paymentDto.getCardNo())
-					.setCvcNo(paymentDto.getCvcNo())
-					.setCardType(paymentDto.getCardType())
-					.setExpiryDate(paymentDto.getExpiryDate());
-
+			payment = Card.builder()
+					.cardNo(paymentDto.getCardNo())
+					.cvcNo(paymentDto.getCvcNo())
+					.cardType(paymentDto.getCardType())
+					.expiryDate(paymentDto.getExpiryDate())
+					.build();
 		} else {
-			payment = new Account();
-			((Account)payment).setAccountNo(paymentDto.getAccountNo())
-					.setBankType(paymentDto.getBankType());
+			payment = Account.builder()
+					.accountNo(paymentDto.getAccountNo())
+					.bankType(paymentDto.getBankType())
+					.build();
 		}
-		payment.setPaytype(payType)
-				.setCustomerId(paymentDto.getCustomerId());
+		payment.setPaytype(payType);
+		payment.setCustomerId(paymentDto.getCustomerId());
 		return payment;
 
 	}
@@ -392,51 +293,39 @@ public class Customer {
 		AccidentType accidentType = accidentReportDto.getAccidentType();
 
 		Accident accident = null;
-		if (accidentType == AccidentType.INJURYACCIDENT) {
-			accident = new InjuryAccident();
-			((InjuryAccident) accident).setInjurySite(accidentReportDto.getInjurySite());
-		} else if(accidentType == AccidentType.CARACCIDENT) {
-			accident = new CarAccident();
-			((CarAccident)accident).setCarNo(accidentReportDto.getCarNo())
-					.setPlaceAddress(accidentReportDto.getPlaceAddress())
-					.setOpposingDriverPhone(accidentReportDto.getOpposingDriverPhone())
-					.setRequestOnSite(accidentReportDto.isRequestOnSite());
-		} else if (accidentType == AccidentType.CARBREAKDOWN) {
-			accident = new CarBreakdown();
-			((CarBreakdown) accident).setCarNo(accidentReportDto.getCarNo())
-					.setPlaceAddress(accidentReportDto.getPlaceAddress())
-					.setSymptom(accidentReportDto.getSymptom());
-		} else {
-			accident = new FireAccident();
-			((FireAccident)accident).setPlaceAddress(accidentReportDto.getPlaceAddress());
-		}
-		 accident.setAccidentType(accidentType)
-				.setDateOfAccident(accidentReportDto.getDateOfAccident())
-				.setDateOfReport(accidentReportDto.getDateOfReport())
-				.setCustomerId(this.id);
-
-		AccidentDao accidentDao = new AccidentDaoImpl();
-		accidentDao.create(accident);
+//		if (accidentType == AccidentType.INJURYACCIDENT) {
+//			accident = new InjuryAccident();
+//			((InjuryAccident) accident).setInjurySite(accidentReportDto.getInjurySite());
+//		} else if(accidentType == AccidentType.CARACCIDENT) {
+//			accident = new CarAccident();
+//			((CarAccident)accident).setCarNo(accidentReportDto.getCarNo())
+//					.setPlaceAddress(accidentReportDto.getPlaceAddress())
+//					.setOpposingDriverPhone(accidentReportDto.getOpposingDriverPhone())
+//					.setRequestOnSite(accidentReportDto.isRequestOnSite());
+//		} else if (accidentType == AccidentType.CARBREAKDOWN) {
+//			accident = new CarBreakdown();
+//			((CarBreakdown) accident).setCarNo(accidentReportDto.getCarNo())
+//					.setPlaceAddress(accidentReportDto.getPlaceAddress())
+//					.setSymptom(accidentReportDto.getSymptom());
+//		} else {
+//			accident = new FireAccident();
+//			((FireAccident)accident).setPlaceAddress(accidentReportDto.getPlaceAddress());
+//		}
+//		 accident.setAccidentType(accidentType)
+//				.setDateOfAccident(accidentReportDto.getDateOfAccident())
+//				.setDateOfReport(accidentReportDto.getDateOfReport())
+//				.setCustomerId(this.id);
+//
+//		AccidentDao accidentDao = new AccidentDaoImpl();
+//		accidentDao.create(accident);
 		return accident;
 	}
 
+	 */
 	public void signUp() {
 	}
 
 	public void terminate(){
 	}
 
-	@Override
-	public String toString() {
-		return "고객정보 {" +
-				"고객 ID: " + id +
-				", 이름: '" + name + '\'' +
-				", 주소: '" + address + '\'' +
-				", 이메일: '" + email + '\'' +
-				", 전화번호: '" + phone + '\'' +
-				", 직업: '" + job + '\'' +
-				", 주민등록번호: '" + ssn + '\'' +
-				", 결제수단: " + paymentList +
-				'}';
-	}
 }

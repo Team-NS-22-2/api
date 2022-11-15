@@ -1,8 +1,11 @@
 package com.mju.insuranceCompany.application.domain.accident.complain;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 /**
  * packageName :  domain.complain
@@ -15,10 +18,14 @@ import lombok.Setter;
  * -----------------------------------------------------------
  * 2022-05-23                규현             최초 생성
  */
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
 public class Complain {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private int customerId;
     private String reason;

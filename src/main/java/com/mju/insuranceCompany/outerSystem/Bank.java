@@ -17,6 +17,6 @@ import com.mju.insuranceCompany.application.global.utility.ConsoleColors;
 public interface Bank {
 
     public static void sendCompensation(Account account, long compensation) {
-        System.out.println(ConsoleColors.YELLOW_BOLD+"[알림] ["+account.getBankType() + "]"+account.getAccountNo() + "로 "+compensation + "원이 지급되었습니다."+ ConsoleColors.RESET);
+//        System.out.println(ConsoleColors.YELLOW_BOLD+"[알림] ["+account.getBankType() + "]"+account.getAccountNo() + "로 "+compensation + "원이 지급되었습니다."+ ConsoleColors.RESET);
     }
 }

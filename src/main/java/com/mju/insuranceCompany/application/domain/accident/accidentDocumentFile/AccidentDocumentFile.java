@@ -1,6 +1,12 @@
 package com.mju.insuranceCompany.application.domain.accident.accidentDocumentFile;
 
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -9,62 +15,18 @@ import java.util.Objects;
  * @version 1.0
  * @created 09-5-2022 오전 2:42:22
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
 public class AccidentDocumentFile {
 
 	private int accidentId;
 	private String fileAddress;
+	@Id
 	private int id;
 	private AccDocType type;
 	private LocalDateTime lastModifedDate;
-
-	public AccidentDocumentFile(){
-
-	}
-
-	public int getAccidentId() {
-		return accidentId;
-	}
-
-	public AccidentDocumentFile setAccidentId(int accidentId) {
-		this.accidentId = accidentId;
-		return this;
-	}
-
-	public String getFileAddress() {
-		return fileAddress;
-	}
-
-	public AccidentDocumentFile setFileAddress(String fileAddress) {
-		this.fileAddress = fileAddress;
-		return this;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public AccidentDocumentFile setId(int id) {
-		this.id = id;
-		return this;
-	}
-
-	public AccDocType getType() {
-		return type;
-	}
-
-	public AccidentDocumentFile setType(AccDocType type) {
-		this.type = type;
-		return this;
-	}
-
-	public LocalDateTime getLastModifedDate() {
-		return lastModifedDate;
-	}
-
-	public AccidentDocumentFile setLastModifedDate(LocalDateTime lastModifedDate) {
-		this.lastModifedDate = lastModifedDate;
-		return this;
-	}
 
 	@Override
 	public String toString() {
