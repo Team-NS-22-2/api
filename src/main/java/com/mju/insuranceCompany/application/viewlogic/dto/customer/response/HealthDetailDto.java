@@ -8,6 +8,6 @@ import lombok.*;
 @EqualsAndHashCode(callSuper = false)
 public class HealthDetailDto extends InsuranceDetailDto {
     private int targetAge;
-    private boolean targetSex;
-    private boolean riskCriterion;
+    private Boolean targetSex;
+    private Boolean riskCriterion;
 }

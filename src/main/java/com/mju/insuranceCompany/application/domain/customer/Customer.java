@@ -14,8 +14,7 @@ import com.mju.insuranceCompany.application.viewlogic.dto.contract.ContractDto;
 import com.mju.insuranceCompany.application.viewlogic.dto.contract.FireContractDto;
 import com.mju.insuranceCompany.application.viewlogic.dto.contract.HealthContractDto;
 import com.mju.insuranceCompany.application.viewlogic.dto.customer.request.CustomerBasicRequest;
-import com.mju.insuranceCompany.application.viewlogic.dto.customer.response.*;
-import com.mju.insuranceCompany.application.viewlogic.dto.user.UserRequestDto;
+import com.mju.insuranceCompany.application.viewlogic.dto.user.UserSignUpRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -114,13 +113,13 @@ public class Customer {
 				.build();
 	}
 
-	public User registerUser(UserRequestDto userDto) {
-		return User.builder()
-				.userId(userDto.getUserId())
-				.password(userDto.getPassword())
-				.roleId(userDto.getRoleId())
-				.build();
-	}
+//	public User registerUser(UserSignUpRequest userDto) {
+//		return User.builder()
+//				.userId(userDto.getUserId())
+//				.password(userDto.getPassword())
+//				.roleId(userDto.getRoleId())
+//				.build();
+//	}
 
 	public Contract registerContract(Customer customer, ContractDto contractDto, int insuranceId, InsuranceType insuranceType) {
 		Contract contract = null;
@@ -129,12 +128,12 @@ public class Customer {
 				HealthContract healthContract = HealthContract.builder()
 						.height(((HealthContractDto) contractDto).getHeight())
 						.weight(((HealthContractDto) contractDto).getWeight())
-						.isDrinking(((HealthContractDto) contractDto).isDrinking())
-						.isSmoking(((HealthContractDto) contractDto).isSmoking())
-						.isDriving(((HealthContractDto) contractDto).isDriving())
-						.isDangerActivity(((HealthContractDto) contractDto).isDangerActivity())
-						.isHavingDisease(((HealthContractDto) contractDto).isHavingDisease())
-						.isTakingDrug(((HealthContractDto) contractDto).isTakingDrug())
+						.isDrinking(((HealthContractDto) contractDto).getIsDrinking())
+						.isSmoking(((HealthContractDto) contractDto).getIsSmoking())
+						.isDriving(((HealthContractDto) contractDto).getIsDriving())
+						.isDangerActivity(((HealthContractDto) contractDto).getIsDangerActivity())
+						.isHavingDisease(((HealthContractDto) contractDto).getIsHavingDisease())
+						.isTakingDrug(((HealthContractDto) contractDto).getIsTakingDrug())
 						.diseaseDetail(((HealthContractDto) contractDto).getDiseaseDetail())
 						.build();
 				healthContract.setInsuranceId(insuranceId)
@@ -151,9 +150,10 @@ public class Customer {
 						.buildingArea(((FireContractDto) contractDto).getBuildingArea())
 						.buildingType(((FireContractDto) contractDto).getBuildingType())
 						.collateralAmount(((FireContractDto) contractDto).getCollateralAmount())
-						.isActualResidence(((FireContractDto) contractDto).isActualResidence())
-						.isSelfOwned(((FireContractDto) contractDto).isSelfOwned())
+						.isActualResidence(((FireContractDto) contractDto).getIsActualResidence())
+						.isSelfOwned(((FireContractDto) contractDto).getIsSelfOwned())
 						.build();
+				System.out.println(fireContract);
 				fireContract.setInsuranceId(insuranceId)
 						.setCustomerId(customer.getId())
 						.setPremium(contractDto.getPremium())
@@ -164,6 +164,7 @@ public class Customer {
 				contract = fireContract;
 			}
 			case CAR -> {
+				//TODO owner 필드 추가 요망
 				CarContract carContract = CarContract.builder()
 						.carNo(((CarContractDto) contractDto).getCarNo())
 						.carType(((CarContractDto) contractDto).getCarType())

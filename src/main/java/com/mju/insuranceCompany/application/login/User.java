@@ -23,8 +23,8 @@ public class User {
     private int id;
     private String userId;
     private String password;
-    private LocalDateTime createDate;
-    private LocalDateTime modifyDate;
+//    private LocalDateTime createDate;
+//    private LocalDateTime modifyDate;
     private int roleId;
 
 }

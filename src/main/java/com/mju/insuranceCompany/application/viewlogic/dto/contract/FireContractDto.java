@@ -14,7 +14,7 @@ public class FireContractDto extends ContractDto {
     private int buildingArea;
     private BuildingType buildingType;
     private Long collateralAmount;
-    private boolean isActualResidence;
-    private boolean isSelfOwned;
+    private Boolean isActualResidence;
+    private Boolean isSelfOwned;
 
 }

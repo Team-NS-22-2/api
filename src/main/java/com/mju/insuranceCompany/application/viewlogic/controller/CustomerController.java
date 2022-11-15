@@ -2,6 +2,7 @@ package com.mju.insuranceCompany.application.viewlogic.controller;
 
 import com.mju.insuranceCompany.application.viewlogic.dto.customer.request.*;
 import com.mju.insuranceCompany.application.viewlogic.dto.customer.response.InquirePremiumResponse;
+import com.mju.insuranceCompany.application.viewlogic.dto.customer.response.RegisterContractResponse;
 import com.mju.insuranceCompany.application.viewlogic.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -31,23 +32,20 @@ public class CustomerController {
 
 //    // /register-health/{insId}
     @PostMapping("/register-health/{insId}")
-    public ResponseEntity registerHealthContract(@PathVariable int insId, @RequestBody RegisterHealthContractRequest request) {
-        service.registerHealthContract(insId, request);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<RegisterContractResponse> registerHealthContract(@PathVariable int insId, @RequestBody RegisterHealthContractRequest request) {
+        return ResponseEntity.ok(service.registerHealthContract(insId, request));
     }
 
 //    // /register-fire/{insId}
     @PostMapping("/register-fire/{insId}")
-    public ResponseEntity registerFireContract(@PathVariable int insId, @RequestBody RegisterFireContractRequest request) {
-        service.registerFireContract(insId, request);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<RegisterContractResponse> registerFireContract(@PathVariable int insId, @RequestBody RegisterFireContractRequest request) {
+        return ResponseEntity.ok(service.registerFireContract(insId, request));
     }
 
 //    // /register-car/{insId}
     @PostMapping("/register-car/{insId}")
-    public ResponseEntity registerCarContract(@PathVariable int insId, @RequestBody RegisterCarContractRequest request) {
-        service.registerCarContract(insId, request);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<RegisterContractResponse> registerCarContract(@PathVariable int insId, @RequestBody RegisterCarContractRequest request) {
+        return ResponseEntity.ok(service.registerCarContract(insId, request));
     }
 
 }

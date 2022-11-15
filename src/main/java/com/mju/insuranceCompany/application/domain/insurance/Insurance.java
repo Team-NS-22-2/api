@@ -1,10 +1,7 @@
 package com.mju.insuranceCompany.application.domain.insurance;
 
-import com.mju.insuranceCompany.application.viewlogic.dto.customer.response.InsuranceCarDetailDto;
-import com.mju.insuranceCompany.application.viewlogic.dto.customer.response.InsuranceFireDetailDto;
-import com.mju.insuranceCompany.application.viewlogic.dto.customer.response.InsuranceHealthDetailDto;
-import com.mju.insuranceCompany.application.viewlogic.dto.insurance.response.InsuranceListDto;
 import com.mju.insuranceCompany.application.viewlogic.dto.insurance.response.InsuranceGuaranteeDto;
+import com.mju.insuranceCompany.application.viewlogic.dto.insurance.response.InsuranceListDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

@@ -5,8 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class UserRequestDto {
+public class UserSignUpRequest {
     private String userId;
     private String password;
-    private int roleId;
 }

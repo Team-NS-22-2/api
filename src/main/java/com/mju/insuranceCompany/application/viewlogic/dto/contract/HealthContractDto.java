@@ -11,17 +11,11 @@ import javax.persistence.Column;
 public class HealthContractDto extends ContractDto {
     private int height;
     private int weight;
-    @Column(columnDefinition = "TINYINT", length=1)
-    private boolean isDrinking;
-    @Column(columnDefinition = "TINYINT", length=1)
-    private boolean isSmoking;
-    @Column(columnDefinition = "TINYINT", length=1)
-    private boolean isDriving;
-    @Column(columnDefinition = "TINYINT", length=1)
-    private boolean isDangerActivity;
-    @Column(columnDefinition = "TINYINT", length=1)
-    private boolean isHavingDisease;
-    @Column(columnDefinition = "TINYINT", length=1)
-    private boolean isTakingDrug;
+    private Boolean isDrinking;
+    private Boolean isSmoking;
+    private Boolean isDriving;
+    private Boolean isDangerActivity;
+    private Boolean isHavingDisease;
+    private Boolean isTakingDrug;
     private String diseaseDetail;
 }

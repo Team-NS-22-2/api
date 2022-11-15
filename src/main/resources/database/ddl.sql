@@ -126,7 +126,7 @@ contract_id int not null primary key,
 car_no varchar(15),
 car_type varchar(15),
 model_year int,
-name varchar(20),
+model_name varchar(20),
 owner varchar(20),
 value int,
 foreign key (contract_id) references contract(contract_id) on delete cascade
