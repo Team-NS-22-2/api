@@ -1,11 +1,11 @@
 package com.mju.insuranceCompany.application.domain.insurance;
 
 
+import com.mju.insuranceCompany.application.viewlogic.dto.customer.response.HealthDetailDto;
 import lombok.*;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.PrimaryKeyJoinColumn;
 
 /**
  * @author ����
@@ -17,27 +17,20 @@ import javax.persistence.Id;
 @AllArgsConstructor
 @Entity
 @Builder
+@PrimaryKeyJoinColumn(name = "health_detail_id")
 public class HealthDetail extends InsuranceDetail {
 
-	@Id
-	@Column(name = "health_detail_id")
-	private int id;
 	private int targetAge;
 	private boolean targetSex;
 	private boolean riskCriterion;
 
-	public String printTargetAge() {
-		 String ageRange = switch (targetAge) {
-			case 100 -> "100세 이상";
-			case 80 -> "80 ~ 100세";
-			case 60 -> "60 ~ 80세";
-			case 50 -> "50 ~ 60세";
-			case 40 -> "40 ~ 50세";
-			case 30 -> "30 ~ 40세";
-			case 20 -> "20 ~ 30세";
-			default -> "20세 이하";
-		 };
-		 return ageRange;
+	public HealthDetailDto toDto() {
+		return (HealthDetailDto) HealthDetailDto.builder()
+				.targetAge(this.getTargetAge())
+				.targetSex(this.isTargetSex())
+				.riskCriterion(this.isRiskCriterion())
+				.build()
+				.setPremium(getPremium());
 	}
 
 }

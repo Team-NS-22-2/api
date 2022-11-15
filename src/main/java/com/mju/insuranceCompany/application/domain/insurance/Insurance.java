@@ -1,6 +1,8 @@
 package com.mju.insuranceCompany.application.domain.insurance;
 
-import com.mju.insuranceCompany.application.viewlogic.dto.insurance.response.InsuranceDto;
+import com.mju.insuranceCompany.application.viewlogic.dto.customer.response.InsuranceCarDetailDto;
+import com.mju.insuranceCompany.application.viewlogic.dto.customer.response.InsuranceFireDetailDto;
+import com.mju.insuranceCompany.application.viewlogic.dto.customer.response.InsuranceHealthDetailDto;
 import com.mju.insuranceCompany.application.viewlogic.dto.insurance.response.InsuranceListDto;
 import com.mju.insuranceCompany.application.viewlogic.dto.insurance.response.InsuranceGuaranteeDto;
 import lombok.AllArgsConstructor;
@@ -51,27 +53,37 @@ public class Insurance {
 				.build();
 	}
 
-	public InsuranceDto toInsuranceDto() {
-		return InsuranceDto.builder()
+	public InsuranceHealthDetailDto toInsuranceHealthDetailDto() {
+		return InsuranceHealthDetailDto.builder()
 				.id(this.getId())
-				.name(this.getName())
-				.description(this.getDescription())
-				.contractPeriod(this.getContractPeriod())
-				.paymentPeriod(this.getPaymentPeriod())
 				.insuranceType(this.getInsuranceType())
-				.insuranceDetailList(this.getInsuranceDetailList().stream().map(InsuranceDetail::toInsuranceDetailDto).toList())
+				.insuranceDetailList(this.getInsuranceDetailList().stream().map(e->(HealthDetail)e).map(HealthDetail::toDto).toList())
+				.build();
+	}
+
+	public InsuranceFireDetailDto toInsuranceFireDetailDto() {
+		return InsuranceFireDetailDto.builder()
+				.id(this.getId())
+				.insuranceType(this.getInsuranceType())
+				.insuranceDetailList(this.getInsuranceDetailList().stream().map(e->(FireDetail)e).map(FireDetail::toDto).toList())
+				.build();
+	}
+
+	public InsuranceCarDetailDto toInsuranceCarDetailDto() {
+		return InsuranceCarDetailDto.builder()
+				.id(this.getId())
+				.insuranceType(this.getInsuranceType())
+				.insuranceDetailList(this.getInsuranceDetailList().stream().map(e->(CarDetail)e).map(CarDetail::toDto).toList())
 				.build();
 	}
 
 	public InsuranceGuaranteeDto toInsuranceGuaranteeDto() {
 		return InsuranceGuaranteeDto.builder()
-				.id(this.getId())
 				.name(this.getName())
 				.type(this.getInsuranceType())
-				.description(this.getDescription())
 				.contractPeriod(this.getContractPeriod())
 				.paymentPeriod(this.getPaymentPeriod())
-				.guaranteeList(this.getGuaranteeList().stream().map(Guarantee::guaranteeDto).toList())
+				.guaranteeList(this.getGuaranteeList().stream().map(Guarantee::toGuaranteeDto).toList())
 				.build();
 	}
 

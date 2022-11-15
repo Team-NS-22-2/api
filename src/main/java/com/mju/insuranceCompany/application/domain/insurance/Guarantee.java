@@ -31,9 +31,8 @@ public class Guarantee {
 	@JoinColumn(name = "insurance_id")
 	private Insurance insurance;
 
-	public GuaranteeDto guaranteeDto() {
+	public GuaranteeDto toGuaranteeDto() {
 		return GuaranteeDto.builder()
-				.id(this.getId())
 				.name(this.getName())
 				.description(this.getDescription())
 				.amount(this.getGuaranteeAmount())

@@ -13,10 +13,8 @@ import com.mju.insuranceCompany.application.viewlogic.dto.contract.CarContractDt
 import com.mju.insuranceCompany.application.viewlogic.dto.contract.ContractDto;
 import com.mju.insuranceCompany.application.viewlogic.dto.contract.FireContractDto;
 import com.mju.insuranceCompany.application.viewlogic.dto.contract.HealthContractDto;
-import com.mju.insuranceCompany.application.viewlogic.dto.customer.request.CustomerBasicRequestDto;
-import com.mju.insuranceCompany.application.viewlogic.dto.insurance.response.HealthDetailDto;
-import com.mju.insuranceCompany.application.viewlogic.dto.insurance.response.InsuranceDetailDto;
-import com.mju.insuranceCompany.application.viewlogic.dto.insurance.response.InsuranceDto;
+import com.mju.insuranceCompany.application.viewlogic.dto.customer.request.CustomerBasicRequest;
+import com.mju.insuranceCompany.application.viewlogic.dto.customer.response.*;
 import com.mju.insuranceCompany.application.viewlogic.dto.user.UserRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -52,15 +50,17 @@ public class Customer {
 	@OneToMany
 	private List<Complain> complainList;
 
-	public int inquireHealthPremium(String ssn, int riskCount, InsuranceDto insurance){
+	// 변경: Insurance -> InsuranceHealthDetailDto
+	public int inquireHealthPremium(String ssn, int riskCount, InsuranceHealthDetailDto insurance){
 		int premium = 0;
 		int targetAge = CriterionSetUtil.setTargetAge((TargetInfoCalculator.targetAgeCalculator(ssn)));
 		boolean targetSex = TargetInfoCalculator.targetSexCalculator(ssn);
 		boolean riskCriterion = CriterionSetUtil.setRiskCriterion(riskCount);
 
-		List<InsuranceDetailDto> insuranceDetails = insurance.getInsuranceDetailList();
-		for (InsuranceDetailDto insuranceDetail : insuranceDetails) {
-			HealthDetailDto healthDetail = (HealthDetailDto) insuranceDetail;
+		// 변경 : InsuranceDetailDto -> HealthDetailDto
+		List<HealthDetailDto> insuranceDetails = insurance.getInsuranceDetailList();
+		for (HealthDetailDto healthDetail : insuranceDetails) {
+//			HealthDetailDto healthDetail = (HealthDetailDto) insuranceDetail;
 			if (healthDetail.getTargetAge() == targetAge && healthDetail.isTargetSex() == targetSex && (healthDetail.isRiskCriterion()) == riskCriterion) {
 				premium = healthDetail.getPremium();
 				break;
@@ -71,13 +71,15 @@ public class Customer {
 		return premium;
 	}
 
-	public int inquireFirePremium(BuildingType buildingType, Long collateralAmount, Insurance insurance){
+	// 변경 : Insurance -> InsuranceFireDetailDto
+	public int inquireFirePremium(BuildingType buildingType, Long collateralAmount, InsuranceFireDetailDto insurance){
 		int premium = 0;
 		Long collateralAmountCriterion = CriterionSetUtil.setCollateralAmountCriterion(collateralAmount);
 
-		List<InsuranceDetail> insuranceDetails = insurance.getInsuranceDetailList();
-		for (InsuranceDetail insuranceDetail : insuranceDetails) {
-			FireDetail fireDetail = (FireDetail) insuranceDetail;
+		// 변경 : InsuranceDetailDto -> FireDetailDto
+		List<FireDetailDto> insuranceDetails = insurance.getInsuranceDetailList();
+		for (FireDetailDto fireDetail : insuranceDetails) {
+//			FireDetail fireDetail = (FireDetail) insuranceDetail;
 			if (fireDetail.getTargetBuildingType() == buildingType && fireDetail.getCollateralAmountCriterion() == collateralAmountCriterion) {
 				premium = fireDetail.getPremium();
 				break;
@@ -88,14 +90,16 @@ public class Customer {
 		return premium;
 	}
 
-	public int inquireCarPremium(String ssn, Long value, Insurance insurance){
+	// 변경 : Insurance -> InsuranceCarDetailDto
+	public int inquireCarPremium(String ssn, Long value, InsuranceCarDetailDto insurance){
 		int premium = 0;
 		int targetAge = CriterionSetUtil.setTargetAge(TargetInfoCalculator.targetAgeCalculator(ssn));
 		Long valueCriterion = CriterionSetUtil.setValueCriterion(value);
 
-		List<InsuranceDetail> insuranceDetails = insurance.getInsuranceDetailList();
-		for (InsuranceDetail insuranceDetail : insuranceDetails) {
-			CarDetail carDetail = (CarDetail) insuranceDetail;
+		// 변경 : InsuranceDetailDto -> CarDetailDto
+		List<CarDetailDto> insuranceDetails = insurance.getInsuranceDetailList();
+		for (CarDetailDto carDetail : insuranceDetails) {
+//			CarDetail carDetail = (CarDetail) insuranceDetail;
 			if (carDetail.getTargetAge() == targetAge && carDetail.getValueCriterion() == valueCriterion) {
 				premium = carDetail.getPremium();
 				break;
@@ -106,7 +110,7 @@ public class Customer {
 		return premium;
 	}
 
-	public Customer registerCustomer(CustomerBasicRequestDto customerDto) {
+	public Customer registerCustomer(CustomerBasicRequest customerDto) {
 		return Customer.builder()
 				.name(customerDto.getName())
 				.ssn(customerDto.getSsn())
