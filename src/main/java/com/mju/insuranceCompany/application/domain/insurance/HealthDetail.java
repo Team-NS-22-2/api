@@ -4,6 +4,7 @@ package com.mju.insuranceCompany.application.domain.insurance;
 import com.mju.insuranceCompany.application.viewlogic.dto.customer.response.HealthDetailDto;
 import lombok.*;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.PrimaryKeyJoinColumn;
 
@@ -22,7 +23,9 @@ import javax.persistence.PrimaryKeyJoinColumn;
 public class HealthDetail extends InsuranceDetail {
 
 	private int targetAge;
+	@Column(columnDefinition = "TINYINT", length=1)
 	private boolean targetSex;
+	@Column(columnDefinition = "TINYINT", length=1)
 	private boolean riskCriterion;
 
 }

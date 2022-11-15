@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 
 /**
@@ -20,11 +21,17 @@ public class HealthContract extends Contract{
 
 	private int height;
 	private int weight;
+	@Column(columnDefinition = "TINYINT", length=1)
 	private boolean isDrinking;
+	@Column(columnDefinition = "TINYINT", length=1)
 	private boolean isSmoking;
+	@Column(columnDefinition = "TINYINT", length=1)
 	private boolean isDriving;
+	@Column(columnDefinition = "TINYINT", length=1)
 	private boolean isDangerActivity;
+	@Column(columnDefinition = "TINYINT", length=1)
 	private boolean isHavingDisease;
+	@Column(columnDefinition = "TINYINT", length=1)
 	private boolean isTakingDrug;
 	private String diseaseDetail;
 

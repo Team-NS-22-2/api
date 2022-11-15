@@ -3,6 +3,8 @@ package com.mju.insuranceCompany.application.viewlogic.dto.contract;
 import com.mju.insuranceCompany.application.domain.contract.BuildingType;
 import lombok.*;
 
+import javax.persistence.Column;
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor

@@ -3,11 +3,13 @@ package com.mju.insuranceCompany.application.repository;
 import com.mju.insuranceCompany.application.domain.insurance.HealthDetail;
 import com.mju.insuranceCompany.application.domain.insurance.Insurance;
 import com.mju.insuranceCompany.application.domain.insurance.InsuranceDetail;
+import com.mju.insuranceCompany.application.domain.insurance.InsuranceType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface InsuranceRepository extends JpaRepository<Insurance, Integer> {
 
@@ -31,6 +33,11 @@ public interface InsuranceRepository extends JpaRepository<Insurance, Integer> {
                     "where i.id = :id"
     )
     List<InsuranceDetail> findCarDetailsByInsuranceId(@Param("id") Integer id);
+
+    @Query(
+            "select i.insuranceType from Insurance i where i.id = :id"
+    )
+    Optional<InsuranceType> findInsuranceTypeByInsuranceId(@Param("id") Integer id);
 
 
 }

@@ -122,9 +122,9 @@ public class Customer {
 				.build();
 	}
 
-	public Contract registerContract(Customer customer, ContractDto contractDto, Insurance insurance) {
+	public Contract registerContract(Customer customer, ContractDto contractDto, int insuranceId, InsuranceType insuranceType) {
 		Contract contract = null;
-		switch (insurance.getInsuranceType()){
+		switch (insuranceType){
 			case HEALTH -> {
 				HealthContract healthContract = HealthContract.builder()
 						.height(((HealthContractDto) contractDto).getHeight())
@@ -137,7 +137,7 @@ public class Customer {
 						.isTakingDrug(((HealthContractDto) contractDto).isTakingDrug())
 						.diseaseDetail(((HealthContractDto) contractDto).getDiseaseDetail())
 						.build();
-				healthContract.setInsuranceId(insurance.getId())
+				healthContract.setInsuranceId(insuranceId)
 						.setCustomerId(customer.getId())
 						.setPremium(contractDto.getPremium())
 						.setConditionOfUw(ConditionOfUw.WAIT);
@@ -154,7 +154,7 @@ public class Customer {
 						.isActualResidence(((FireContractDto) contractDto).isActualResidence())
 						.isSelfOwned(((FireContractDto) contractDto).isSelfOwned())
 						.build();
-				fireContract.setInsuranceId(insurance.getId())
+				fireContract.setInsuranceId(insuranceId)
 						.setCustomerId(customer.getId())
 						.setPremium(contractDto.getPremium())
 						.setConditionOfUw(ConditionOfUw.WAIT);
@@ -171,7 +171,7 @@ public class Customer {
 						.modelYear(((CarContractDto) contractDto).getModelYear())
 						.value(((CarContractDto) contractDto).getValue())
 						.build();
-				carContract.setInsuranceId(insurance.getId())
+				carContract.setInsuranceId(insuranceId)
 						.setCustomerId(customer.getId())
 						.setPremium(contractDto.getPremium())
 						.setConditionOfUw(ConditionOfUw.WAIT);

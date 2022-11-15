@@ -1,8 +1,6 @@
 package com.mju.insuranceCompany.application.viewlogic.controller;
 
-import com.mju.insuranceCompany.application.viewlogic.dto.customer.request.InquireCarPremiumRequest;
-import com.mju.insuranceCompany.application.viewlogic.dto.customer.request.InquireFirePremiumRequest;
-import com.mju.insuranceCompany.application.viewlogic.dto.customer.request.InquireHealthPremiumRequest;
+import com.mju.insuranceCompany.application.viewlogic.dto.customer.request.*;
 import com.mju.insuranceCompany.application.viewlogic.dto.customer.response.InquirePremiumResponse;
 import com.mju.insuranceCompany.application.viewlogic.service.CustomerService;
 import lombok.RequiredArgsConstructor;
@@ -32,14 +30,24 @@ public class CustomerController {
     }
 
 //    // /register-health/{insId}
-//    @PostMapping("/register-health/{insId}")
-//    public ResponseEntity registerHealthContract(@PathVariable int insId) {
-//
-//    }
-//
-//    // /register-fire/{insId}
-//
-//    // /register-car/{insId}
+    @PostMapping("/register-health/{insId}")
+    public ResponseEntity registerHealthContract(@PathVariable int insId, @RequestBody RegisterHealthContractRequest request) {
+        service.registerHealthContract(insId, request);
+        return ResponseEntity.noContent().build();
+    }
 
+//    // /register-fire/{insId}
+    @PostMapping("/register-fire/{insId}")
+    public ResponseEntity registerFireContract(@PathVariable int insId, @RequestBody RegisterFireContractRequest request) {
+        service.registerFireContract(insId, request);
+        return ResponseEntity.noContent().build();
+    }
+
+//    // /register-car/{insId}
+    @PostMapping("/register-car/{insId}")
+    public ResponseEntity registerCarContract(@PathVariable int insId, @RequestBody RegisterCarContractRequest request) {
+        service.registerCarContract(insId, request);
+        return ResponseEntity.noContent().build();
+    }
 
 }

@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import java.time.format.DateTimeFormatter;
 
@@ -23,6 +24,7 @@ public class CarAccident extends Accident {
 
 	private String carNo;
 	private int errorRate;
+	@Column(columnDefinition = "TINYINT", length=1)
 	private boolean isRequestOnSite; // 현장 출동 요청
 	private String opposingDriverPhone;
 	private String placeAddress;
