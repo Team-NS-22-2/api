@@ -1,4 +1,4 @@
-package com.mju.insuranceCompany.application.viewlogic.dto.customer.response;
+package com.mju.insuranceCompany.application.viewlogic.dto.customer.dto;
 
 import com.mju.insuranceCompany.application.domain.insurance.InsuranceType;
 import lombok.Builder;
@@ -8,8 +8,8 @@ import java.util.List;
 
 @Data
 @Builder
-public class InsuranceHealthDetailDto {
+public class InsuranceFireDetailDto {
     private int id;
     private InsuranceType insuranceType;
-    private List<HealthDetailDto> insuranceDetailList;
+    private List<FireDetailDto> insuranceDetailList;
 }

@@ -1,7 +1,7 @@
 package com.mju.insuranceCompany.application.domain.insurance;
 
-import com.mju.insuranceCompany.application.viewlogic.dto.insurance.response.InsuranceGuaranteeDto;
-import com.mju.insuranceCompany.application.viewlogic.dto.insurance.response.InsuranceListDto;
+import com.mju.insuranceCompany.application.viewlogic.dto.insurance.response.InsuranceGuaranteeResponse;
+import com.mju.insuranceCompany.application.viewlogic.dto.insurance.dto.InsuranceListDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -33,13 +33,13 @@ public class Insurance {
 	private int paymentPeriod;
 	@Enumerated(value = EnumType.STRING)
 	private InsuranceType insuranceType;
-	@OneToMany(mappedBy = "insurance")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "insurance")
 	private List<Guarantee> guaranteeList;
-	@OneToMany(mappedBy = "insurance")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "insurance")
 	private List<InsuranceDetail> insuranceDetailList;
-
+//	@OneToOne(fetch = FetchType.LAZY, mappedBy = "insuranceId")
 //	private DevelopInfo developInfo;
-//	@OneToOne
+//	@OneToOne(fetch = FetchType.LAZY, mappedBy = "insuranceId")
 //	private SalesAuthorizationFile salesAuthorizationFile;
 
 	public InsuranceListDto toInsuranceListDto() {
@@ -50,8 +50,8 @@ public class Insurance {
 				.build();
 	}
 
-	public InsuranceGuaranteeDto toInsuranceGuaranteeDto() {
-		return InsuranceGuaranteeDto.builder()
+	public InsuranceGuaranteeResponse toInsuranceGuaranteeDto() {
+		return InsuranceGuaranteeResponse.builder()
 				.name(this.getName())
 				.type(this.getInsuranceType())
 				.contractPeriod(this.getContractPeriod())

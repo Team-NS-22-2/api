@@ -2,11 +2,9 @@ package com.mju.insuranceCompany.application.viewlogic.service;
 
 import com.mju.insuranceCompany.application.login.User;
 import com.mju.insuranceCompany.application.repository.UserRepository;
-import com.mju.insuranceCompany.application.viewlogic.dto.user.UserSignUpRequest;
+import com.mju.insuranceCompany.application.viewlogic.dto.user.request.UserSignUpRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor

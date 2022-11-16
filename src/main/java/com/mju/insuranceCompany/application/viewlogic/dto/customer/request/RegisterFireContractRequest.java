@@ -1,6 +1,6 @@
 package com.mju.insuranceCompany.application.viewlogic.dto.customer.request;
 
-import com.mju.insuranceCompany.application.viewlogic.dto.contract.FireContractDto;
+import com.mju.insuranceCompany.application.viewlogic.dto.contract.dto.FireContractDto;
 import lombok.Data;
 
 @Data

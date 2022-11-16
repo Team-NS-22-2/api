@@ -2,7 +2,6 @@ package com.mju.insuranceCompany.application.domain.insurance;
 
 
 import com.mju.insuranceCompany.application.domain.contract.BuildingType;
-import com.mju.insuranceCompany.application.viewlogic.dto.customer.response.FireDetailDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

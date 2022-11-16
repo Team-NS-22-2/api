@@ -1,6 +1,6 @@
 package com.mju.insuranceCompany.application.viewlogic.controller;
 
-import com.mju.insuranceCompany.application.viewlogic.dto.user.UserSignUpRequest;
+import com.mju.insuranceCompany.application.viewlogic.dto.user.request.UserSignUpRequest;
 import com.mju.insuranceCompany.application.viewlogic.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

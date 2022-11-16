@@ -1,7 +1,7 @@
 package com.mju.insuranceCompany.application.domain.insurance;
 
 
-import com.mju.insuranceCompany.application.viewlogic.dto.insurance.response.GuaranteeDto;
+import com.mju.insuranceCompany.application.viewlogic.dto.insurance.dto.GuaranteeDto;
 import lombok.*;
 
 import javax.persistence.*;

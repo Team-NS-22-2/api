@@ -1,7 +1,6 @@
 package com.mju.insuranceCompany.application.domain.insurance;
 
 
-import com.mju.insuranceCompany.application.viewlogic.dto.customer.response.HealthDetailDto;
 import lombok.*;
 
 import javax.persistence.Column;

@@ -1,4 +1,4 @@
-package com.mju.insuranceCompany.application.viewlogic.dto.customer.response;
+package com.mju.insuranceCompany.application.viewlogic.dto.customer.dto;
 
 import lombok.Builder;
 import lombok.EqualsAndHashCode;

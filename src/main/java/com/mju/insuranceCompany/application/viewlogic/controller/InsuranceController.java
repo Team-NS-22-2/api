@@ -1,7 +1,7 @@
 package com.mju.insuranceCompany.application.viewlogic.controller;
 
-import com.mju.insuranceCompany.application.viewlogic.dto.insurance.response.InsuranceListDto;
-import com.mju.insuranceCompany.application.viewlogic.dto.insurance.response.InsuranceGuaranteeDto;
+import com.mju.insuranceCompany.application.viewlogic.dto.insurance.dto.InsuranceListDto;
+import com.mju.insuranceCompany.application.viewlogic.dto.insurance.response.InsuranceGuaranteeResponse;
 import com.mju.insuranceCompany.application.viewlogic.service.InsuranceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,12 +21,11 @@ public class InsuranceController {
 
     @GetMapping("/all")
     public ResponseEntity<List<InsuranceListDto>> getInsuranceList() {
-        List<InsuranceListDto> list = insuranceService.getAllInsuranceList();
-        return ResponseEntity.ok(list);
+        return ResponseEntity.ok(insuranceService.getAllInsuranceList());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<InsuranceGuaranteeDto> getGuaranteeById(@PathVariable int id) {
+    public ResponseEntity<InsuranceGuaranteeResponse> getGuaranteeById(@PathVariable int id) {
         return ResponseEntity.ok(insuranceService.getInsuranceGuaranteeById(id));
     }
 

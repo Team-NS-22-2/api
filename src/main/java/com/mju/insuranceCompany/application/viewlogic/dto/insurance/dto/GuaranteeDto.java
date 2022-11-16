@@ -1,4 +1,4 @@
-package com.mju.insuranceCompany.application.viewlogic.dto.insurance.response;
+package com.mju.insuranceCompany.application.viewlogic.dto.insurance.dto;
 
 import lombok.Builder;
 import lombok.Data;

@@ -1,9 +1,7 @@
-package com.mju.insuranceCompany.application.viewlogic.dto.contract;
+package com.mju.insuranceCompany.application.viewlogic.dto.contract.dto;
 
 import com.mju.insuranceCompany.application.domain.contract.BuildingType;
 import lombok.*;
-
-import javax.persistence.Column;
 
 @Getter
 @NoArgsConstructor

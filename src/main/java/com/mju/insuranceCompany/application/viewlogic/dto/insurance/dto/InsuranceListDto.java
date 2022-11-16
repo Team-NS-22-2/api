@@ -1,4 +1,4 @@
-package com.mju.insuranceCompany.application.viewlogic.dto.insurance.response;
+package com.mju.insuranceCompany.application.viewlogic.dto.insurance.dto;
 
 
 import com.mju.insuranceCompany.application.domain.insurance.InsuranceType;

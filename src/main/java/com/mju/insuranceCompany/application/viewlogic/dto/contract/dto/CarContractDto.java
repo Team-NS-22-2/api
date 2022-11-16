@@ -1,4 +1,4 @@
-package com.mju.insuranceCompany.application.viewlogic.dto.contract;
+package com.mju.insuranceCompany.application.viewlogic.dto.contract.dto;
 
 import com.mju.insuranceCompany.application.domain.contract.CarType;
 import lombok.*;

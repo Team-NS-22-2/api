@@ -1,11 +1,13 @@
 package com.mju.insuranceCompany.application.domain.employee;
 
+import com.mju.insuranceCompany.application.domain.insurance.Insurance;
+import com.mju.insuranceCompany.application.domain.insurance.InsuranceType;
+import com.mju.insuranceCompany.application.domain.insurance.SalesAuthorizationFile;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Objects;
 
 /**
@@ -20,14 +22,18 @@ import java.util.Objects;
 public class Employee {
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "employee_id")
 	private int id;
 	private String name;
 	private String phone;
+	@Enumerated(value = EnumType.STRING)
 	private Department department;
+	@Enumerated(value = EnumType.STRING)
 	private Position position;
 
-	/*
 
+/*
 	public void develop(InsuranceType type, DtoBasicInfo basicInfo, ArrayList<DtoGuarantee> guaranteeInfoList, ArrayList<DtoTypeInfo> typeInfoList){
 		Insurance insurance = Insurance.builder()
 				.name(basicInfo.getName())
@@ -43,7 +49,7 @@ public class Employee {
 			case CAR -> developCar(insurance, typeInfoList);
 			case FIRE -> developFire(insurance, typeInfoList);
 		}
-		new InsuranceDaoImpl().create(insurance);
+//		new InsuranceDaoImpl().create(insurance);
 	}
 
 	private ArrayList<Guarantee> developGuarantee(ArrayList<DtoGuarantee> guaranteeInfoList) {
@@ -60,7 +66,8 @@ public class Employee {
 	private DevelopInfo developDevInfo() {
 		return DevelopInfo.builder().employeeId(this.id)
 				.developDate(LocalDate.now())
-				.salesAuthorizationState(SalesAuthorizationState.WAIT).build();
+				.salesAuthorizationState(SalesAuthorizationState.WAIT)
+				.build();
 	}
 
 	private Insurance developHealth(Insurance insurance, ArrayList<DtoTypeInfo> typeInfoList) {
