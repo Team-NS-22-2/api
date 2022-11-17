@@ -215,5 +215,6 @@ create table user (
 id int primary key not null auto_increment,
 user_id varchar(255) not null,
 password varchar(255) not null,
+type varchar(30) not null,
 role_id int not null
 );
