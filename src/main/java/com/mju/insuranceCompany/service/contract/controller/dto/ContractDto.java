@@ -15,4 +15,5 @@ public class ContractDto {
     private int customerId;
     private int premium;
     private ConditionOfUw conditionOfUw;
+    private int employeeId;
 }

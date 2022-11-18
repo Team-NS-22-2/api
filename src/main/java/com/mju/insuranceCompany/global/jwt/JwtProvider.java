@@ -4,21 +4,25 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Date;
 
+@Component
+@RequiredArgsConstructor
+@PropertySource("classpath:security.properties")
 public class JwtProvider {
 
     @Value("${jwt.secretkey}")
     private String secretKey;
-    @Value("${jwt.accessToken}")
-    private long accessTokenExpirationTime;
-    @Value("${jwt.refreshToken}")
-    private long refreshTokenExpirationTime;
+    private final long accessTokenExpirationTime = 1000 * 60 * 60 * 24L;
+    private final long refreshTokenExpirationTime = 1000 * 60 * 60 * 24 * 30L;
 
     @PostConstruct // init() 메소드
     protected void init() {  // secretKey를 Base64형식으로 인코딩함. 인코딩 전후 확인 로깅
@@ -48,7 +52,7 @@ public class JwtProvider {
         return createToken(refreshTokenExpirationTime, email);
     }
 
-    public String getUserEmail(String token) {
+    public String getUserId(String token) {
         return  Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody()
                 .getSubject();
     }

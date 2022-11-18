@@ -1,7 +1,6 @@
 package com.mju.insuranceCompany.global.utility;
 
 import com.mju.insuranceCompany.global.exception.*;
-import com.mju.insuranceCompany.service.global.exception.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;

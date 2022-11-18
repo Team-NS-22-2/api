@@ -1,7 +1,6 @@
 package com.mju.insuranceCompany.global.config;
 
 import com.mju.insuranceCompany.global.jwt.*;
-import com.mju.insuranceCompany.service.global.jwt.*;
 import com.mju.insuranceCompany.service.user.domain.UserType;
 import com.mju.insuranceCompany.service.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +28,6 @@ public class SecurityConfig {
 //    private final RefreshTokenService refreshTokenService;
 
     AuthenticationManager authenticationManager;
-
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {

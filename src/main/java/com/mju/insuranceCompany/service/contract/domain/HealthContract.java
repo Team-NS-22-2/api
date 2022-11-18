@@ -37,7 +37,7 @@ public class HealthContract extends Contract {
     private String diseaseDetail;
 
     public HealthContract(HealthContractDto dto, int customerId) {
-        super(false,  dto.getPremium(), dto.getInsuranceId(), ConditionOfUw.WAIT, customerId, 0);
+        super(false,  dto.getPremium(), dto.getInsuranceId(), ConditionOfUw.WAIT, customerId, dto.getEmployeeId());
         this.height = dto.getHeight();
         this.weight = dto.getWeight();
         this.isDrinking = dto.getIsDrinking();
