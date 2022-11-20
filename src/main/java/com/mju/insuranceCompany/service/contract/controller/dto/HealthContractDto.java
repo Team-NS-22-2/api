@@ -2,7 +2,7 @@ package com.mju.insuranceCompany.service.contract.controller.dto;
 
 import lombok.*;
 
-@Getter
+@Getter @ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)

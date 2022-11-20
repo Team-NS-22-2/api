@@ -17,4 +17,9 @@ class ContractServiceTest {
     void getUwStateOfCustomer() {
         contractService.getUwStateOfCustomer(InsuranceType.HEALTH);
     }
+
+    @Test
+    void getHealthContractOfCustomer() {
+        contractService.getHealthContractOfCustomer(1);
+    }
 }

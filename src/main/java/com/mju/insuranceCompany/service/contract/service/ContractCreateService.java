@@ -12,10 +12,10 @@ import com.mju.insuranceCompany.service.contract.domain.Contract;
 import com.mju.insuranceCompany.service.contract.domain.FireContract;
 import com.mju.insuranceCompany.service.contract.domain.HealthContract;
 import com.mju.insuranceCompany.service.contract.repository.ContractRepository;
-import com.mju.insuranceCompany.service.contract.controller.dto.RegisterCarContractRequest;
+import com.mju.insuranceCompany.service.contract.controller.dto.CustomerCarContractDto;
 import com.mju.insuranceCompany.service.contract.controller.dto.RegisterContractResponse;
-import com.mju.insuranceCompany.service.contract.controller.dto.RegisterFireContractRequest;
-import com.mju.insuranceCompany.service.contract.controller.dto.RegisterHealthContractRequest;
+import com.mju.insuranceCompany.service.contract.controller.dto.CustomerFireContractDto;
+import com.mju.insuranceCompany.service.contract.controller.dto.CustomerHealthContractDto;
 import com.mju.insuranceCompany.service.customer.domain.Customer;
 import com.mju.insuranceCompany.service.customer.repository.CustomerRepository;
 import com.mju.insuranceCompany.service.employee.domain.Employee;
@@ -42,7 +42,7 @@ public class ContractCreateService {
     private final ContractRepository contractRepository;
     private final EmployeeRepository employeeRepository;
 
-    public RegisterContractResponse registerHealthContract(int insId, RegisterHealthContractRequest request) {
+    public RegisterContractResponse registerHealthContract(int insId, CustomerHealthContractDto request) {
         request.setHealthContractDto(   // 판매직원이 보험을 체결할 경우, 직원ID를 주입하기 위함.
                 (HealthContractDto) injectEmployeeIdToContractDto(request.getHealthContractDto(), UserType.SALES));
 
@@ -59,7 +59,7 @@ public class ContractCreateService {
         return RegisterContractResponse.builder().customerId(customer.getId()).build();
     }
 
-    public RegisterContractResponse registerFireContract(int insId, RegisterFireContractRequest request) {
+    public RegisterContractResponse registerFireContract(int insId, CustomerFireContractDto request) {
         request.setFireContractDto(   // 판매직원이 보험을 체결할 경우, 직원ID를 주입하기 위함.
                 (FireContractDto) injectEmployeeIdToContractDto(request.getFireContractDto(), UserType.SALES));
 
@@ -76,7 +76,7 @@ public class ContractCreateService {
         return RegisterContractResponse.builder().customerId(customer.getId()).build();
     }
 
-    public RegisterContractResponse registerCarContract(int insId, RegisterCarContractRequest request) {
+    public RegisterContractResponse registerCarContract(int insId, CustomerCarContractDto request) {
         request.setCarContractDto(   // 판매직원이 보험을 체결할 경우, 직원ID를 주입하기 위함.
                 (CarContractDto) injectEmployeeIdToContractDto(request.getCarContractDto(), UserType.SALES));
 

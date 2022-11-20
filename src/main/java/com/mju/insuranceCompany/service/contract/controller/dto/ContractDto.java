@@ -4,8 +4,7 @@ import com.mju.insuranceCompany.service.contract.domain.ConditionOfUw;
 import lombok.*;
 import lombok.experimental.Accessors;
 
-@Setter
-@Getter
+@Setter @Getter @ToString
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

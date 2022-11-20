@@ -2,7 +2,7 @@ package com.mju.insuranceCompany.service.customer.domain;
 
 
 import com.mju.insuranceCompany.service.accident.domain.complain.Complain;
-import com.mju.insuranceCompany.service.customer.controller.dto.CustomerBasicRequest;
+import com.mju.insuranceCompany.service.customer.controller.dto.CustomerBasicDto;
 import com.mju.insuranceCompany.service.customer.domain.payment.Payment;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -39,7 +39,7 @@ public class Customer {
 	@OneToMany
 	private List<Complain> complainList;
 
-	public Customer(CustomerBasicRequest dto) {
+	public Customer(CustomerBasicDto dto) {
 		name = dto.getName();
 		ssn = dto.getSsn();
 		address = dto.getAddress();
