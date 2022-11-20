@@ -31,6 +31,8 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
+import static com.mju.insuranceCompany.service.user.domain.Users.anonymousUser;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -96,7 +98,8 @@ public class ContractCreateService {
 
 
     private Users getUsers(){
-        return (Users) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser")
+                ? anonymousUser() : (Users) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
     private ContractDto injectEmployeeIdToContractDto(ContractDto dto, UserType employeeType) {
