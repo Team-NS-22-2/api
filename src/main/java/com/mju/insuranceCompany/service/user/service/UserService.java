@@ -26,7 +26,7 @@ public class UserService implements UserDetailsService {
                 .userId(request.getUserId())
                 .password(encodePassword)
                 .roleId(cId)
-                .type(UserType.CUSTOMER)
+                .type(UserType.ROLE_CUSTOMER)
                 .build();
         user = userRepository.save(user);
         return user.getId() > 0;

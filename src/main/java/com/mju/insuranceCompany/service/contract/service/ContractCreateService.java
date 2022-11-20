@@ -44,7 +44,7 @@ public class ContractCreateService {
 
     public RegisterContractResponse registerHealthContract(int insId, RegisterHealthContractRequest request) {
         request.setHealthContractDto(   // 판매직원이 보험을 체결할 경우, 직원ID를 주입하기 위함.
-                (HealthContractDto) injectEmployeeIdToContractDto(request.getHealthContractDto(), UserType.SALES));
+                (HealthContractDto) injectEmployeeIdToContractDto(request.getHealthContractDto(), UserType.ROLE_SALES));
 
         InsuranceType insuranceType = insuranceRepository.findInsuranceTypeByInsuranceId(insId).orElseThrow(NullDataException::new);
         if(insuranceType != InsuranceType.HEALTH) throw new MyInvalidAccessException();
@@ -61,7 +61,7 @@ public class ContractCreateService {
 
     public RegisterContractResponse registerFireContract(int insId, RegisterFireContractRequest request) {
         request.setFireContractDto(   // 판매직원이 보험을 체결할 경우, 직원ID를 주입하기 위함.
-                (FireContractDto) injectEmployeeIdToContractDto(request.getFireContractDto(), UserType.SALES));
+                (FireContractDto) injectEmployeeIdToContractDto(request.getFireContractDto(), UserType.ROLE_SALES));
 
         InsuranceType insuranceType = insuranceRepository.findInsuranceTypeByInsuranceId(insId).orElseThrow(NullDataException::new);
         if(insuranceType != InsuranceType.FIRE) throw new MyInvalidAccessException();
@@ -78,7 +78,7 @@ public class ContractCreateService {
 
     public RegisterContractResponse registerCarContract(int insId, RegisterCarContractRequest request) {
         request.setCarContractDto(   // 판매직원이 보험을 체결할 경우, 직원ID를 주입하기 위함.
-                (CarContractDto) injectEmployeeIdToContractDto(request.getCarContractDto(), UserType.SALES));
+                (CarContractDto) injectEmployeeIdToContractDto(request.getCarContractDto(), UserType.ROLE_SALES));
 
         InsuranceType insuranceType = insuranceRepository.findInsuranceTypeByInsuranceId(insId).orElseThrow(NullDataException::new);
         if(insuranceType != InsuranceType.CAR) throw new MyInvalidAccessException();
