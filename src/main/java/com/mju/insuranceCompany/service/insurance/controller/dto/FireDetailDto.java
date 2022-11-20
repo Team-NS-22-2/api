@@ -1,4 +1,4 @@
-package com.mju.insuranceCompany.service.customer.controller.dto;
+package com.mju.insuranceCompany.service.insurance.controller.dto;
 
 import com.mju.insuranceCompany.service.contract.domain.BuildingType;
 import lombok.Builder;

@@ -23,14 +23,13 @@ public class Contract {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "contract_id")
 	private int id;
-	@Column(columnDefinition = "TINYINT", length=1)
 	private boolean isPublishStock;
-	private int paymentId;
 	private int premium;
 	private String reasonOfUw;
-	private int insuranceId;
 	@Enumerated(value = EnumType.STRING)
 	private ConditionOfUw conditionOfUw;
+	private int paymentId;
+	private int insuranceId;
 	private int customerId;
 	private int employeeId;
 

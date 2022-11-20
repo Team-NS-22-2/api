@@ -17,7 +17,7 @@ public class InsuranceDetail {
     @Column(name = "insurance_detail_id")
     private int id;
     private int premium;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "insurance_id")
     private Insurance insurance;
 

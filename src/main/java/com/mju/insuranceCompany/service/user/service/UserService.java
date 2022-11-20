@@ -1,28 +1,30 @@
 package com.mju.insuranceCompany.service.user.service;
 
-import com.mju.insuranceCompany.service.user.domain.Users;
+import com.mju.insuranceCompany.service.user.controller.dto.UserBasicRequest;
 import com.mju.insuranceCompany.service.user.domain.UserType;
+import com.mju.insuranceCompany.service.user.domain.Users;
 import com.mju.insuranceCompany.service.user.repository.UserRepository;
-import com.mju.insuranceCompany.service.user.controller.dto.UserSignUpRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Arrays;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder encoder;
 
-    public boolean signUp(int cId, UserSignUpRequest request) {
+    public boolean signUp(int cId, UserBasicRequest request) {
+        String encodePassword = encoder.encode(request.getPassword());
         Users user = Users.builder()
                 .userId(request.getUserId())
-                .password(request.getPassword())
+                .password(encodePassword)
                 .roleId(cId)
                 .type(UserType.CUSTOMER)
                 .build();
@@ -30,11 +32,23 @@ public class UserService implements UserDetailsService {
         return user.getId() > 0;
     }
 
+    public void signUpEmployee(int eId, UserBasicRequest request, UserType type) {
+        String encodePassword = encoder.encode(request.getPassword());
+        Users user = Users.builder()
+                .userId(request.getUserId())
+                .password(encodePassword)
+                .roleId(eId)
+                .type(type)
+                .build();
+        userRepository.save(user);
+    }
+
     @Override
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
-        Users user = userRepository.findByUserId(id).orElseThrow();
-        return new org.springframework.security.core.userdetails.
-                User(user.getUserId(), user.getPassword(),
-                Arrays.asList(new SimpleGrantedAuthority(user.getType().name())));
+        return userRepository.findByUserId(id).orElseThrow();
+//        Users user = userRepository.findByUserId(id).orElseThrow();
+//        return new org.springframework.security.core.userdetails.
+//                User(user.getUserId(), user.getPassword(),
+//                List.of(new SimpleGrantedAuthority(user.getType().name())));
     }
 }

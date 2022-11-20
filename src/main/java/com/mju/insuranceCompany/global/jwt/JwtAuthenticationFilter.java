@@ -36,14 +36,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String loginId = jwtProvider.validateToken(token).getSubject();
             log.info("[JwtAuthenticationFilter] - 토큰검증-로그인아이디 = {}",loginId);
             SecurityContextHolder.getContext().setAuthentication(getAuthentication(loginId));
-
         }
         log.info("[JwtAuthenticationFilter] - filter 끝");
         filterChain.doFilter(request,response);
     }
     private UsernamePasswordAuthenticationToken getAuthentication(String loginId) {
         UserDetails users = userService.loadUserByUsername(loginId);
-        return new UsernamePasswordAuthenticationToken(users,users.getPassword(),users.getAuthorities());
-
+        return new UsernamePasswordAuthenticationToken(users, users.getPassword(), users.getAuthorities());
     }
 }

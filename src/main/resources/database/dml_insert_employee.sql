@@ -11,17 +11,17 @@ INSERT INTO employee (name, phone, department, position) VALUES ('UW팀원', '01
 INSERT INTO employee (name, phone, department, position) VALUES ('보상팀원', '010-3141-2312', 'COMP', 'MEMBER');
 INSERT INTO employee (name, phone, department, position) VALUES ('영업팀원', '010-6534-5135', 'SALES', 'MEMBER');
 
-INSERT INTO user (user_id, password, role_id) VALUES ('dev', '1234', 1);
-INSERT INTO user (user_id, password, role_id) VALUES ('uw', '1234', 2);
-INSERT INTO user (user_id, password, role_id) VALUES ('comp', '1234', 3);
-INSERT INTO user (user_id, password, role_id) VALUES ('sales', '1234', 4);
-INSERT INTO user (user_id, password, role_id) VALUES ('devmanager', '1234', 5);
-INSERT INTO user (user_id, password, role_id) VALUES ('uwmanager', '1234', 6);
-INSERT INTO user (user_id, password, role_id) VALUES ('compmanager', '1234', 7);
-INSERT INTO user (user_id, password, role_id) VALUES ('salesmanager', '1234', 8);
-INSERT INTO user (user_id, password, role_id) VALUES ('devmember', '1234', 9);
-INSERT INTO user (user_id, password, role_id) VALUES ('uwmember', '1234', 10);
-INSERT INTO user (user_id, password, role_id) VALUES ('compmember', '1234', 11);
-INSERT INTO user (user_id, password, role_id) VALUES ('salesmember', '1234', 12);
+INSERT INTO user (user_id, password, type, role_id) VALUES ('dev', '1234', 'DEV', 1);
+INSERT INTO user (user_id, password, type, role_id) VALUES ('uw', '1234', 'UW', 2);
+INSERT INTO user (user_id, password, type, role_id) VALUES ('comp', '1234', 'COMP', 3);
+INSERT INTO user (user_id, password, type, role_id) VALUES ('sales', '1234', 'SALES', 4);
+INSERT INTO user (user_id, password, type, role_id) VALUES ('devmanager', '1234', 'DEV', 5);
+INSERT INTO user (user_id, password, type, role_id) VALUES ('uwmanager', '1234', 'UW', 6);
+INSERT INTO user (user_id, password, type, role_id) VALUES ('compmanager', '1234', 'COMP', 7);
+INSERT INTO user (user_id, password, type, role_id) VALUES ('salesmanager', '1234', 'SALES', 8);
+INSERT INTO user (user_id, password, type, role_id) VALUES ('devmember', '1234', 'DEV', 9);
+INSERT INTO user (user_id, password, type, role_id) VALUES ('uwmember', '1234', 'UW', 10);
+INSERT INTO user (user_id, password, type, role_id) VALUES ('compmember', '1234', 'COMP', 11);
+INSERT INTO user (user_id, password, type, role_id) VALUES ('salesmember', '1234', 'SALES', 12);
 
 

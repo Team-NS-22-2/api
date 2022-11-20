@@ -1,4 +1,4 @@
-package com.mju.insuranceCompany.service.customer.controller.dto;
+package com.mju.insuranceCompany.service.insurance.controller.dto;
 
 import com.mju.insuranceCompany.service.insurance.domain.InsuranceType;
 import lombok.Builder;
@@ -8,8 +8,8 @@ import java.util.List;
 
 @Data
 @Builder
-public class InsuranceCarDetailDto {
+public class InsuranceHealthDetailDto {
     private int id;
     private InsuranceType insuranceType;
-    private List<CarDetailDto> insuranceDetailList;
+    private List<HealthDetailDto> insuranceDetailList;
 }

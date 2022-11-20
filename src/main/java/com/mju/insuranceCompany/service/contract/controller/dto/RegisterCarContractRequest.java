@@ -1,6 +1,6 @@
-package com.mju.insuranceCompany.service.customer.controller.dto;
+package com.mju.insuranceCompany.service.contract.controller.dto;
 
-import com.mju.insuranceCompany.service.contract.controller.dto.CarContractDto;
+import com.mju.insuranceCompany.service.customer.controller.dto.CustomerBasicRequest;
 import lombok.Data;
 
 @Data

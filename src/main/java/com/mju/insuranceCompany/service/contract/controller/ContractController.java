@@ -1,9 +1,9 @@
 package com.mju.insuranceCompany.service.contract.controller;
 
-import com.mju.insuranceCompany.service.customer.controller.dto.RegisterCarContractRequest;
-import com.mju.insuranceCompany.service.customer.controller.dto.RegisterFireContractRequest;
-import com.mju.insuranceCompany.service.customer.controller.dto.RegisterHealthContractRequest;
-import com.mju.insuranceCompany.service.customer.controller.dto.RegisterContractResponse;
+import com.mju.insuranceCompany.service.contract.controller.dto.RegisterCarContractRequest;
+import com.mju.insuranceCompany.service.contract.controller.dto.RegisterFireContractRequest;
+import com.mju.insuranceCompany.service.contract.controller.dto.RegisterHealthContractRequest;
+import com.mju.insuranceCompany.service.contract.controller.dto.RegisterContractResponse;
 import com.mju.insuranceCompany.service.contract.service.ContractCreateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

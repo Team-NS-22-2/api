@@ -1,7 +1,7 @@
 package com.mju.insuranceCompany.global.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mju.insuranceCompany.service.user.controller.dto.UserSignUpRequest;
+import com.mju.insuranceCompany.service.user.controller.dto.UserBasicRequest;
 import com.mju.insuranceCompany.service.user.domain.Users;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,9 +31,9 @@ public class JwtAuthorizationFilter extends UsernamePasswordAuthenticationFilter
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         log.info("[JWTAuthorizationFilter] - attemptAuthentication 시작");
         ObjectMapper mapper = new ObjectMapper();
-        UserSignUpRequest dto;
+        UserBasicRequest dto;
         try {
-            dto = mapper.readValue(request.getInputStream(),UserSignUpRequest.class);
+            dto = mapper.readValue(request.getInputStream(), UserBasicRequest.class);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -51,7 +51,7 @@ public class JwtAuthorizationFilter extends UsernamePasswordAuthenticationFilter
         Users user = (Users) authResult.getPrincipal();
         log.info("[JWTAuthorizationFilter] - User = {}", user);
         String accessToken = jwtProvider.createAccessToken(user.getUserId());
-        String refreshToken = jwtProvider.createRefreshToken(user.getUserId());
+//        String refreshToken = jwtProvider.createRefreshToken(user.getUserId());
 
 //        TokenResponseDto dto = TokenResponseDto.builder()
 //                .accessToken(accessToken)
@@ -59,7 +59,8 @@ public class JwtAuthorizationFilter extends UsernamePasswordAuthenticationFilter
 //                .build();
 //        refreshTokenService.createToken(user.getUsername(),refreshToken);
 
-        response.addHeader("Access-Token",accessToken);
+
+        response.addHeader("Access-Token", "Bearer "+accessToken);
 //        response.addHeader("Refresh-Token",dto.getRefreshToken());
         response.setStatus(201);
 

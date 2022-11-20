@@ -2,8 +2,8 @@ package com.mju.insuranceCompany.service.customer.domain;
 
 
 import com.mju.insuranceCompany.service.accident.domain.complain.Complain;
-import com.mju.insuranceCompany.service.customer.domain.payment.Payment;
 import com.mju.insuranceCompany.service.customer.controller.dto.CustomerBasicRequest;
+import com.mju.insuranceCompany.service.customer.domain.payment.Payment;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,6 +26,7 @@ public class Customer {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "customer_id")
 	private int id;
 	private String name;
 	private String ssn;

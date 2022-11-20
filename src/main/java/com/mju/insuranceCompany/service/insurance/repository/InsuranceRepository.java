@@ -38,5 +38,6 @@ public interface InsuranceRepository extends JpaRepository<Insurance, Integer> {
     )
     Optional<InsuranceType> findInsuranceTypeByInsuranceId(@Param("id") Integer id);
 
+    List<Insurance> findInsuranceIdByInsuranceType(InsuranceType insuranceType);
 
 }

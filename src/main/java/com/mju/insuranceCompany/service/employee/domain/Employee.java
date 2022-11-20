@@ -29,7 +29,6 @@ public class Employee {
 	@Enumerated(value = EnumType.STRING)
 	private Position position;
 
-
 /*
 	public void develop(InsuranceType type, DtoBasicInfo basicInfo, ArrayList<DtoGuarantee> guaranteeInfoList, ArrayList<DtoTypeInfo> typeInfoList){
 		Insurance insurance = Insurance.builder()

@@ -1,15 +1,12 @@
 package com.mju.insuranceCompany.service.insurance.domain;
 
-import com.mju.insuranceCompany.service.contract.domain.BuildingType;
 import com.mju.insuranceCompany.global.exception.NoResultantException;
 import com.mju.insuranceCompany.global.utility.CriterionSetUtil;
 import com.mju.insuranceCompany.global.utility.TargetInfoCalculator;
+import com.mju.insuranceCompany.service.contract.domain.BuildingType;
 import com.mju.insuranceCompany.service.insurance.controller.dto.InsuranceGuaranteeResponse;
 import com.mju.insuranceCompany.service.insurance.controller.dto.InsuranceListDto;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
@@ -37,9 +34,9 @@ public class Insurance {
 	private int paymentPeriod;
 	@Enumerated(value = EnumType.STRING)
 	private InsuranceType insuranceType;
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "insurance")
+	@OneToMany(mappedBy = "insurance")
 	private List<Guarantee> guaranteeList;
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "insurance")
+	@OneToMany(mappedBy = "insurance")
 	private List<InsuranceDetail> insuranceDetailList;
 //	@OneToOne(fetch = FetchType.LAZY, mappedBy = "insuranceId")
 //	private DevelopInfo developInfo;

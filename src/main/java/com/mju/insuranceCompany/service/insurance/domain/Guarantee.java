@@ -27,7 +27,7 @@ public class Guarantee {
 	private String description;
 	@Column(name = "amount")
 	private Long guaranteeAmount;
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "insurance_id")
 	private Insurance insurance;
 
