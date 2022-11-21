@@ -4,7 +4,7 @@ import com.mju.insuranceCompany.service.contract.domain.BuildingType;
 import com.mju.insuranceCompany.service.contract.domain.FireContract;
 import lombok.*;
 
-@Getter
+@Getter @ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)

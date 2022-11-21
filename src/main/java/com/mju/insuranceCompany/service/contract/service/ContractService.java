@@ -24,7 +24,6 @@ public class ContractService {
         return contractRepository.findConditionOfUwOfCustomer(insuranceType);
     }
 
-
     public CustomerHealthContractDto getHealthContractOfCustomer(int customerId) {
         Customer customer = customerRepository.findById(customerId).orElseThrow();
         HealthContract healthContract = contractRepository.findHealthContractByCustomerId(customerId).orElseThrow();
@@ -58,7 +57,6 @@ public class ContractService {
     public void underwriting(int contractId, String reasonOfUw, ConditionOfUw conditionOfUw) {
         Contract contract = contractRepository.findById(contractId).orElseThrow();
         contract.underwriting(reasonOfUw, conditionOfUw);
-        contractRepository.save(contract);
     }
 
 }

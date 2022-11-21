@@ -1,4 +1,4 @@
-package com.mju.insuranceCompany.service.employee.controller;
+package com.mju.insuranceCompany.service.employee.controller.dto;
 
 import com.mju.insuranceCompany.service.contract.domain.ConditionOfUw;
 import lombok.Data;

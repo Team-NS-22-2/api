@@ -49,7 +49,6 @@ public class JwtAuthorizationFilter extends UsernamePasswordAuthenticationFilter
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         log.info("[JWTAuthorizationFilter] - successfulAuthentication 시작");
         Users user = (Users) authResult.getPrincipal();
-        log.info("[JWTAuthorizationFilter] - User = {}", user);
         String accessToken = jwtProvider.createAccessToken(user.getUserId());
 //        String refreshToken = jwtProvider.createRefreshToken(user.getUserId());
 
