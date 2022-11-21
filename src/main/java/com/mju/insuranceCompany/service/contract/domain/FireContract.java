@@ -11,11 +11,11 @@ import javax.persistence.Entity;
  * @version 1.0
  * @created 09-5-2022 오전 2:42:23
  */
+@Setter @Getter @ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Builder
-@ToString
 public class FireContract extends Contract{
 
 	private int buildingArea;

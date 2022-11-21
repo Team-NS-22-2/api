@@ -1,8 +1,7 @@
 package com.mju.insuranceCompany.service.contract.service;
 
-import com.mju.insuranceCompany.service.contract.controller.dto.CustomerHealthContractDto;
-import com.mju.insuranceCompany.service.contract.controller.dto.HealthContractDto;
-import com.mju.insuranceCompany.service.contract.domain.HealthContract;
+import com.mju.insuranceCompany.service.contract.controller.dto.*;
+import com.mju.insuranceCompany.service.contract.domain.*;
 import com.mju.insuranceCompany.service.contract.repository.ContractRepository;
 import com.mju.insuranceCompany.service.customer.controller.dto.CustomerBasicDto;
 import com.mju.insuranceCompany.service.customer.domain.Customer;
@@ -26,32 +25,40 @@ public class ContractService {
     }
 
 
-    public void getHealthContractOfCustomer(int cId) {
-        Customer customer = customerRepository.findById(cId).orElseThrow();
-        HealthContract healthContract = contractRepository.findHealthContractByCustomerId(cId).orElseThrow();
+    public CustomerHealthContractDto getHealthContractOfCustomer(int customerId) {
+        Customer customer = customerRepository.findById(customerId).orElseThrow();
+        HealthContract healthContract = contractRepository.findHealthContractByCustomerId(customerId).orElseThrow();
 
-        CustomerHealthContractDto dto = new CustomerHealthContractDto(
-                new CustomerBasicDto(
-                        customer.getName(),
-                        customer.getSsn(),
-                        customer.getPhone(),
-                        customer.getAddress(),
-                        customer.getEmail(),
-                        customer.getJob()
-                ),
-                new HealthContractDto(
-                        healthContract.getHeight(),
-                        healthContract.getWeight(),
-                        healthContract.isDrinking(),
-                        healthContract.isSmoking(),
-                        healthContract.isDriving(),
-                        healthContract.isDangerActivity(),
-                        healthContract.isHavingDisease(),
-                        healthContract.isTakingDrug(),
-                        healthContract.getDiseaseDetail()
-                )
+        return new CustomerHealthContractDto(
+                CustomerBasicDto.toDtoFromEntity(customer),
+                HealthContractDto.toDtoFromEntity(healthContract)
         );
-
-        System.out.println(dto);
     }
+
+    public CustomerFireContractDto getFireContractOfCustomer(int customerId) {
+        Customer customer = customerRepository.findById(customerId).orElseThrow();
+        FireContract fireContract = contractRepository.findFireContractByCustomerId(customerId).orElseThrow();
+
+        return new CustomerFireContractDto(
+                CustomerBasicDto.toDtoFromEntity(customer),
+                FireContractDto.toDtoFromEntity(fireContract)
+        );
+    }
+
+    public CustomerCarContractDto getCarContractOfCustomer(int customerId) {
+        Customer customer = customerRepository.findById(customerId).orElseThrow();
+        CarContract carContract = contractRepository.findCarContractByCustomerId(customerId).orElseThrow();
+
+        return new CustomerCarContractDto(
+                CustomerBasicDto.toDtoFromEntity(customer),
+                CarContractDto.toDtoFromEntity(carContract)
+        );
+    }
+
+    public void underwriting(int contractId, String reasonOfUw, ConditionOfUw conditionOfUw) {
+        Contract contract = contractRepository.findById(contractId).orElseThrow();
+        contract.underwriting(reasonOfUw, conditionOfUw);
+        contractRepository.save(contract);
+    }
+
 }

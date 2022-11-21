@@ -1,6 +1,8 @@
 package com.mju.insuranceCompany.service.contract.repository;
 
+import com.mju.insuranceCompany.service.contract.domain.CarContract;
 import com.mju.insuranceCompany.service.contract.domain.Contract;
+import com.mju.insuranceCompany.service.contract.domain.FireContract;
 import com.mju.insuranceCompany.service.contract.domain.HealthContract;
 import com.mju.insuranceCompany.service.employee.controller.dto.ConditionOfUwOfCustomerResponse;
 import com.mju.insuranceCompany.service.insurance.domain.InsuranceType;
@@ -20,4 +22,8 @@ public interface ContractRepository extends JpaRepository<Contract, Integer> {
     List<ConditionOfUwOfCustomerResponse> findConditionOfUwOfCustomer(InsuranceType insuranceType);
 
     Optional<HealthContract> findHealthContractByCustomerId(int customerId);
+
+    Optional<FireContract> findFireContractByCustomerId(int customerId);
+
+    Optional<CarContract> findCarContractByCustomerId(int customerId);
 }
