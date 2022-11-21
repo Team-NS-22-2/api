@@ -1,4 +1,4 @@
-package com.mju.insuranceCompany.global.exception.accident;
+package com.mju.insuranceCompany.service.customer.exception;
 
 import com.mju.insuranceCompany.global.exception.ErrorCode;
 import lombok.Getter;
@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
 @Getter @RequiredArgsConstructor
-public enum AccidentErrorCode implements ErrorCode {
+public enum CustomerErrorCode implements ErrorCode {
 
     ;
 

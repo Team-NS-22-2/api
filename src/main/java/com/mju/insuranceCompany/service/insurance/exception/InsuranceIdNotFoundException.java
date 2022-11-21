@@ -1,9 +1,8 @@
-package com.mju.insuranceCompany.global.exception.insurance;
+package com.mju.insuranceCompany.service.insurance.exception;
 
 import com.mju.insuranceCompany.global.exception.MyException;
-import org.springframework.http.HttpStatus;
 
-import static com.mju.insuranceCompany.global.exception.insurance.InsuranceErrorCode.INSURANCE_ID_NOT_FOUND;
+import static com.mju.insuranceCompany.service.insurance.exception.InsuranceErrorCode.INSURANCE_ID_NOT_FOUND;
 
 public class InsuranceIdNotFoundException extends MyException {
     public InsuranceIdNotFoundException() {

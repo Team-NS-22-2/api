@@ -1,6 +1,6 @@
 package com.mju.insuranceCompany.service.user.service;
 
-import com.mju.insuranceCompany.global.exception.user.UserIdNotFoundException;
+import com.mju.insuranceCompany.service.user.exception.UserIdNotFoundException;
 import com.mju.insuranceCompany.service.user.controller.dto.UserBasicRequest;
 import com.mju.insuranceCompany.service.user.domain.UserType;
 import com.mju.insuranceCompany.service.user.domain.Users;

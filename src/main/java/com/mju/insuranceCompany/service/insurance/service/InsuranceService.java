@@ -1,9 +1,8 @@
 package com.mju.insuranceCompany.service.insurance.service;
 
-import com.mju.insuranceCompany.global.exception.insurance.InsuranceIdNotFoundException;
+import com.mju.insuranceCompany.service.insurance.exception.InsuranceIdNotFoundException;
 import com.mju.insuranceCompany.service.insurance.domain.Insurance;
 import com.mju.insuranceCompany.service.insurance.controller.dto.InquirePremiumResponse;
-import com.mju.insuranceCompany.global.exception.NullDataException;
 import com.mju.insuranceCompany.service.insurance.repository.InsuranceRepository;
 import com.mju.insuranceCompany.service.insurance.controller.dto.InquireCarPremiumRequest;
 import com.mju.insuranceCompany.service.insurance.controller.dto.InquireFirePremiumRequest;

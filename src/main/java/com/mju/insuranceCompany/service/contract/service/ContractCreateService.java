@@ -2,9 +2,7 @@ package com.mju.insuranceCompany.service.contract.service;
 
 
 import com.mju.insuranceCompany.global.exception.MyInvalidAccessException;
-import com.mju.insuranceCompany.global.exception.NullDataException;
-import com.mju.insuranceCompany.global.exception.insurance.InsuranceIdNotFoundException;
-import com.mju.insuranceCompany.global.exception.user.UnauthorizedAccessException;
+import com.mju.insuranceCompany.service.insurance.exception.InsuranceIdNotFoundException;
 import com.mju.insuranceCompany.service.contract.controller.dto.CarContractDto;
 import com.mju.insuranceCompany.service.contract.controller.dto.ContractDto;
 import com.mju.insuranceCompany.service.contract.controller.dto.FireContractDto;

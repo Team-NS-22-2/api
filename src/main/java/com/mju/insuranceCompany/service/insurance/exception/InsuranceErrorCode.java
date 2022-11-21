@@ -1,4 +1,4 @@
-package com.mju.insuranceCompany.global.exception.user;
+package com.mju.insuranceCompany.service.insurance.exception;
 
 import com.mju.insuranceCompany.global.exception.ErrorCode;
 import lombok.Getter;
@@ -6,10 +6,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
 @Getter @RequiredArgsConstructor
-public enum UserErrorCode implements ErrorCode {
+public enum InsuranceErrorCode implements ErrorCode {
 
-    UNAUTHORIZED_ACCESS(HttpStatus.UNAUTHORIZED, "권한이 없는 접근입니다."),
-    USER_ID_NOT_FOUND(HttpStatus.NOT_FOUND, "찾을 수 없는 ID입니다.")
+    INSURANCE_ID_NOT_FOUND(HttpStatus.NOT_FOUND, "입력하신 ID에 해당하는 보험 정보가 존재하지 않습니다."),
+
     ;
 
 
