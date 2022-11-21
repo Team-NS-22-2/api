@@ -1,5 +1,6 @@
 package com.mju.insuranceCompany.service.insurance.service;
 
+import com.mju.insuranceCompany.global.exception.insurance.InsuranceIdNotFoundException;
 import com.mju.insuranceCompany.service.insurance.domain.Insurance;
 import com.mju.insuranceCompany.service.insurance.controller.dto.InquirePremiumResponse;
 import com.mju.insuranceCompany.global.exception.NullDataException;
@@ -25,23 +26,23 @@ public class InsuranceService {
     }
     
     public InsuranceGuaranteeResponse getInsuranceGuaranteeById(int id) {
-        return insuranceRepository.findById(id).orElseThrow(NullDataException::new).toInsuranceGuaranteeDto();
+        return insuranceRepository.findById(id).orElseThrow(InsuranceIdNotFoundException::new).toInsuranceGuaranteeDto();
     }
 
     public InquirePremiumResponse inquireHealthPremium(int insId, InquireHealthPremiumRequest requestDto) {
-        Insurance insurance = insuranceRepository.findById(insId).orElseThrow(NullDataException::new);
+        Insurance insurance = insuranceRepository.findById(insId).orElseThrow(InsuranceIdNotFoundException::new);
         int premium = insurance.inquireHealthPremium(requestDto.getSsn(), requestDto.getRiskCount());
         return InquirePremiumResponse.builder().premium(premium).build();
     }
 
     public InquirePremiumResponse inquireFirePremium(int insId, InquireFirePremiumRequest requestDto) {
-        Insurance insurance = insuranceRepository.findById(insId).orElseThrow(NullDataException::new);
+        Insurance insurance = insuranceRepository.findById(insId).orElseThrow(InsuranceIdNotFoundException::new);
         int premium = insurance.inquireFirePremium(requestDto.getBuildingType(), requestDto.getCollateralAmount());
         return InquirePremiumResponse.builder().premium(premium).build();
     }
 
     public InquirePremiumResponse inquireCarPremium(int insId, InquireCarPremiumRequest requestDto) {
-        Insurance insurance = insuranceRepository.findById(insId).orElseThrow(NullDataException::new);
+        Insurance insurance = insuranceRepository.findById(insId).orElseThrow(InsuranceIdNotFoundException::new);
         int premium = insurance.inquireCarPremium(requestDto.getSsn(), requestDto.getValue());
         return InquirePremiumResponse.builder().premium(premium).build();
     }

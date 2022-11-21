@@ -29,7 +29,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        log.info("[JWTAuthorizationFilter] - attemptAuthentication 시작");
+        log.info("[JwtAuthenticationFilter] - attemptAuthentication 시작");
         ObjectMapper mapper = new ObjectMapper();
         UserBasicRequest dto;
         try {
@@ -47,9 +47,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     // jwt 토큰을 만들어서 response로 전달해줘서 유저가 받아서 사용할 수 있게끔 한다.
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-        log.info("[JWTAuthorizationFilter] - successfulAuthentication 시작");
+        log.info("[JwtAuthenticationFilter] - successfulAuthentication 시작");
         Users user = (Users) authResult.getPrincipal();
-        log.info("[JWTAuthorizationFilter] - User = {}", user);
+        log.info("[JwtAuthenticationFilter] - User = {}", user);
         String accessToken = jwtProvider.createAccessToken(user.getUserId());
 //        String refreshToken = jwtProvider.createRefreshToken(user.getUserId());
 
@@ -68,7 +68,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
-        log.info("[JWTAuthorizationFilter] - 인증실패");
+        log.info("[JwtAuthenticationFilter] - 인증실패");
         authenticationFailureHandler.onAuthenticationFailure(request,response,failed);
     }
 }

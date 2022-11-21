@@ -23,21 +23,21 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         // request에서 값을 가져온다
-        log.info("[JwtAuthenticationFilter] - filter 시작");
+        log.info("[JwtAuthorizationFilter] - filter 시작");
         String authorization = request.getHeader("Authorization");
         String token = null;
         // token 변환
         if (StringUtils.hasText(authorization) && authorization.contains("Bearer")) {
             token = authorization.replace("Bearer","");
-            log.info("[JwtAuthenticationFilter] - 토큰변환 = {}",token);
+            log.info("[JwtAuthorizationFilter] - 토큰변환 = {}",token);
         }
         // 토큰 검증
         if (token != null && jwtProvider.validateToken(token) != null) {
             String loginId = jwtProvider.validateToken(token).getSubject();
-            log.info("[JwtAuthenticationFilter] - 토큰검증-로그인아이디 = {}",loginId);
+            log.info("[JwtAuthorizationFilter] - 토큰검증-로그인아이디 = {}",loginId);
             SecurityContextHolder.getContext().setAuthentication(getAuthentication(loginId));
         }
-        log.info("[JwtAuthenticationFilter] - filter 끝");
+        log.info("[JwtAuthorizationFilter] - filter 끝");
         filterChain.doFilter(request,response);
     }
     private UsernamePasswordAuthenticationToken getAuthentication(String loginId) {

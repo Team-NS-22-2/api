@@ -1,5 +1,6 @@
 package com.mju.insuranceCompany.service.user.service;
 
+import com.mju.insuranceCompany.global.exception.user.UserIdNotFoundException;
 import com.mju.insuranceCompany.service.user.controller.dto.UserBasicRequest;
 import com.mju.insuranceCompany.service.user.domain.UserType;
 import com.mju.insuranceCompany.service.user.domain.Users;
@@ -45,7 +46,7 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
-        return userRepository.findByUserId(id).orElseThrow();
+        return userRepository.findByUserId(id).orElseThrow(UserIdNotFoundException::new);
 //        Users user = userRepository.findByUserId(id).orElseThrow();
 //        return new org.springframework.security.core.userdetails.
 //                User(user.getUserId(), user.getPassword(),

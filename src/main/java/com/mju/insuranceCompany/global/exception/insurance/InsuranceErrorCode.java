@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 @Getter @RequiredArgsConstructor
 public enum InsuranceErrorCode implements ErrorCode {
 
+    INSURANCE_ID_NOT_FOUND(HttpStatus.NOT_FOUND, "입력하신 ID에 해당하는 보험 정보가 존재하지 않습니다."),
+
     ;
 
 
