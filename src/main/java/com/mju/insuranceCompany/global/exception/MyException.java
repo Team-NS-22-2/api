@@ -1,5 +1,8 @@
 package com.mju.insuranceCompany.global.exception;
 
+import lombok.Getter;
+import org.springframework.http.HttpStatus;
+
 /**
  * packageName :  main.exception
  * fileName : MyException
@@ -11,21 +14,15 @@ package com.mju.insuranceCompany.global.exception;
  * -----------------------------------------------------------
  * 2022-05-11                규현             최초 생성
  */
-public class MyException extends RuntimeException{
+@Getter
+public abstract class MyException extends RuntimeException implements ErrorCode{
 
-    public MyException() {
+    private final HttpStatus httpStatus;
+    private final String errorName;
+    private final String errorMessage;
+    protected MyException(ErrorCode errorCode) {
+        this.httpStatus = errorCode.getHttpStatus();
+        this.errorName = errorCode.getErrorName();
+        this.errorMessage = errorCode.getErrorMessage();
     }
-
-    public MyException(String message) {
-        super(message);
-    }
-
-    public MyException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public MyException(Throwable cause) {
-        super(cause);
-    }
-
 }

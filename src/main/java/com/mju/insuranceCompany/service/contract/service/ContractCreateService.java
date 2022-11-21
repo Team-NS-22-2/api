@@ -2,7 +2,7 @@ package com.mju.insuranceCompany.service.contract.service;
 
 
 import com.mju.insuranceCompany.global.exception.MyInvalidAccessException;
-import com.mju.insuranceCompany.global.exception.NullDataException;
+import com.mju.insuranceCompany.service.insurance.exception.InsuranceIdNotFoundException;
 import com.mju.insuranceCompany.service.contract.controller.dto.CarContractDto;
 import com.mju.insuranceCompany.service.contract.controller.dto.ContractDto;
 import com.mju.insuranceCompany.service.contract.controller.dto.FireContractDto;
@@ -48,7 +48,7 @@ public class ContractCreateService {
         request.setHealthContractDto(   // 판매직원이 보험을 체결할 경우, 직원ID를 주입하기 위함.
                 (HealthContractDto) injectEmployeeIdToContractDto(request.getHealthContractDto(), UserType.ROLE_SALES));
 
-        InsuranceType insuranceType = insuranceRepository.findInsuranceTypeByInsuranceId(insId).orElseThrow(NullDataException::new);
+        InsuranceType insuranceType = insuranceRepository.findInsuranceTypeByInsuranceId(insId).orElseThrow(InsuranceIdNotFoundException::new);
         if(insuranceType != InsuranceType.HEALTH) throw new MyInvalidAccessException();
 
         Customer customer = new Customer(request.getCustomerDto());
@@ -65,7 +65,7 @@ public class ContractCreateService {
         request.setFireContractDto(   // 판매직원이 보험을 체결할 경우, 직원ID를 주입하기 위함.
                 (FireContractDto) injectEmployeeIdToContractDto(request.getFireContractDto(), UserType.ROLE_SALES));
 
-        InsuranceType insuranceType = insuranceRepository.findInsuranceTypeByInsuranceId(insId).orElseThrow(NullDataException::new);
+        InsuranceType insuranceType = insuranceRepository.findInsuranceTypeByInsuranceId(insId).orElseThrow(InsuranceIdNotFoundException::new);
         if(insuranceType != InsuranceType.FIRE) throw new MyInvalidAccessException();
 
         Customer customer = new Customer(request.getCustomerDto());
@@ -82,7 +82,7 @@ public class ContractCreateService {
         request.setCarContractDto(   // 판매직원이 보험을 체결할 경우, 직원ID를 주입하기 위함.
                 (CarContractDto) injectEmployeeIdToContractDto(request.getCarContractDto(), UserType.ROLE_SALES));
 
-        InsuranceType insuranceType = insuranceRepository.findInsuranceTypeByInsuranceId(insId).orElseThrow(NullDataException::new);
+        InsuranceType insuranceType = insuranceRepository.findInsuranceTypeByInsuranceId(insId).orElseThrow(InsuranceIdNotFoundException::new);
         if(insuranceType != InsuranceType.CAR) throw new MyInvalidAccessException();
 
         Customer customer = new Customer(request.getCustomerDto());
@@ -106,7 +106,10 @@ public class ContractCreateService {
         // 만일 지정된 직원 타입이 아니라면, 기존 ContractDto를 리턴
         if (getUsers().getType() == null) return dto;
         else {
-            if(getUsers().getType() != employeeType) throw new MyInvalidAccessException("접근할 권한이 없습니다. 접근권한: %s, 유저권한: %s", employeeType, getUsers().getType());
+            if(getUsers().getType() != employeeType)
+                throw new MyInvalidAccessException
+                        ("접근할 권한이 없습니다. 접근권한: %s, 유저권한: %s", employeeType, getUsers().getType());
+//            throw new UnauthorizedAccessException();
             Employee employee = employeeRepository.findById(getUsers().getRoleId()).orElseThrow();
             return dto.setEmployeeId(employee.getId());
         }
