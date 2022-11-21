@@ -60,7 +60,7 @@ public class JwtAuthorizationFilter extends UsernamePasswordAuthenticationFilter
 //        refreshTokenService.createToken(user.getUsername(),refreshToken);
 
 
-        response.addHeader("Access-Token", "Bearer "+accessToken);
+        response.addHeader("Access-Token", accessToken);
 //        response.addHeader("Refresh-Token",dto.getRefreshToken());
         response.setStatus(201);
 

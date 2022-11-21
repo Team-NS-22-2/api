@@ -25,7 +25,7 @@ public class CarContract extends Contract{
 	private Long value;
 
 	public CarContract(CarContractDto dto, int customerId) {
-		super(false,  dto.getPremium(), dto.getInsuranceId(), ConditionOfUw.WAIT, customerId, 0);
+		super(false,  dto.getPremium(), dto.getInsuranceId(), ConditionOfUw.WAIT, customerId, dto.getEmployeeId());
 		this.carNo = dto.getCarNo();
 		this.carType = dto.getCarType();
 		modelName = dto.getModelName();

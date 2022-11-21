@@ -25,7 +25,7 @@ public class FireContract extends Contract{
 	private Boolean isSelfOwned;
 
 	public FireContract(FireContractDto dto, int customerId) {
-		super(false,  dto.getPremium(), dto.getInsuranceId(), ConditionOfUw.WAIT, customerId, 0);
+		super(false,  dto.getPremium(), dto.getInsuranceId(), ConditionOfUw.WAIT, customerId, dto.getEmployeeId());
 		this.buildingArea = dto.getBuildingArea();
 		this.buildingType = dto.getBuildingType();
 		this.collateralAmount = dto.getCollateralAmount();

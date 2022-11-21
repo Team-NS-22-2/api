@@ -7,5 +7,9 @@ package com.mju.insuranceCompany.service.user.domain;
  * 해당 값을 통해서 ViewLogic에 차이를 둠.
  */
 public enum UserType {
-    CUSTOMER,SALES,UW,DEV,COMP,OUT
+    ROLE_CUSTOMER, ROLE_SALES, ROLE_UW, ROLE_DEV, ROLE_COMP, ROLE_OUT;
+
+    public String getRole(){
+        return this.name().replace("ROLE_","");
+    }
 }
