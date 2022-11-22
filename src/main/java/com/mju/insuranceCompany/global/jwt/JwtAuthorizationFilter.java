@@ -1,8 +1,6 @@
 package com.mju.insuranceCompany.global.jwt;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mju.insuranceCompany.service.user.controller.dto.UserBasicRequest;
-import com.mju.insuranceCompany.service.user.domain.Users;
+import com.mju.insuranceCompany.service.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

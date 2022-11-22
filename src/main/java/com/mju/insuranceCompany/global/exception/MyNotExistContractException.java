@@ -11,7 +11,7 @@ package com.mju.insuranceCompany.global.exception;
  * -----------------------------------------------------------
  * 2022-05-18                규현             최초 생성
  */
-public class MyNotExistContractException extends MyException{
+public class MyNotExistContractException extends RuntimeException{
     public MyNotExistContractException() { super("\033[1;31m계약 정보가 존재하지 않습니다.\033[0m");}
 
     public MyNotExistContractException(String message) {

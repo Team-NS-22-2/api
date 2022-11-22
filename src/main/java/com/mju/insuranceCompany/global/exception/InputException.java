@@ -1,6 +1,6 @@
 package com.mju.insuranceCompany.global.exception;
 
-public class InputException extends MyException {
+public class InputException extends RuntimeException {
     public InputException() {
     }
     public InputException(String message) {

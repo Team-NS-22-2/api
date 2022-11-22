@@ -11,7 +11,7 @@ package com.mju.insuranceCompany.global.exception;
  * -----------------------------------------------------------
  * 2022-05-12                규현             최초 생성
  */
-public class MyIllegalArgumentException extends MyException{
+public class MyIllegalArgumentException extends RuntimeException{
 
         public MyIllegalArgumentException() {
 

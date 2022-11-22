@@ -11,7 +11,7 @@ package com.mju.insuranceCompany.global.exception;
  * -----------------------------------------------------------
  * 2022-05-15                규현             최초 생성
  */
-public class MyCloseSequence extends MyException{
+public class MyCloseSequence extends RuntimeException{
     public MyCloseSequence() {
         super("\033[1;31mEXIT!! : 시스템을 종료합니다.\033[0m");
     }

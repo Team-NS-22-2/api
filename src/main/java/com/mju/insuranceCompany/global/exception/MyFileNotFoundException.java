@@ -11,7 +11,7 @@ package com.mju.insuranceCompany.global.exception;
  * -----------------------------------------------------------
  * 2022-05-20                규현             최초 생성
  */
-public class MyFileNotFoundException extends MyException{
+public class MyFileNotFoundException extends RuntimeException{
     public MyFileNotFoundException() {
         super("\033[1;31mERROR :: 파일을 찾을 수 없습니다!\n\033[0m");
     }

@@ -11,7 +11,7 @@ package com.mju.insuranceCompany.global.exception;
  * -----------------------------------------------------------
  * 2022-05-14                규현             최초 생성
  */
-public class MyInadequateFormatException extends MyException {
+public class MyInadequateFormatException extends RuntimeException {
     public MyInadequateFormatException() {
     }
 

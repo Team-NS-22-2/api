@@ -13,7 +13,7 @@ import com.mju.insuranceCompany.service.user.domain.UserType;
  * -----------------------------------------------------------
  * 2022-06-02                규현             최초 생성
  */
-public class MyInvalidAccessException extends MyException{
+public class MyInvalidAccessException extends RuntimeException{
     public MyInvalidAccessException() {}
 
     public MyInvalidAccessException(String message) {
