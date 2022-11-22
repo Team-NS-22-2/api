@@ -1,10 +1,7 @@
 package com.mju.insuranceCompany.service.insurance.domain;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.PrimaryKeyJoinColumn;
@@ -14,7 +11,7 @@ import javax.persistence.PrimaryKeyJoinColumn;
  * @version 1.0
  * @created 09-5-2022 ���� 4:38:57
  */
-@Getter
+@Getter @ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity

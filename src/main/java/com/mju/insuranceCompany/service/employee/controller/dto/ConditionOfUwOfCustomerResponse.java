@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ConditionOfUwOfCustomerResponse {
-    private int customerId;
+    private int contractId;
     private String customerName;
     private ConditionOfUw conditionOfUw;
 }

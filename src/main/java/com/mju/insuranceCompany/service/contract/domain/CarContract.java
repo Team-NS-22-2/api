@@ -2,9 +2,7 @@ package com.mju.insuranceCompany.service.contract.domain;
 
 
 import com.mju.insuranceCompany.service.contract.controller.dto.CarContractDto;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Entity;
 
@@ -13,6 +11,7 @@ import javax.persistence.Entity;
  * @version 1.0
  * @created 09-5-2022 오전 2:42:23
  */
+@Setter @Getter @ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity

@@ -5,6 +5,7 @@ import com.mju.insuranceCompany.service.contract.domain.BuildingType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -16,7 +17,7 @@ import javax.persistence.PrimaryKeyJoinColumn;
  * @version 1.0
  * @created 09-5-2022 ���� 4:39:00
  */
-@Getter
+@Getter @ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity

@@ -1,10 +1,13 @@
 package com.mju.insuranceCompany.service.employee.domain;
 
+import com.mju.insuranceCompany.service.insurance.domain.DevelopInfo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -16,6 +19,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@ToString(exclude = "developInfoList")
 public class Employee {
 
 	@Id
@@ -28,6 +32,8 @@ public class Employee {
 	private Department department;
 	@Enumerated(value = EnumType.STRING)
 	private Position position;
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "employee")
+	private List<DevelopInfo> developInfoList;
 
 /*
 	public void develop(InsuranceType type, DtoBasicInfo basicInfo, ArrayList<DtoGuarantee> guaranteeInfoList, ArrayList<DtoTypeInfo> typeInfoList){
@@ -366,16 +372,6 @@ public class Employee {
 	}
 
  */
-
-	public String print() {
-		return "직원 정보 {" +
-				"직원ID: " + id +
-				", 이름: '" + name + '\'' +
-				", 연락처: '" + phone + '\'' +
-				", 부서: " + department.getName() +
-				", 직책: " + position.getName() +
-				'}';
-	}
 
 	@Override
 	public boolean equals(Object o) {
