@@ -50,18 +50,18 @@ class ContractServiceTest {
 
     @Test
     void getHealthContractOfCustomer() {
-        System.out.println(contractService.getHealthContractOfCustomer(1));
+        System.out.println(contractService.getHealthContractOfCustomerByContractId(1));
     }
 
     @Test
     void getCarContractOfCustomer() {
-        System.out.println(contractService.getCarContractOfCustomer(11));
+        System.out.println(contractService.getCarContractOfCustomerByContractId(11));
     }
 
     @Test
     void getFireContractOfCustomer() {
-        int customerId = 14;
-        CustomerFireContractDto dto = contractService.getFireContractOfCustomer(customerId);
+        int contractId = 14;
+        CustomerFireContractDto dto = contractService.getFireContractOfCustomerByContractId(contractId);
         FireContractDto f = dto.getFireContractDto();
 
         int buildingArea = 300;

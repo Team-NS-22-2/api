@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 @Builder
 @AllArgsConstructor
-public class CustomerBasicDto {
+public class CustomerDto {
     private String name;
     private String ssn;
     private String phone;
@@ -16,8 +16,8 @@ public class CustomerBasicDto {
     private String email;
     private String job;
 
-    public static CustomerBasicDto toDtoFromEntity(Customer customer) {
-        return new CustomerBasicDto(
+    public static CustomerDto toDtoFromEntity(Customer customer) {
+        return new CustomerDto(
                 customer.getName(),
                 customer.getSsn(),
                 customer.getPhone(),

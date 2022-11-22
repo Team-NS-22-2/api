@@ -55,21 +55,21 @@ public class EmployeeController {
     }
 
 //        고객 건강보험 계약 조회
-    @GetMapping("/uw/health/{customerId}")
-    public ResponseEntity<CustomerHealthContractDto> getHealthContractOfCustomer(@PathVariable int customerId) {
-        return ResponseEntity.ok(contractService.getHealthContractOfCustomer(customerId));
+    @GetMapping("/uw/health/{contractId}")
+    public ResponseEntity<CustomerHealthContractDto> getHealthContractOfCustomer(@PathVariable int contractId) {
+        return ResponseEntity.ok(contractService.getHealthContractOfCustomerByContractId(contractId));
     }
 
 //        고객 화재보험 계약 조회
-    @GetMapping("/uw/fire/{customerId}")
-    public ResponseEntity<CustomerFireContractDto> getFireContractOfCustomer(@PathVariable int customerId) {
-        return ResponseEntity.ok(contractService.getFireContractOfCustomer(customerId));
+    @GetMapping("/uw/fire/{contractId}")
+    public ResponseEntity<CustomerFireContractDto> getFireContractOfCustomer(@PathVariable int contractId) {
+        return ResponseEntity.ok(contractService.getFireContractOfCustomerByContractId(contractId));
     }
 
 //        고객 자동차보험 계약 조회
-    @GetMapping("/uw/car/{customerId}")
-    public ResponseEntity<CustomerCarContractDto> getCarContractOfCustomer(@PathVariable int customerId) {
-        return ResponseEntity.ok(contractService.getCarContractOfCustomer(customerId));
+    @GetMapping("/uw/car/{contractId}")
+    public ResponseEntity<CustomerCarContractDto> getCarContractOfCustomer(@PathVariable int contractId) {
+        return ResponseEntity.ok(contractService.getCarContractOfCustomerByContractId(contractId));
     }
 
 }

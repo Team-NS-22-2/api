@@ -15,16 +15,16 @@ import java.util.Optional;
 public interface ContractRepository extends JpaRepository<Contract, Integer> {
 
     @Query(
-            "select new com.mju.insuranceCompany.service.employee.controller.dto.ConditionOfUwOfCustomerResponse(cs.id, cs.name, ct.conditionOfUw) " +
+            "select new com.mju.insuranceCompany.service.employee.controller.dto.ConditionOfUwOfCustomerResponse(ct.id, cs.name, ct.conditionOfUw) " +
                     "from Customer cs, Contract ct where cs.id = ct.customerId " +
                     "and (ct.conditionOfUw = 'WAIT' or ct.conditionOfUw = 'RE_AUDIT') " +
                     "and ct.insuranceId = (select i.id from Insurance i where i.insuranceType = :insuranceType)"
     )
     List<ConditionOfUwOfCustomerResponse> findConditionOfUwOfCustomer(InsuranceType insuranceType);
 
-    Optional<HealthContract> findHealthContractByCustomerId(int customerId);
+    Optional<HealthContract> findHealthContractById(int contractId);
 
-    Optional<FireContract> findFireContractByCustomerId(int customerId);
+    Optional<FireContract> findFireContractById(int contractId);
 
-    Optional<CarContract> findCarContractByCustomerId(int customerId);
+    Optional<CarContract> findCarContractById(int contractId);
 }
