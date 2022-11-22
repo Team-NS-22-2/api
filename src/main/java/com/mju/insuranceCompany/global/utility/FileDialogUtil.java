@@ -3,7 +3,6 @@ package com.mju.insuranceCompany.global.utility;
 import com.mju.insuranceCompany.global.constant.CommonConstants;
 import com.mju.insuranceCompany.global.constant.DocUtilConstants;
 import com.mju.insuranceCompany.global.constant.ExceptionConstants;
-import com.mju.insuranceCompany.global.exception.MyFileNotFoundException;
 import com.mju.insuranceCompany.service.accident.domain.Accident;
 import com.mju.insuranceCompany.service.accident.domain.accidentDocumentFile.AccDocType;
 

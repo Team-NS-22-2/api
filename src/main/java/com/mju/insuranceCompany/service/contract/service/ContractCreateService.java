@@ -1,7 +1,6 @@
 package com.mju.insuranceCompany.service.contract.service;
 
 
-import com.mju.insuranceCompany.global.exception.MyInvalidAccessException;
 import com.mju.insuranceCompany.service.insurance.exception.InsuranceIdNotFoundException;
 import com.mju.insuranceCompany.service.contract.controller.dto.CarContractDto;
 import com.mju.insuranceCompany.service.contract.controller.dto.ContractDto;

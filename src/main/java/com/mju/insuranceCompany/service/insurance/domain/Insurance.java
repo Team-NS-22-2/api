@@ -1,6 +1,5 @@
 package com.mju.insuranceCompany.service.insurance.domain;
 
-import com.mju.insuranceCompany.global.exception.NoResultantException;
 import com.mju.insuranceCompany.global.utility.CriterionSetUtil;
 import com.mju.insuranceCompany.global.utility.TargetInfoCalculator;
 import com.mju.insuranceCompany.service.contract.domain.BuildingType;
