@@ -1,6 +1,7 @@
 package com.mju.insuranceCompany.service.insurance.domain;
 
 
+import com.mju.insuranceCompany.service.employee.domain.Employee;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,9 +23,10 @@ import java.time.LocalDate;
 public class DevelopInfo {
 
 	@Id
-	@JoinColumn(name = "insurance_id")
 	private int insuranceId;
-	private int employeeId;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "employee_id")
+	private Employee employee;
 	private LocalDate developDate;
 	@Enumerated(value = EnumType.STRING)
 	private SalesAuthorizationState salesAuthorizationState;

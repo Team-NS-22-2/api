@@ -34,14 +34,16 @@ public class Insurance {
 	private int paymentPeriod;
 	@Enumerated(value = EnumType.STRING)
 	private InsuranceType insuranceType;
-	@OneToMany(mappedBy = "insurance")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "insurance")
 	private List<Guarantee> guaranteeList;
-	@OneToMany(mappedBy = "insurance")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "insurance")
 	private List<InsuranceDetail> insuranceDetailList;
-//	@OneToOne(fetch = FetchType.LAZY, mappedBy = "insuranceId")
-//	private DevelopInfo developInfo;
-//	@OneToOne(fetch = FetchType.LAZY, mappedBy = "insuranceId")
-//	private SalesAuthorizationFile salesAuthorizationFile;
+	@OneToOne(fetch = FetchType.LAZY)
+	@PrimaryKeyJoinColumn
+	private DevelopInfo developInfo;
+	@OneToOne(fetch = FetchType.LAZY)
+	@PrimaryKeyJoinColumn
+	private SalesAuthorizationFile salesAuthorizationFile;
 
 	public int inquireHealthPremium(String ssn, int riskCount){
 		int premium = 0;

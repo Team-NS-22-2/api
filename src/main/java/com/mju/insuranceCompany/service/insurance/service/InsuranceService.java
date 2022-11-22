@@ -20,6 +20,9 @@ public class InsuranceService {
 
     private final InsuranceRepository insuranceRepository;
 
+    /*
+    TODO 이 메소드는 모든 보험정보를 조회하는 메소드다. 하지만 체결을 위한 보험은 판매상태가 PERMISSION 상태여야 한다. 다른 메소드를 만들어서 판매할 때는 해당 메소드를 호출하도록 해야하는가?
+     */
     public List<InsuranceListDto> getAllInsuranceList() {
         return insuranceRepository.findAll().stream().map(Insurance::toInsuranceListDto).toList();
     }
