@@ -11,11 +11,12 @@ import com.mju.insuranceCompany.service.insurance.controller.dto.InsuranceListDt
 import com.mju.insuranceCompany.service.insurance.controller.dto.InsuranceGuaranteeResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor @Transactional
 public class InsuranceService {
 
     private final InsuranceRepository insuranceRepository;

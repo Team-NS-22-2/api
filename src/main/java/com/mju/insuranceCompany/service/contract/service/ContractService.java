@@ -13,10 +13,11 @@ import com.mju.insuranceCompany.service.insurance.domain.InsuranceType;
 import com.mju.insuranceCompany.service.insurance.repository.InsuranceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Service
+@Service @Transactional
 @RequiredArgsConstructor
 public class ContractService {
 
