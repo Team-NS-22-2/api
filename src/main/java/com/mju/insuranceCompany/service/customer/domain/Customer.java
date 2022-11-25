@@ -49,6 +49,7 @@ public class Customer {
 	}
 	/*
 
+	// use-case: 보상처리 담당자를 변경한다.
 	public Employee changeCompEmp(String reason, Employee compEmployee){
 		Complain complain = Complain.builder().reason(reason)
 				.customerId(this.id).build();
@@ -60,7 +61,9 @@ public class Customer {
 		return CompAssignUtil.changeCompEmployee(compEmployee);
 	}
 
+	// use-case : 보상금을 청구한다. (청구서류를 제출 -> Accident 상태를 변경)
 	// 파일을 선택해서 저장하고, 파일 주소를 리턴하는 식으로 해야할듯?
+	// -> Accident:
 	public AccidentDocumentFile claimCompensation(Accident accident, AccidentDocumentFile accidentDocumentFile){
 
 		String path = DocUtilConstants.getSubmitPath(id,accident.getId(),accidentDocumentFile.getType().getDesc());
@@ -88,7 +91,7 @@ public class Customer {
 	}
 
 
-
+	// use-case: 보험료를 납부한다.
 	public void pay(Contract contract){
 		PaymentDao paymentDao = new PaymentDaoImpl();
 		Payment payment = paymentDao.read(contract.getPaymentId());
@@ -129,6 +132,7 @@ public class Customer {
 
 	}
 
+	// use-case: 결제 수단 추가
 	public void addPayment(PaymentDto paymentDto){
 		Payment payment = createPayment(paymentDto);
 		FinancialInstitute.validPaymentInfo(payment);
@@ -137,6 +141,7 @@ public class Customer {
 		this.paymentList.add(payment);
 	}
 
+	// use-case: 결제수단을 설정한다.
 	public void registerPayment(Contract contract, int paymentId) {
 		PaymentDao paymentDao = new PaymentDaoImpl();
 		Payment payment = paymentDao.read(paymentId);
@@ -149,6 +154,8 @@ public class Customer {
 		contractList.updatePayment(contract.getId(),payment.getId());
 	}
 
+	// use-case : 사고를 접수한다
+	// -> Accident (e.g., createAccident())
 	public Accident reportAccident(AccidentReportDto accidentReportDto){
 		AccidentType accidentType = accidentReportDto.getAccidentType();
 

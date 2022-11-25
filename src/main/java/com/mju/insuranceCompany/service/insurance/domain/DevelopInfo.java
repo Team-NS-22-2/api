@@ -1,13 +1,15 @@
 package com.mju.insuranceCompany.service.insurance.domain;
 
 
-import com.mju.insuranceCompany.service.employee.domain.Employee;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Id;
 import java.time.LocalDate;
 
 /**
@@ -24,9 +26,7 @@ public class DevelopInfo {
 
 	@Id
 	private int insuranceId;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "employee_id")
-	private Employee employee;
+	private int employeeId;
 	private LocalDate developDate;
 	@Enumerated(value = EnumType.STRING)
 	private SalesAuthorizationState salesAuthorizationState;

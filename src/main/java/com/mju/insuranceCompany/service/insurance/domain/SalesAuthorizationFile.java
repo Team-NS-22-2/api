@@ -46,15 +46,17 @@ public class SalesAuthorizationFile {
 	private String fssOfficialDoc;
 	private LocalDateTime modifiedFss;
 
+	/**
+	 * 모든 파일이 존재하는지 확인하는 메소드
+	 * @return 모든 파일이 있으면 true, 하나의 파일이라도 없으면 false
+	 */
+	public boolean isExistAllFile() {
+		return (this.getProdDeclaration()!=null) && (this.getFssOfficialDoc()!=null)
+				&& (this.getIsoVerification()!=null) && (this.getSrActuaryVerification()!=null);
+	}
 
-	public String print() {
-		String print = "{";
-		if(prodDeclaration != null) print += "보험상품신고서(" + modifiedProd + "), ";
-		if(isoVerification != null) print += "보험요율산출기관 검증확인서(" + modifiedIso + "), ";
-		if(srActuaryVerification != null) print += "선임계리사 검증기초서류(" + modifiedSrActuary + "), ";
-		if(fssOfficialDoc != null) print += "금융감독원 인가허가파일(" + modifiedFss + ")";
-		print += "} ";
-		return print;
+	public void modifyProdDeclaration() {
+
 	}
 
 }

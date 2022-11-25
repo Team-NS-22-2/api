@@ -1,7 +1,6 @@
 package com.mju.insuranceCompany.service.insurance.domain;
 
 
-import com.mju.insuranceCompany.service.insurance.controller.dto.GuaranteeDto;
 import lombok.*;
 
 import javax.persistence.*;
@@ -30,13 +29,5 @@ public class Guarantee {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "insurance_id")
 	private Insurance insurance;
-
-	public GuaranteeDto toGuaranteeDto() {
-		return GuaranteeDto.builder()
-				.name(this.getName())
-				.description(this.getDescription())
-				.amount(this.getGuaranteeAmount())
-				.build();
-	}
 
 }

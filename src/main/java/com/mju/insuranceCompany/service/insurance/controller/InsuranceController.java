@@ -6,7 +6,7 @@ import com.mju.insuranceCompany.service.insurance.controller.dto.InquireCarPremi
 import com.mju.insuranceCompany.service.insurance.controller.dto.InquireFirePremiumRequest;
 import com.mju.insuranceCompany.service.insurance.controller.dto.InquireHealthPremiumRequest;
 import com.mju.insuranceCompany.service.insurance.controller.dto.InsuranceListDto;
-import com.mju.insuranceCompany.service.insurance.controller.dto.InsuranceGuaranteeResponse;
+import com.mju.insuranceCompany.service.insurance.controller.dto.InsuranceGuaranteeDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +26,7 @@ public class InsuranceController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<InsuranceGuaranteeResponse> getGuaranteeById(@PathVariable int id) {
+    public ResponseEntity<InsuranceGuaranteeDto> getGuaranteeById(@PathVariable int id) {
         return ResponseEntity.ok(insuranceService.getInsuranceGuaranteeById(id));
     }
 

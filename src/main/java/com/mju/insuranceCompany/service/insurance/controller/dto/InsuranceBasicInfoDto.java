@@ -12,7 +12,7 @@ public class InsuranceBasicInfoDto {
     private int contractPeriod;
     private int paymentPeriod;
 
-    public static InsuranceBasicInfoDto toDtoFromEntity(Insurance insurance) {
+    public static InsuranceBasicInfoDto toDto(Insurance insurance) {
         return new InsuranceBasicInfoDto(
                 insurance.getName(),
                 insurance.getDescription(),

@@ -37,7 +37,7 @@ public class ContractService {
         return new CustomerHealthContractDto(
                 CustomerDto.toDtoFromEntity(customer),
                 HealthContractDto.toDtoFromEntity(healthContract),
-                InsuranceBasicInfoDto.toDtoFromEntity(insurance)
+                InsuranceBasicInfoDto.toDto(insurance)
         );
     }
 
@@ -49,7 +49,7 @@ public class ContractService {
         return new CustomerFireContractDto(
                 CustomerDto.toDtoFromEntity(customer),
                 FireContractDto.toDtoFromEntity(fireContract),
-                InsuranceBasicInfoDto.toDtoFromEntity(insurance)
+                InsuranceBasicInfoDto.toDto(insurance)
         );
     }
 
@@ -61,7 +61,7 @@ public class ContractService {
         return new CustomerCarContractDto(
                 CustomerDto.toDtoFromEntity(customer),
                 CarContractDto.toDtoFromEntity(carContract),
-                InsuranceBasicInfoDto.toDtoFromEntity(insurance)
+                InsuranceBasicInfoDto.toDto(insurance)
         );
     }
 
