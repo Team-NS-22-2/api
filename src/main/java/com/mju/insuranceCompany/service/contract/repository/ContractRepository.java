@@ -35,5 +35,7 @@ public interface ContractRepository extends JpaRepository<Contract, Integer> {
             "where c.customerId = :customerId")
     List<ContractReceiptDto> findAllContractReceipt(@Param("customerId") int customerId);
 
+    Optional<Contract> findContractByIdAndCustomerId(@Param("id") int id, @Param("customerId") int customerId);
+
 
 }

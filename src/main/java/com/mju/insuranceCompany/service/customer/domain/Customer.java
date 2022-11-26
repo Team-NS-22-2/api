@@ -74,8 +74,8 @@ public class Customer {
 					.bankType(paymentCreateDto.getBankType())
 					.build();
 		}
-		payment.setPaytype(payType);
-		payment.setCustomerId(paymentCreateDto.getCustomerId());
+		payment.setPayType(payType);
+		payment.setCustomerId(this.id);
 		return payment;
 	}
 	// use-case: 결제 수단 추가

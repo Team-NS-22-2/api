@@ -15,13 +15,16 @@ import javax.persistence.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Inheritance(strategy = InheritanceType.JOINED)
 @Entity
 public abstract class Payment {
 
-	@Id
+	@Id @Column(name = "payment_id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	protected int id;
-	protected PayType paytype;
+
+	@Enumerated(value = EnumType.STRING)
+	protected PayType payType;
 	@JoinColumn(name = "customer_id")
 	protected int customerId;
 

@@ -16,8 +16,8 @@ public class PaymentBasicInfoDto {
     public static PaymentBasicInfoDto toDto(Payment payment) {
         PaymentBasicInfoDto dto = new PaymentBasicInfoDto();
         dto.setPaymentId(payment.getId());
-        dto.setPayType(payment.getPaytype());
-        if (payment.getPaytype().equals(PayType.CARD)) {
+        dto.setPayType(payment.getPayType());
+        if (payment.getPayType().equals(PayType.CARD)) {
             dto.setNo(((Card) payment).getCardNo());
         } else {
             dto.setNo(((Account) payment).getAccountNo());

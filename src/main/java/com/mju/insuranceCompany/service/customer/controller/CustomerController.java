@@ -1,6 +1,9 @@
 package com.mju.insuranceCompany.service.customer.controller;
 
+import com.mju.insuranceCompany.service.contract.controller.dto.PaymentRegisterOnContractDto;
+import com.mju.insuranceCompany.service.contract.service.ContractPayService;
 import com.mju.insuranceCompany.service.contract.service.ContractService;
+import com.mju.insuranceCompany.service.contract.service.PaymentRegisterService;
 import com.mju.insuranceCompany.service.customer.controller.dto.ContractReceiptDto;
 import com.mju.insuranceCompany.service.customer.controller.dto.PaymentBasicInfoDto;
 import com.mju.insuranceCompany.service.customer.controller.dto.PaymentCreateDto;
@@ -20,6 +23,8 @@ public class CustomerController {
 
     private final ContractService contractService;
     private final CustomerService customerService;
+    private final PaymentRegisterService paymentRegisterService;
+    private final ContractPayService contractPayService;
 
     @GetMapping("/contract")
     public ResponseEntity<List<ContractReceiptDto>> getAllContractReceipts(){
@@ -36,6 +41,15 @@ public class CustomerController {
         customerService.addNewPayment(dto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
-//    @PatchMapping("/payment")
+    @PatchMapping("/payment")
+    public ResponseEntity<Void> registerPaymentOnContract(@RequestBody PaymentRegisterOnContractDto dto){
+        paymentRegisterService.registerPaymentOnContract(dto);
+        return ResponseEntity.noContent().build();
+    }
+    @PostMapping("/pay/{contractId}")
+    public ResponseEntity<Void> payContractPremium(@PathVariable("contractId") int contractId){
+        contractPayService.payForContractPremium(contractId);
+        return ResponseEntity.noContent().build();
+    }
 
 }
