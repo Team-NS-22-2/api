@@ -54,7 +54,6 @@ public class Customer {
 
 
 	public List<Payment> readPayments(){
-		//TODO DTO가 있다면.. 어떻게 화면에 그릴지랑 데이터를 고려해야 할 듯.
 		return this.paymentList;
 	}
 //

@@ -21,7 +21,7 @@ public class CustomerService {
 
     public List<PaymentBasicInfoDto> getAllPaymentInfos(){
         Customer customer = getCustomerByExtractedId();
-        return customer.getPaymentList()
+        return customer.readPayments()
                 .stream()
                 .map(PaymentBasicInfoDto::toDto)
                 .toList();
