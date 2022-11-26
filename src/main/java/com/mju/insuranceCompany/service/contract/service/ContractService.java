@@ -3,15 +3,19 @@ package com.mju.insuranceCompany.service.contract.service;
 import com.mju.insuranceCompany.service.contract.controller.dto.*;
 import com.mju.insuranceCompany.service.contract.domain.*;
 import com.mju.insuranceCompany.service.contract.repository.ContractRepository;
+import com.mju.insuranceCompany.service.customer.controller.dto.ContractReceiptDto;
 import com.mju.insuranceCompany.service.customer.controller.dto.CustomerDto;
 import com.mju.insuranceCompany.service.customer.domain.Customer;
+import com.mju.insuranceCompany.service.customer.exception.ContractofCustomerNotFoundException;
 import com.mju.insuranceCompany.service.customer.repository.CustomerRepository;
 import com.mju.insuranceCompany.service.employee.controller.dto.ConditionOfUwOfCustomerResponse;
 import com.mju.insuranceCompany.service.insurance.controller.dto.InsuranceBasicInfoDto;
 import com.mju.insuranceCompany.service.insurance.domain.Insurance;
 import com.mju.insuranceCompany.service.insurance.domain.InsuranceType;
 import com.mju.insuranceCompany.service.insurance.repository.InsuranceRepository;
+import com.mju.insuranceCompany.service.user.domain.Users;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -68,6 +72,19 @@ public class ContractService {
     public void underwriting(int contractId, String reasonOfUw, ConditionOfUw conditionOfUw) {
         Contract contract = contractRepository.findById(contractId).orElseThrow();
         contract.underwriting(reasonOfUw, conditionOfUw);
+    }
+
+    public List<ContractReceiptDto> getAllContractReceipts(){
+        int customerId = extractCustomerIdByAuthentication();
+        List<ContractReceiptDto> receipts = contractRepository.findAllContractReceipt(customerId);
+        if(receipts.isEmpty())
+            throw new ContractofCustomerNotFoundException();
+        return receipts;
+    }
+
+    private int extractCustomerIdByAuthentication() {
+        Users users = (Users) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return users.getRoleId();
     }
 
 }
