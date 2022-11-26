@@ -1,5 +1,6 @@
 package com.mju.insuranceCompany.service.contract.service;
 
+import com.mju.insuranceCompany.global.utility.AuthenticationExtractor;
 import com.mju.insuranceCompany.service.contract.controller.dto.*;
 import com.mju.insuranceCompany.service.contract.domain.*;
 import com.mju.insuranceCompany.service.contract.repository.ContractRepository;
@@ -75,16 +76,11 @@ public class ContractService {
     }
 
     public List<ContractReceiptDto> getAllContractReceipts(){
-        int customerId = extractCustomerIdByAuthentication();
+        int customerId = AuthenticationExtractor.extractCustomerIdByAuthentication();
         List<ContractReceiptDto> receipts = contractRepository.findAllContractReceipt(customerId);
         if(receipts.isEmpty())
             throw new ContractofCustomerNotFoundException();
         return receipts;
-    }
-
-    private int extractCustomerIdByAuthentication() {
-        Users users = (Users) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return users.getRoleId();
     }
 
 }
