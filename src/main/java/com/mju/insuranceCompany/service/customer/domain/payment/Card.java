@@ -3,6 +3,7 @@ package com.mju.insuranceCompany.service.customer.domain.payment;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
@@ -17,6 +18,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Entity
 @Builder
+@Getter
 public class Card extends Payment {
 
 	private String cardNo;

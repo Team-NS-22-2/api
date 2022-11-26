@@ -3,13 +3,17 @@ package com.mju.insuranceCompany.service.customer.domain;
 
 import com.mju.insuranceCompany.service.accident.domain.complain.Complain;
 import com.mju.insuranceCompany.service.customer.controller.dto.CustomerDto;
-import com.mju.insuranceCompany.service.customer.domain.payment.Payment;
+import com.mju.insuranceCompany.service.customer.controller.dto.PaymentCreateDto;
+import com.mju.insuranceCompany.service.customer.domain.payment.*;
+import com.mju.insuranceCompany.service.customer.exception.PaymentNotFoundException;
+import com.mju.outerSystem.FinancialInstitute;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,8 +38,8 @@ public class Customer {
 	private String phone;
 	private String email;
 	private String job;
-	@OneToMany
-	private List<Payment> paymentList;
+	@OneToMany(mappedBy = "customerId",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<Payment> paymentList = new ArrayList<>();
 	@OneToMany
 	private List<Complain> complainList;
 
@@ -47,6 +51,51 @@ public class Customer {
 		email = dto.getEmail();
 		job = dto.getJob();
 	}
+
+
+	public List<Payment> readPayments(){
+		//TODO DTO가 있다면.. 어떻게 화면에 그릴지랑 데이터를 고려해야 할 듯.
+		return this.paymentList;
+	}
+//
+	private Payment createPayment(PaymentCreateDto paymentCreateDto) {
+		PayType payType = paymentCreateDto.getPayType();
+		Payment payment;
+		if (payType.equals(PayType.CARD)) {
+			payment = Card.builder()
+					.cardNo(paymentCreateDto.getCardNo())
+					.cvcNo(paymentCreateDto.getCvcNo())
+					.cardType(paymentCreateDto.getCardType())
+					.expiryDate(paymentCreateDto.getExpiryDate())
+					.build();
+		} else {
+			payment = Account.builder()
+					.accountNo(paymentCreateDto.getAccountNo())
+					.bankType(paymentCreateDto.getBankType())
+					.build();
+		}
+		payment.setPaytype(payType);
+		payment.setCustomerId(paymentCreateDto.getCustomerId());
+		return payment;
+	}
+	// use-case: 결제 수단 추가
+	public void addPayment(PaymentCreateDto paymentCreateDto){
+		Payment payment = createPayment(paymentCreateDto);
+		FinancialInstitute.validPaymentInfo(payment);
+		this.paymentList.add(payment);
+	}
+
+	// use-case: 결제수단을 설정한다.
+	// Contract에 따로 RegisterPayment를 만들고 여기선 반환만 해주면 될 듯.
+	public Payment getPayment(int paymentId) {
+		for (Payment payment : paymentList) {
+			if(payment.getId() == paymentId)
+				return payment;
+		}
+		throw new PaymentNotFoundException();
+	}
+
+	// use-case: 보험료를 납부한다. -> Contract의 Method로 이전
 	/*
 
 	// use-case: 보상처리 담당자를 변경한다.
@@ -91,68 +140,14 @@ public class Customer {
 	}
 
 
-	// use-case: 보험료를 납부한다.
-	public void pay(Contract contract){
-		PaymentDao paymentDao = new PaymentDaoImpl();
-		Payment payment = paymentDao.read(contract.getPaymentId());
-		if(payment != null)
-			ElectronicPaymentSystem.pay(payment.toStringForPay(), contract.getPremium());
-	}
+
 
 	public List<Contract> readContracts(){
 		ContractDao contractList = new ContractDaoImpl();
 		return contractList.findAllByCustomerId(this.getId());
 	}
 
-	public void readPayments(){
-		PaymentDao paymentDao = new PaymentDaoImpl();
-		List<Payment> payments = paymentDao.findAllByCustomerId(this.id);
-		this.setPaymentList((List<Payment>) payments);
-	}
 
-	private Payment createPayment(PaymentDto paymentDto) {
-		PayType payType = paymentDto.getPayType();
-		Payment payment;
-		if (payType.equals(PayType.CARD)) {
-			payment = Card.builder()
-					.cardNo(paymentDto.getCardNo())
-					.cvcNo(paymentDto.getCvcNo())
-					.cardType(paymentDto.getCardType())
-					.expiryDate(paymentDto.getExpiryDate())
-					.build();
-		} else {
-			payment = Account.builder()
-					.accountNo(paymentDto.getAccountNo())
-					.bankType(paymentDto.getBankType())
-					.build();
-		}
-		payment.setPaytype(payType);
-		payment.setCustomerId(paymentDto.getCustomerId());
-		return payment;
-
-	}
-
-	// use-case: 결제 수단 추가
-	public void addPayment(PaymentDto paymentDto){
-		Payment payment = createPayment(paymentDto);
-		FinancialInstitute.validPaymentInfo(payment);
-		PaymentDao paymentDao = new PaymentDaoImpl();
-		paymentDao.create(payment);
-		this.paymentList.add(payment);
-	}
-
-	// use-case: 결제수단을 설정한다.
-	public void registerPayment(Contract contract, int paymentId) {
-		PaymentDao paymentDao = new PaymentDaoImpl();
-		Payment payment = paymentDao.read(paymentId);
-		if (payment.getCustomerId() != this.id) {
-			throw new MyIllegalArgumentException(ExceptionConstants.INPUT_DATA_ON_LIST);
-		}
-
-		contract.setPaymentId(payment.getId());
-		ContractDao contractList = new ContractDaoImpl();
-		contractList.updatePayment(contract.getId(),payment.getId());
-	}
 
 	// use-case : 사고를 접수한다
 	// -> Accident (e.g., createAccident())

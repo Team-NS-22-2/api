@@ -5,10 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /**
  * @author 규현
@@ -25,6 +22,7 @@ public abstract class Payment {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	protected int id;
 	protected PayType paytype;
+	@JoinColumn(name = "customer_id")
 	protected int customerId;
 
 }

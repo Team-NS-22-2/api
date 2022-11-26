@@ -14,5 +14,5 @@ public enum CardType {
 	BC,
 	NH,
 	SAMSUNG,
-	HYNDAI
+	HYUNDAI
 }

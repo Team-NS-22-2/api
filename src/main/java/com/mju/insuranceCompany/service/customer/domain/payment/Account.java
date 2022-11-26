@@ -3,6 +3,7 @@ package com.mju.insuranceCompany.service.customer.domain.payment;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
@@ -15,7 +16,7 @@ import javax.persistence.Entity;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Builder
+@Builder @Getter
 public class Account extends Payment {
 
 	private String accountNo;
