@@ -49,11 +49,10 @@ public class Insurance {
 	@PrimaryKeyJoinColumn
 	private SalesAuthorizationFile salesAuthorizationFile;
 
-	public static Insurance createHealthInsurance(InsuranceBasicInfoDto basicInfo,
-												  ArrayList<GuaranteeDto> guaranteeInfoList,
-												  int employeeId,
-												  ArrayList<HealthDetailDto> healthDtoList){
-		Insurance insurance = Insurance.builder()
+	private static Insurance createInsurance(InsuranceBasicInfoDto basicInfo,
+											 List<GuaranteeDto> guaranteeInfoList,
+										 	 int employeeId) {
+		return Insurance.builder()
 				.name(basicInfo.getName())
 				.description(basicInfo.getDescription())
 				.contractPeriod(basicInfo.getContractPeriod())
@@ -62,48 +61,56 @@ public class Insurance {
 				.developInfo(createDevelopInfo(employeeId))
 				.salesAuthorizationFile(new SalesAuthorizationFile())
 				.build();
+	}
 
-		return null;
+	public static Insurance createHealthInsurance(InsuranceBasicInfoDto basicInfo,
+												  List<GuaranteeDto> guaranteeInfoList,
+												  int employeeId,
+												  List<HealthDetailDto> healthDtoList){
+		Insurance insurance = createInsurance(basicInfo, guaranteeInfoList, employeeId);
+		insurance.setInsuranceType(InsuranceType.HEALTH);
+		List<InsuranceDetail> insuranceDetails = new ArrayList<>();
+		for(HealthDetailDto healthDetailDto: healthDtoList) {
+			insuranceDetails.add(healthDetailDto.toEntity());
+		}
+		insurance.setInsuranceDetailList(insuranceDetails);
+		return insurance;
 	}
 
 	public static Insurance createCarInsurance( InsuranceBasicInfoDto basicInfo,
-												ArrayList<GuaranteeDto> guaranteeInfoList,
+												List<GuaranteeDto> guaranteeInfoList,
 												int employeeId,
-												ArrayList<CarDetailDto> carDtoList){
-		Insurance insurance = Insurance.builder()
-				.name(basicInfo.getName())
-				.description(basicInfo.getDescription())
-				.contractPeriod(basicInfo.getContractPeriod())
-				.paymentPeriod(basicInfo.getPaymentPeriod())
-				.guaranteeList(createGuaranteeList(guaranteeInfoList))
-				.developInfo(createDevelopInfo(employeeId))
-				.salesAuthorizationFile(new SalesAuthorizationFile())
-				.build();
-		return null;
+												List<CarDetailDto> carDtoList){
+		Insurance insurance = createInsurance(basicInfo, guaranteeInfoList, employeeId);
+		insurance.setInsuranceType(InsuranceType.CAR);
+		List<InsuranceDetail> insuranceDetails = new ArrayList<>();
+		for(CarDetailDto carDetailDto : carDtoList) {
+			insuranceDetails.add(carDetailDto.toEntity());
+		}
+		insurance.setInsuranceDetailList(insuranceDetails);
+		return insurance;
 	}
 	public static Insurance createFireInsurance(InsuranceBasicInfoDto basicInfo,
-												ArrayList<GuaranteeDto> guaranteeInfoList,
+												List<GuaranteeDto> guaranteeInfoList,
 												int employeeId,
-												ArrayList<FireDetailDto> fireDtoList){
-		Insurance insurance = Insurance.builder()
-				.name(basicInfo.getName())
-				.description(basicInfo.getDescription())
-				.contractPeriod(basicInfo.getContractPeriod())
-				.paymentPeriod(basicInfo.getPaymentPeriod())
-				.guaranteeList(createGuaranteeList(guaranteeInfoList))
-				.developInfo(createDevelopInfo(employeeId))
-				.salesAuthorizationFile(new SalesAuthorizationFile())
-				.build();
-		return null;
+												List<FireDetailDto> fireDtoList){
+		Insurance insurance = createInsurance(basicInfo, guaranteeInfoList, employeeId);
+		insurance.setInsuranceType(InsuranceType.FIRE);
+		List<InsuranceDetail> insuranceDetails = new ArrayList<>();
+		for(FireDetailDto fireDetailDto : fireDtoList) {
+			insuranceDetails.add(fireDetailDto.toEntity());
+		}
+		insurance.setInsuranceDetailList(insuranceDetails);
+		return insurance;
 	}
 
-	private static ArrayList<Guarantee> createGuaranteeList(ArrayList<GuaranteeDto> guaranteeInfoList) {
-		ArrayList<Guarantee> guaranteeList = new ArrayList<>();
-		for(int i=0; i<guaranteeInfoList.size(); i++) {
+	private static List<Guarantee> createGuaranteeList(List<GuaranteeDto> guaranteeInfoList) {
+		List<Guarantee> guaranteeList = new ArrayList<>();
+		for (GuaranteeDto guaranteeDto : guaranteeInfoList) {
 			guaranteeList.add(Guarantee.builder()
-					.name(guaranteeInfoList.get(i).getName())
-					.description(guaranteeInfoList.get(i).getDescription())
-					.guaranteeAmount(guaranteeInfoList.get(i).getAmount())
+					.name(guaranteeDto.getName())
+					.description(guaranteeDto.getDescription())
+					.guaranteeAmount(guaranteeDto.getAmount())
 					.build()
 			);
 		}
