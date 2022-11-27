@@ -5,10 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /**
  * @author 규현
@@ -18,13 +15,17 @@ import javax.persistence.Id;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Inheritance(strategy = InheritanceType.JOINED)
 @Entity
 public abstract class Payment {
 
-	@Id
+	@Id @Column(name = "payment_id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	protected int id;
-	protected PayType paytype;
+
+	@Enumerated(value = EnumType.STRING)
+	protected PayType payType;
+	@JoinColumn(name = "customer_id")
 	protected int customerId;
 
 }

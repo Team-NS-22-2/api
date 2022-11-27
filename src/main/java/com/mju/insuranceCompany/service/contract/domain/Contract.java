@@ -1,6 +1,9 @@
 package com.mju.insuranceCompany.service.contract.domain;
 
 
+import com.mju.insuranceCompany.service.contract.exception.PaymentNotRegisteredException;
+import com.mju.insuranceCompany.service.customer.domain.payment.Payment;
+import com.mju.outerSystem.ElectronicPaymentSystem;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
@@ -28,7 +31,10 @@ public class Contract {
 	private String reasonOfUw;
 	@Enumerated(value = EnumType.STRING)
 	private ConditionOfUw conditionOfUw;
-	private int paymentId;
+
+	@OneToOne
+	@JoinColumn(name = "payment_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+	private Payment payment;
 	private int insuranceId;
 	private int customerId;
 	private int employeeId;
@@ -47,5 +53,15 @@ public class Contract {
 		this.setConditionOfUw(conditionOfUw);
 
 		if (!conditionOfUw.getName().equals(ConditionOfUw.RE_AUDIT.getName())) this.setPublishStock(true);
+	}
+
+	public void registerPayment(Payment payment) {
+		this.payment = payment;
+	}
+
+	public void payPremium(ElectronicPaymentSystem electronicPaymentSystem){
+		if(payment == null)
+			throw new PaymentNotRegisteredException();
+		electronicPaymentSystem.pay(payment,premium);
 	}
 }
