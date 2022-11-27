@@ -1,4 +1,8 @@
-package com.mju.insuranceCompany.service.customer.domain.payment;
+package com.mju.insuranceCompany.service.customer.controller.dto;
+
+import com.mju.insuranceCompany.service.customer.domain.payment.BankType;
+import com.mju.insuranceCompany.service.customer.domain.payment.CardType;
+import com.mju.insuranceCompany.service.customer.domain.payment.PayType;
 
 import java.time.LocalDate;
 
@@ -13,7 +17,7 @@ import java.time.LocalDate;
  * -----------------------------------------------------------
  * 2022-05-16                규현             최초 생성
  */
-public class PaymentDto {
+public class PaymentCreateDto {
 
     private PayType payType;
     private int customerId;
@@ -32,7 +36,7 @@ public class PaymentDto {
         return payType;
     }
 
-    public PaymentDto setPayType(PayType payType) {
+    public PaymentCreateDto setPayType(PayType payType) {
         this.payType = payType;
         return this;
     }
@@ -41,7 +45,7 @@ public class PaymentDto {
         return customerId;
     }
 
-    public PaymentDto setCustomerId(int customerId) {
+    public PaymentCreateDto setCustomerId(int customerId) {
         this.customerId = customerId;
         return this;
     }
@@ -50,7 +54,7 @@ public class PaymentDto {
         return cardNo;
     }
 
-    public PaymentDto setCardNo(String cardNo) {
+    public PaymentCreateDto setCardNo(String cardNo) {
         this.cardNo = cardNo;
         return this;
     }
@@ -59,7 +63,7 @@ public class PaymentDto {
         return cardType;
     }
 
-    public PaymentDto setCardType(CardType cardType) {
+    public PaymentCreateDto setCardType(CardType cardType) {
         this.cardType = cardType;
         return this;
     }
@@ -68,7 +72,7 @@ public class PaymentDto {
         return cvcNo;
     }
 
-    public PaymentDto setCvcNo(String cvcNo) {
+    public PaymentCreateDto setCvcNo(String cvcNo) {
         this.cvcNo = cvcNo;
         return this;
     }
@@ -77,7 +81,7 @@ public class PaymentDto {
         return expiryDate;
     }
 
-    public PaymentDto setExpiryDate(LocalDate expiryDate) {
+    public PaymentCreateDto setExpiryDate(LocalDate expiryDate) {
         this.expiryDate = expiryDate;
         return this;
     }
@@ -86,7 +90,7 @@ public class PaymentDto {
         return accountNo;
     }
 
-    public PaymentDto setAccountNo(String accountNo) {
+    public PaymentCreateDto setAccountNo(String accountNo) {
         this.accountNo = accountNo;
         return this;
     }
@@ -95,7 +99,7 @@ public class PaymentDto {
         return bankType;
     }
 
-    public PaymentDto setBankType(BankType bankType) {
+    public PaymentCreateDto setBankType(BankType bankType) {
         this.bankType = bankType;
         return this;
     }

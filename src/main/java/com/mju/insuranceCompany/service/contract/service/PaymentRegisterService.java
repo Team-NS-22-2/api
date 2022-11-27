@@ -1,36 +1,31 @@
-package com.mju.insuranceCompany.service.customer.service;
+package com.mju.insuranceCompany.service.contract.service;
+
 
 import com.mju.insuranceCompany.global.utility.AuthenticationExtractor;
-import com.mju.insuranceCompany.service.customer.controller.dto.PaymentBasicInfoDto;
-import com.mju.insuranceCompany.service.customer.controller.dto.PaymentCreateDto;
+import com.mju.insuranceCompany.service.contract.controller.dto.PaymentRegisterOnContractDto;
+import com.mju.insuranceCompany.service.contract.domain.Contract;
+import com.mju.insuranceCompany.service.contract.repository.ContractRepository;
 import com.mju.insuranceCompany.service.customer.domain.Customer;
+import com.mju.insuranceCompany.service.customer.domain.payment.Payment;
 import com.mju.insuranceCompany.service.customer.exception.CustomerNotFoundException;
 import com.mju.insuranceCompany.service.customer.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+@Service @RequiredArgsConstructor @Transactional
+public class PaymentRegisterService {
 
-@Slf4j
-@Service @Transactional @RequiredArgsConstructor
-public class CustomerService {
-
+    private final ContractRepository contractRepository;
     private final CustomerRepository customerRepository;
 
-    public List<PaymentBasicInfoDto> getAllPaymentInfos(){
+    public void registerPaymentOnContract(PaymentRegisterOnContractDto dto){
         Customer customer = getCustomerByExtractedId();
-        return customer.readPayments()
-                .stream()
-                .map(PaymentBasicInfoDto::toDto)
-                .toList();
-    }
+        Contract contract = contractRepository.findById(dto.getContractId()).orElseThrow();
 
 
-    public void addNewPayment(PaymentCreateDto paymentCreateDto){
-        Customer customer = getCustomerByExtractedId();
-        customer.addPayment(paymentCreateDto);
+        Payment payment = customer.getPayment(dto.getPaymentId());
+        contract.registerPayment(payment);
     }
 
     private Customer getCustomerByExtractedId() {
@@ -38,6 +33,4 @@ public class CustomerService {
         return customerRepository.findById(customerId)
                 .orElseThrow(CustomerNotFoundException::new);
     }
-
-
 }
