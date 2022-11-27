@@ -42,17 +42,15 @@ public class Insurance {
 	private List<Guarantee> guaranteeList;
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "insurance", cascade = CascadeType.ALL)
 	private List<InsuranceDetail> insuranceDetailList;
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@PrimaryKeyJoinColumn
+	@OneToOne(fetch = FetchType.LAZY, mappedBy = "insurance", cascade = CascadeType.ALL)
 	private DevelopInfo developInfo;
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@PrimaryKeyJoinColumn
+	@OneToOne(fetch = FetchType.LAZY, mappedBy = "insurance", cascade = CascadeType.ALL)
 	private SalesAuthorizationFile salesAuthorizationFile;
 
 	private static Insurance createInsurance(InsuranceBasicInfoDto basicInfo,
 											 List<GuaranteeDto> guaranteeInfoList,
 										 	 int employeeId) {
-		return Insurance.builder()
+		Insurance insurance = Insurance.builder()
 				.name(basicInfo.getName())
 				.description(basicInfo.getDescription())
 				.contractPeriod(basicInfo.getContractPeriod())
@@ -61,6 +59,9 @@ public class Insurance {
 				.developInfo(createDevelopInfo(employeeId))
 				.salesAuthorizationFile(new SalesAuthorizationFile())
 				.build();
+		insurance.getDevelopInfo().setInsurance(insurance);
+		insurance.getSalesAuthorizationFile().setInsurance(insurance);
+		return insurance;
 	}
 
 	public static Insurance createHealthInsurance(InsuranceBasicInfoDto basicInfo,
@@ -189,15 +190,13 @@ public class Insurance {
 		validatePremiumCondition(standardPremiumDto);
 
 		long damageAmount = standardPremiumDto.getDamageAmount() * 10000;
-		long businessExpense = 10000 * standardPremiumDto.getBusinessExpense();
+		long businessExpense = standardPremiumDto.getBusinessExpense() * 10000;
 		double profitMargin = standardPremiumDto.getProfitMargin() / 100;
 		long purePremium = damageAmount / standardPremiumDto.getCountContract();
 		long riskCost = businessExpense / standardPremiumDto.getCountContract();
-		int stPremium = (int) ((purePremium + riskCost) / (1 - profitMargin));
-		return stPremium;
+		return (int) ((purePremium + riskCost) / (1 - profitMargin));
 	}
 
-	// TODO API 1.건강보험계산 2.자동차보험계산 3.화재보험계산
 	public static int calcHealthPremium(StandardPremiumDto standardPremiumDto, HealthDetailDto dtoHealth) {
 		int stPremium = calcStandardPremium(standardPremiumDto);
 		double weightRatio = 1.0;

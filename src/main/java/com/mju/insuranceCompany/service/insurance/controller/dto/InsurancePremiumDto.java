@@ -5,7 +5,6 @@ import lombok.Data;
 
 @Data
 @Builder
-public class InquireHealthPremiumRequest {
-    private String ssn;
-    private int riskCount;
+public class InsurancePremiumDto {
+    private int premium;
 }

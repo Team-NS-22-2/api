@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class InquireFirePremiumRequest {
+public class InquireFirePremiumDto {
     private BuildingType buildingType;
     private long collateralAmount;
 }

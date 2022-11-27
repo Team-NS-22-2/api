@@ -8,7 +8,9 @@ import com.mju.insuranceCompany.service.contract.service.ContractCreateService;
 import com.mju.insuranceCompany.service.contract.service.ContractService;
 import com.mju.insuranceCompany.service.employee.controller.dto.ConditionOfUwOfCustomerResponse;
 import com.mju.insuranceCompany.service.employee.controller.dto.UnderwritingRequest;
+import com.mju.insuranceCompany.service.insurance.controller.dto.*;
 import com.mju.insuranceCompany.service.insurance.domain.InsuranceType;
+import com.mju.insuranceCompany.service.insurance.service.InsuranceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +24,7 @@ public class EmployeeController {
 
     private final ContractCreateService contractCreateService;
     private final ContractService contractService;
+    private final InsuranceService insuranceService;
 
 //        건강보험 판매
     @PostMapping("/sales/health/{insId}")
@@ -70,6 +73,78 @@ public class EmployeeController {
     @GetMapping("/uw/car/{contractId}")
     public ResponseEntity<CustomerCarContractDto> getCarContractOfCustomer(@PathVariable int contractId) {
         return ResponseEntity.ok(contractService.getCarContractOfCustomerByContractId(contractId));
+    }
+
+    /**
+     * 직원 상품 개발리스트 조회
+     * @return InsuranceOfDeveloperDto List
+     */
+    @GetMapping("/dev/list")
+    public ResponseEntity<List<InsuranceOfDeveloperDto>> getInsuranceListOfDeveloper() {
+        return ResponseEntity.ok(insuranceService.getInsuranceListOfDeveloper());
+    }
+
+    /**
+     * 건강보험료 계산
+     * @param calculateHealthPremiumDto 순보험료 Dto, 건강보험 정보 Dto
+     * @return 건강보험료
+     */
+    @PostMapping("/dev/health-premium")
+    public ResponseEntity<InsurancePremiumDto> calculateHealthPremium(@RequestBody CalculateHealthPremiumDto calculateHealthPremiumDto) {
+        return ResponseEntity.ok(insuranceService.calculateHealthPremium(calculateHealthPremiumDto));
+    }
+
+    /**
+     * 자동차보험료 계산
+     * @param calculateCarPremiumDto 순보험료 Dto, 자동차보험 정보 Dto
+     * @return 자동차보험료
+     */
+    @PostMapping("/dev/car-premium")
+    public ResponseEntity<InsurancePremiumDto> calculateCarPremium(@RequestBody CalculateCarPremiumDto calculateCarPremiumDto) {
+        return ResponseEntity.ok(insuranceService.calculateCarPremium(calculateCarPremiumDto));
+    }
+
+    /**
+     * 화재보험료 계산
+     * @param calculateFirePremiumDto 순보험료 Dto, 화재보험 정보 Dto
+     * @return 화재보험료
+     */
+    @PostMapping("/dev/fire-premium")
+    public ResponseEntity<InsurancePremiumDto> calculateFirePremium(@RequestBody CalculateFirePremiumDto calculateFirePremiumDto) {
+        return ResponseEntity.ok(insuranceService.calculateFirePremium(calculateFirePremiumDto));
+    }
+
+    /**
+     * 건강보험 저장
+     * @param saveHealthInsuranceDto 보험기본정보 Dto, 보장 Dto List, 건강보험 정보 Dto List
+     * @return no contents
+     */
+    @PostMapping("/dev/save-health")
+    public ResponseEntity saveHealthInsurance(@RequestBody SaveHealthInsuranceDto saveHealthInsuranceDto) {
+        insuranceService.saveHealthInsurance(saveHealthInsuranceDto);
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * 자동차보험 저장
+     * @param saveCarInsuranceDto 보험기본정보 Dto, 보장 Dto List, 자동차보험 정보 Dto List
+     * @return no contents
+     */
+    @PostMapping("/dev/save-car")
+    public ResponseEntity saveCarInsurance(@RequestBody SaveCarInsuranceDto saveCarInsuranceDto) {
+        insuranceService.saveCarInsurance(saveCarInsuranceDto);
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * 화재보험 저장
+     * @param saveFireInsuranceDto 보험기본정보 Dto, 보장 Dto List, 화재보험 정보 Dto List
+     * @return no contents
+     */
+    @PostMapping("/dev/save-fire")
+    public ResponseEntity saveFireInsurance(@RequestBody SaveFireInsuranceDto saveFireInsuranceDto) {
+        insuranceService.saveFireInsurance(saveFireInsuranceDto);
+        return ResponseEntity.noContent().build();
     }
 
 }

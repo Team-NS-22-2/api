@@ -6,10 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDate;
 
 /**
@@ -26,6 +23,10 @@ public class DevelopInfo {
 
 	@Id
 	private int insuranceId;
+	@MapsId
+	@OneToOne
+	@JoinColumn(name = "insurance_id")
+	private Insurance insurance;
 	private int employeeId;
 	private LocalDate developDate;
 	@Enumerated(value = EnumType.STRING)

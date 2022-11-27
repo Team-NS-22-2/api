@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class InquireCarPremiumRequest {
+public class InquireCarPremiumDto {
     private String ssn;
     private long value;
 }
