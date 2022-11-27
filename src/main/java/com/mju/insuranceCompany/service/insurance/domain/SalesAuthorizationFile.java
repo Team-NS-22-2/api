@@ -4,8 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 /**
@@ -21,6 +20,10 @@ public class SalesAuthorizationFile {
 
 	@Id
 	private int insuranceId;
+	@MapsId
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "insurance_id")
+	private Insurance insurance;
 
 	/**
 	 * 보험상품신고서

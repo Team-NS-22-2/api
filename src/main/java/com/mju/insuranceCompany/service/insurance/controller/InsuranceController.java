@@ -1,10 +1,10 @@
 package com.mju.insuranceCompany.service.insurance.controller;
 
-import com.mju.insuranceCompany.service.insurance.controller.dto.InquirePremiumResponse;
+import com.mju.insuranceCompany.service.insurance.controller.dto.InsurancePremiumDto;
 import com.mju.insuranceCompany.service.insurance.service.InsuranceService;
-import com.mju.insuranceCompany.service.insurance.controller.dto.InquireCarPremiumRequest;
-import com.mju.insuranceCompany.service.insurance.controller.dto.InquireFirePremiumRequest;
-import com.mju.insuranceCompany.service.insurance.controller.dto.InquireHealthPremiumRequest;
+import com.mju.insuranceCompany.service.insurance.controller.dto.InquireCarPremiumDto;
+import com.mju.insuranceCompany.service.insurance.controller.dto.InquireFirePremiumDto;
+import com.mju.insuranceCompany.service.insurance.controller.dto.InquireHealthPremiumDto;
 import com.mju.insuranceCompany.service.insurance.controller.dto.InsuranceListDto;
 import com.mju.insuranceCompany.service.insurance.controller.dto.InsuranceGuaranteeDto;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ public class InsuranceController {
 
     @GetMapping("/all")
     public ResponseEntity<List<InsuranceListDto>> getInsuranceList() {
-        return ResponseEntity.ok(insuranceService.getAllInsuranceList());
+        return ResponseEntity.ok(insuranceService.getAllInsuranceListForSale());
     }
 
     @GetMapping("/{id}")
@@ -31,17 +31,17 @@ public class InsuranceController {
     }
 
     @PostMapping("/inquire-health/{insId}")
-    public ResponseEntity<InquirePremiumResponse> inquireHealthPremium(@PathVariable int insId, @RequestBody InquireHealthPremiumRequest requestDto) {
+    public ResponseEntity<InsurancePremiumDto> inquireHealthPremium(@PathVariable int insId, @RequestBody InquireHealthPremiumDto requestDto) {
         return ResponseEntity.ok(insuranceService.inquireHealthPremium(insId, requestDto));
     }
 
     @PostMapping("/inquire-fire/{insId}")
-    public ResponseEntity<InquirePremiumResponse> inquireFirePremium(@PathVariable int insId, @RequestBody InquireFirePremiumRequest requestDto) {
+    public ResponseEntity<InsurancePremiumDto> inquireFirePremium(@PathVariable int insId, @RequestBody InquireFirePremiumDto requestDto) {
         return ResponseEntity.ok(insuranceService.inquireFirePremium(insId, requestDto));
     }
 
     @PostMapping("/inquire-car/{insId}")
-    public ResponseEntity<InquirePremiumResponse> inquireCarPremium(@PathVariable int insId, @RequestBody InquireCarPremiumRequest requestDto) {
+    public ResponseEntity<InsurancePremiumDto> inquireCarPremium(@PathVariable int insId, @RequestBody InquireCarPremiumDto requestDto) {
         return ResponseEntity.ok(insuranceService.inquireCarPremium(insId, requestDto));
     }
 

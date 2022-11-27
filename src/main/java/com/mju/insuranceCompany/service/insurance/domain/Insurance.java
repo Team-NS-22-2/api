@@ -42,17 +42,14 @@ public class Insurance {
 	private List<Guarantee> guaranteeList;
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "insurance", cascade = CascadeType.ALL)
 	private List<InsuranceDetail> insuranceDetailList;
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@PrimaryKeyJoinColumn
+	@OneToOne(fetch = FetchType.LAZY, mappedBy = "insurance", cascade = CascadeType.ALL)
 	private DevelopInfo developInfo;
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@PrimaryKeyJoinColumn
+	@OneToOne(fetch = FetchType.LAZY, mappedBy = "insurance", cascade = CascadeType.ALL)
 	private SalesAuthorizationFile salesAuthorizationFile;
 
-	public static Insurance createHealthInsurance(InsuranceBasicInfoDto basicInfo,
-												  ArrayList<GuaranteeDto> guaranteeInfoList,
-												  int employeeId,
-												  ArrayList<HealthDetailDto> healthDtoList){
+	private static Insurance createInsurance(InsuranceBasicInfoDto basicInfo,
+											 List<GuaranteeDto> guaranteeInfoList,
+										 	 int employeeId) {
 		Insurance insurance = Insurance.builder()
 				.name(basicInfo.getName())
 				.description(basicInfo.getDescription())
@@ -62,48 +59,59 @@ public class Insurance {
 				.developInfo(createDevelopInfo(employeeId))
 				.salesAuthorizationFile(new SalesAuthorizationFile())
 				.build();
+		insurance.getDevelopInfo().setInsurance(insurance);
+		insurance.getSalesAuthorizationFile().setInsurance(insurance);
+		return insurance;
+	}
 
-		return null;
+	public static Insurance createHealthInsurance(InsuranceBasicInfoDto basicInfo,
+												  List<GuaranteeDto> guaranteeInfoList,
+												  int employeeId,
+												  List<HealthDetailDto> healthDtoList){
+		Insurance insurance = createInsurance(basicInfo, guaranteeInfoList, employeeId);
+		insurance.setInsuranceType(InsuranceType.HEALTH);
+		List<InsuranceDetail> insuranceDetails = new ArrayList<>();
+		for(HealthDetailDto healthDetailDto: healthDtoList) {
+			insuranceDetails.add(healthDetailDto.toEntity());
+		}
+		insurance.setInsuranceDetailList(insuranceDetails);
+		return insurance;
 	}
 
 	public static Insurance createCarInsurance( InsuranceBasicInfoDto basicInfo,
-												ArrayList<GuaranteeDto> guaranteeInfoList,
+												List<GuaranteeDto> guaranteeInfoList,
 												int employeeId,
-												ArrayList<CarDetailDto> carDtoList){
-		Insurance insurance = Insurance.builder()
-				.name(basicInfo.getName())
-				.description(basicInfo.getDescription())
-				.contractPeriod(basicInfo.getContractPeriod())
-				.paymentPeriod(basicInfo.getPaymentPeriod())
-				.guaranteeList(createGuaranteeList(guaranteeInfoList))
-				.developInfo(createDevelopInfo(employeeId))
-				.salesAuthorizationFile(new SalesAuthorizationFile())
-				.build();
-		return null;
+												List<CarDetailDto> carDtoList){
+		Insurance insurance = createInsurance(basicInfo, guaranteeInfoList, employeeId);
+		insurance.setInsuranceType(InsuranceType.CAR);
+		List<InsuranceDetail> insuranceDetails = new ArrayList<>();
+		for(CarDetailDto carDetailDto : carDtoList) {
+			insuranceDetails.add(carDetailDto.toEntity());
+		}
+		insurance.setInsuranceDetailList(insuranceDetails);
+		return insurance;
 	}
 	public static Insurance createFireInsurance(InsuranceBasicInfoDto basicInfo,
-												ArrayList<GuaranteeDto> guaranteeInfoList,
+												List<GuaranteeDto> guaranteeInfoList,
 												int employeeId,
-												ArrayList<FireDetailDto> fireDtoList){
-		Insurance insurance = Insurance.builder()
-				.name(basicInfo.getName())
-				.description(basicInfo.getDescription())
-				.contractPeriod(basicInfo.getContractPeriod())
-				.paymentPeriod(basicInfo.getPaymentPeriod())
-				.guaranteeList(createGuaranteeList(guaranteeInfoList))
-				.developInfo(createDevelopInfo(employeeId))
-				.salesAuthorizationFile(new SalesAuthorizationFile())
-				.build();
-		return null;
+												List<FireDetailDto> fireDtoList){
+		Insurance insurance = createInsurance(basicInfo, guaranteeInfoList, employeeId);
+		insurance.setInsuranceType(InsuranceType.FIRE);
+		List<InsuranceDetail> insuranceDetails = new ArrayList<>();
+		for(FireDetailDto fireDetailDto : fireDtoList) {
+			insuranceDetails.add(fireDetailDto.toEntity());
+		}
+		insurance.setInsuranceDetailList(insuranceDetails);
+		return insurance;
 	}
 
-	private static ArrayList<Guarantee> createGuaranteeList(ArrayList<GuaranteeDto> guaranteeInfoList) {
-		ArrayList<Guarantee> guaranteeList = new ArrayList<>();
-		for(int i=0; i<guaranteeInfoList.size(); i++) {
+	private static List<Guarantee> createGuaranteeList(List<GuaranteeDto> guaranteeInfoList) {
+		List<Guarantee> guaranteeList = new ArrayList<>();
+		for (GuaranteeDto guaranteeDto : guaranteeInfoList) {
 			guaranteeList.add(Guarantee.builder()
-					.name(guaranteeInfoList.get(i).getName())
-					.description(guaranteeInfoList.get(i).getDescription())
-					.guaranteeAmount(guaranteeInfoList.get(i).getAmount())
+					.name(guaranteeDto.getName())
+					.description(guaranteeDto.getDescription())
+					.guaranteeAmount(guaranteeDto.getAmount())
 					.build()
 			);
 		}
@@ -182,15 +190,13 @@ public class Insurance {
 		validatePremiumCondition(standardPremiumDto);
 
 		long damageAmount = standardPremiumDto.getDamageAmount() * 10000;
-		long businessExpense = 10000 * standardPremiumDto.getBusinessExpense();
+		long businessExpense = standardPremiumDto.getBusinessExpense() * 10000;
 		double profitMargin = standardPremiumDto.getProfitMargin() / 100;
 		long purePremium = damageAmount / standardPremiumDto.getCountContract();
 		long riskCost = businessExpense / standardPremiumDto.getCountContract();
-		int stPremium = (int) ((purePremium + riskCost) / (1 - profitMargin));
-		return stPremium;
+		return (int) ((purePremium + riskCost) / (1 - profitMargin));
 	}
 
-	// TODO API 1.건강보험계산 2.자동차보험계산 3.화재보험계산
 	public static int calcHealthPremium(StandardPremiumDto standardPremiumDto, HealthDetailDto dtoHealth) {
 		int stPremium = calcStandardPremium(standardPremiumDto);
 		double weightRatio = 1.0;

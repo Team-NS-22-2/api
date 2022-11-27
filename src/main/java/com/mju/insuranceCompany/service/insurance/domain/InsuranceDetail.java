@@ -1,15 +1,16 @@
 package com.mju.insuranceCompany.service.insurance.domain;
 
 import lombok.*;
+import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 
-@Getter
-@Setter
+@Getter @Setter @ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
+@Accessors(chain = true)
 public class InsuranceDetail {
 
     @Id

@@ -2,6 +2,7 @@ package com.mju.insuranceCompany.service.insurance.domain;
 
 
 import lombok.*;
+import lombok.experimental.Accessors;
 
 import javax.persistence.Entity;
 import javax.persistence.PrimaryKeyJoinColumn;
@@ -11,12 +12,12 @@ import javax.persistence.PrimaryKeyJoinColumn;
  * @version 1.0
  * @created 09-5-2022 ���� 4:38:57
  */
-@Getter @ToString
+@Getter @Setter @ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Builder
 @PrimaryKeyJoinColumn(name = "car_detail_id")
+@Accessors(chain = true)
 public class CarDetail extends InsuranceDetail {
 
 	private int targetAge;
