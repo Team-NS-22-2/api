@@ -5,6 +5,7 @@ import com.mju.insuranceCompany.service.accident.domain.complain.Complain;
 import com.mju.insuranceCompany.service.customer.controller.dto.CustomerDto;
 import com.mju.insuranceCompany.service.customer.controller.dto.PaymentCreateDto;
 import com.mju.insuranceCompany.service.customer.domain.payment.*;
+import com.mju.insuranceCompany.service.customer.exception.PaymentListEmptyException;
 import com.mju.insuranceCompany.service.customer.exception.PaymentNotFoundException;
 import com.mju.outerSystem.FinancialInstitute;
 import lombok.AllArgsConstructor;
@@ -54,6 +55,10 @@ public class Customer {
 
 
 	public List<Payment> readPayments(){
+		if(this.paymentList.isEmpty()){
+			throw new PaymentListEmptyException();
+		}
+
 		return this.paymentList;
 	}
 //
