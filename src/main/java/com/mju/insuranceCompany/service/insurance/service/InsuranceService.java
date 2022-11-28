@@ -1,16 +1,19 @@
 package com.mju.insuranceCompany.service.insurance.service;
 
 import com.mju.insuranceCompany.global.utility.AuthenticationExtractor;
+import com.mju.insuranceCompany.global.utility.S3Client;
 import com.mju.insuranceCompany.service.employee.domain.Employee;
 import com.mju.insuranceCompany.service.employee.exception.EmployeeIdNotFoundException;
 import com.mju.insuranceCompany.service.employee.repository.EmployeeRepository;
 import com.mju.insuranceCompany.service.insurance.controller.dto.*;
 import com.mju.insuranceCompany.service.insurance.domain.Insurance;
+import com.mju.insuranceCompany.service.insurance.domain.SalesAuthorizationFile;
 import com.mju.insuranceCompany.service.insurance.exception.InsuranceIdNotFoundException;
 import com.mju.insuranceCompany.service.insurance.repository.InsuranceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -114,4 +117,49 @@ public class InsuranceService {
         );
         insuranceRepository.save(fireInsurance);
     }
+
+    public InsuranceForUploadAuthFileDto getInsuranceInfoForUploadAuthFile(int insuranceId) {
+        Insurance insurance = insuranceRepository.findById(insuranceId).orElseThrow(InsuranceIdNotFoundException::new);
+        return InsuranceForUploadAuthFileDto.toDto(insurance);
+    }
+
+    private final S3Client s3Client;
+
+    public UploadAuthFileResultDto uploadProdDeclarationFile(int insuranceId, MultipartFile multipartFile) {
+        Insurance insurance = insuranceRepository.findById(insuranceId).orElseThrow(InsuranceIdNotFoundException::new);
+        String fileUrl = s3Client.uploadFile(multipartFile);
+        SalesAuthorizationFile salesAuthorizationFile = insurance.getSalesAuthorizationFile();
+        salesAuthorizationFile.setProdDeclaration(fileUrl);
+        return getUploadFileResultDto(salesAuthorizationFile);
+    }
+
+    public UploadAuthFileResultDto uploadIsoVerificationFile(int insuranceId, MultipartFile multipartFile) {
+        Insurance insurance = insuranceRepository.findById(insuranceId).orElseThrow(InsuranceIdNotFoundException::new);
+        String fileUrl = s3Client.uploadFile(multipartFile);
+        SalesAuthorizationFile salesAuthorizationFile = insurance.getSalesAuthorizationFile();
+        salesAuthorizationFile.setIsoVerification(fileUrl);
+        return getUploadFileResultDto(salesAuthorizationFile);
+    }
+
+    public UploadAuthFileResultDto uploadSrActuaryVerificationFile(int insuranceId, MultipartFile multipartFile) {
+        Insurance insurance = insuranceRepository.findById(insuranceId).orElseThrow(InsuranceIdNotFoundException::new);
+        String fileUrl = s3Client.uploadFile(multipartFile);
+        SalesAuthorizationFile salesAuthorizationFile = insurance.getSalesAuthorizationFile();
+        salesAuthorizationFile.setSrActuaryVerification(fileUrl);
+        return getUploadFileResultDto(salesAuthorizationFile);
+    }
+
+    public UploadAuthFileResultDto uploadFssOfficialDocFile(int insuranceId, MultipartFile multipartFile) {
+        Insurance insurance = insuranceRepository.findById(insuranceId).orElseThrow(InsuranceIdNotFoundException::new);
+        String fileUrl = s3Client.uploadFile(multipartFile);
+        SalesAuthorizationFile salesAuthorizationFile = insurance.getSalesAuthorizationFile();
+        salesAuthorizationFile.setFssOfficialDoc(fileUrl);
+        return getUploadFileResultDto(salesAuthorizationFile);
+    }
+
+    private UploadAuthFileResultDto getUploadFileResultDto(SalesAuthorizationFile salesAuthorizationFile) {
+        return UploadAuthFileResultDto.builder()
+                .isExistAllFile(salesAuthorizationFile.isExistAllFile()).build();
+    }
+
 }

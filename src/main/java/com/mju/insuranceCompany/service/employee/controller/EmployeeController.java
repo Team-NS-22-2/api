@@ -14,6 +14,7 @@ import com.mju.insuranceCompany.service.insurance.service.InsuranceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -145,6 +146,60 @@ public class EmployeeController {
     public ResponseEntity saveFireInsurance(@RequestBody SaveFireInsuranceDto saveFireInsuranceDto) {
         insuranceService.saveFireInsurance(saveFireInsuranceDto);
         return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * 인가파일 등록할 보험 정보 조회
+     * @param insId 보험 ID
+     * @return InsuranceForUploadAuthFileDto
+     */
+    @GetMapping("/dev/auth-file/{insId}")
+    public ResponseEntity<InsuranceForUploadAuthFileDto> getInsuranceInfoForUploadAuthFile(@PathVariable int insId) {
+        return ResponseEntity.ok(insuranceService.getInsuranceInfoForUploadAuthFile(insId));
+    }
+
+    /**
+     * 보험상품신고서 등록
+     * @param insId 보험 ID
+     * @param multipartFile 보험상품신고서 파일
+     * @return UploadAuthFIleResultDto(isExistAllFile)
+     */
+    @PostMapping("/dev/auth-file/save/prod/{insId}")
+    public ResponseEntity<UploadAuthFileResultDto> uploadProdDeclarationFile(@PathVariable int insId, @RequestBody MultipartFile multipartFile) {
+        return ResponseEntity.ok(insuranceService.uploadProdDeclarationFile(insId, multipartFile));
+    }
+
+    /**
+     * 보험요율산출기관 검증확인서 등록
+     * @param insId 보험 ID
+     * @param multipartFile 보험요율산출기관 검증확인서 파일
+     * @return UploadAuthFIleResultDto(isExistAllFile)
+     */
+    @PostMapping("/dev/auth-file/save/iso/{insId}")
+    public ResponseEntity<UploadAuthFileResultDto> uploadIsoVerificationFile(@PathVariable int insId, @RequestBody MultipartFile multipartFile) {
+        return ResponseEntity.ok(insuranceService.uploadIsoVerificationFile(insId, multipartFile));
+    }
+
+    /**
+     * 선임계리사 검증기초서류 등록
+     * @param insId 보험 ID
+     * @param multipartFile 선임계리사 검증기초서류 파일
+     * @return UploadAuthFIleResultDto(isExistAllFile)
+     */
+    @PostMapping("/dev/auth-file/save/sractuary/{insId}")
+    public ResponseEntity<UploadAuthFileResultDto> uploadSrActuaryVerificationFile(@PathVariable int insId, @RequestBody MultipartFile multipartFile) {
+            return ResponseEntity.ok(insuranceService.uploadSrActuaryVerificationFile(insId, multipartFile));
+        }
+
+    /**
+     * 금융감독원 인가허가파일 등록
+     * @param insId 보험 ID
+     * @param multipartFile 금융감독원 인가허가파일 파일
+     * @return UploadAuthFIleResultDto(isExistAllFile)
+     */
+    @PostMapping("/dev/auth-file/save/fssofficial/{insId}")
+    public ResponseEntity<UploadAuthFileResultDto> uploadFssOfficialDocFile(@PathVariable int insId, @RequestBody MultipartFile multipartFile) {
+        return ResponseEntity.ok(insuranceService.uploadFssOfficialDocFile(insId, multipartFile));
     }
 
 }
