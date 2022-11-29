@@ -223,6 +223,7 @@ public class Insurance {
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////
+	// TODO NoResultantException이 아닌 다른 특정 Exception으로 새로 정의해야 할듯?
 	public int inquireHealthPremium(String ssn, int riskCount){
 		int premium = 0;
 		int targetAge = CriterionSetUtil.setTargetAge((TargetInfoCalculator.targetAgeCalculator(ssn)));
@@ -292,6 +293,12 @@ public class Insurance {
 		};
 	}
 
+	/**
+	 * SalesAuthFile을 삭제하기 위한 메소드.
+	 * 해당 Insurance에 저장되어 있는 파일 저장 경로를 null로 바꾸고, 기존 파일 저장 경로를 리턴한다.
+	 * @param fileType 삭제할 파일의 타입
+	 * @return 삭제할 파일의 저장 경로
+	 */
 	public String deleteSalesAuthFile(SalesAuthFileType fileType) {
 		this.developInfo.setSalesAuthorizationState(SalesAuthorizationState.DISALLOWANCE);
 		return switch (fileType) {
@@ -303,8 +310,11 @@ public class Insurance {
 	}
 
 	public void updateSalesAuthorizationState(SalesAuthorizationState updatedState) {
-		if(updatedState==SalesAuthorizationState.PERMISSION && !this.salesAuthorizationFile.isExistAllFile()) {
-			throw new SalesAuthStateInsufficientConditionException();
+		if(updatedState==SalesAuthorizationState.PERMISSION) {
+			if(!this.salesAuthorizationFile.isExistAllFile()) {
+				throw new SalesAuthStateInsufficientConditionException();
+			}
+			this.developInfo.setSalesStartDate(LocalDate.now());
 		}
 		this.developInfo.setSalesAuthorizationState(updatedState);
 	}
