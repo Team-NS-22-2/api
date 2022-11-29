@@ -15,10 +15,8 @@ public class UserController {
 
     @PostMapping("/sign-up/{cId}")
     public ResponseEntity signUp(@PathVariable int cId, @RequestBody UserBasicRequest request) {
-        if(userService.signUp(cId, request))
-            return ResponseEntity.noContent().build();
-        else
-            return ResponseEntity.internalServerError().build();
+        userService.signUp(cId, request);
+        return ResponseEntity.noContent().build();
     }
 
 }

@@ -9,7 +9,8 @@ import org.springframework.http.HttpStatus;
 public enum UserErrorCode implements ErrorCode {
 
     UNAUTHORIZED_ACCESS(HttpStatus.UNAUTHORIZED, "권한이 없는 접근입니다."),
-    USER_ID_NOT_FOUND(HttpStatus.NOT_FOUND, "찾을 수 없는 ID입니다.")
+    USER_ID_NOT_FOUND(HttpStatus.NOT_FOUND, "찾을 수 없는 ID입니다."),
+    DUPLICATE_USER_ID(HttpStatus.BAD_REQUEST, "해당 ID는 이미 존재하는 ID입니다.")
     ;
 
 
