@@ -19,8 +19,13 @@ public class ErrorResponse {
     private String path;
 
     public static ErrorResponse createErrorResponse(ErrorCode errorCode, String path) {
-        return new ErrorResponse(LocalDateTime.now().toString(),errorCode.getHttpStatus()
-        , errorCode.getErrorName(), errorCode.getErrorMessage(),path);
+        return new ErrorResponse(
+                LocalDateTime.now().toString(),
+                errorCode.getHttpStatus(),
+                errorCode.getErrorName(),
+                errorCode.getErrorMessage(),
+                path
+        );
     }
 
     @Override

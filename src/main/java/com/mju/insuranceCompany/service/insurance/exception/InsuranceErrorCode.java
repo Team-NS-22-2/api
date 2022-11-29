@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 public enum InsuranceErrorCode implements ErrorCode {
 
     INSURANCE_ID_NOT_FOUND(HttpStatus.NOT_FOUND, "입력하신 ID에 해당하는 보험 정보가 존재하지 않습니다."),
+    SALES_AUTH_FILE_TYPE_BAD_REQUEST(HttpStatus.BAD_REQUEST, "유효하지 않은 파일 타입으로 요청하였습니다.")
 
     ;
 

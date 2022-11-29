@@ -6,10 +6,7 @@ import com.mju.insuranceCompany.global.utility.CriterionSetUtil;
 import com.mju.insuranceCompany.global.utility.TargetInfoCalculator;
 import com.mju.insuranceCompany.service.contract.domain.BuildingType;
 import com.mju.insuranceCompany.service.insurance.controller.dto.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -26,6 +23,7 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Builder
+@ToString(exclude = {"developInfo", "salesAuthorizationFile"})
 public class Insurance {
 
 	@Id
@@ -47,6 +45,8 @@ public class Insurance {
 	@OneToOne(fetch = FetchType.LAZY, mappedBy = "insurance", cascade = CascadeType.ALL)
 	private SalesAuthorizationFile salesAuthorizationFile;
 
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////
 	private static Insurance createInsurance(InsuranceBasicInfoDto basicInfo,
 											 List<GuaranteeDto> guaranteeInfoList,
 										 	 int employeeId) {
@@ -126,58 +126,7 @@ public class Insurance {
 				.build();
 	}
 
-	public int inquireHealthPremium(String ssn, int riskCount){
-		int premium = 0;
-		int targetAge = CriterionSetUtil.setTargetAge((TargetInfoCalculator.targetAgeCalculator(ssn)));
-		boolean targetSex = TargetInfoCalculator.targetSexCalculator(ssn);
-		boolean riskCriterion = CriterionSetUtil.setRiskCriterion(riskCount);
-
-		for (InsuranceDetail insuranceDetail : this.insuranceDetailList) {
-			HealthDetail healthDetail = (HealthDetail) insuranceDetail;
-			if (healthDetail.getTargetAge() == targetAge && healthDetail.isTargetSex() == targetSex && (healthDetail.isRiskCriterion()) == riskCriterion) {
-				premium = healthDetail.getPremium();
-				break;
-			}
-		}
-		if (premium == 0)
-			throw new NoResultantException();
-		return premium;
-	}
-
-	public int inquireFirePremium(BuildingType buildingType, Long collateralAmount){
-		int premium = 0;
-		Long collateralAmountCriterion = CriterionSetUtil.setCollateralAmountCriterion(collateralAmount);
-
-		for (InsuranceDetail insuranceDetail : this.insuranceDetailList) {
-			FireDetail fireDetail = (FireDetail) insuranceDetail;
-			if (fireDetail.getTargetBuildingType() == buildingType && fireDetail.getCollateralAmountCriterion() == collateralAmountCriterion) {
-				premium = fireDetail.getPremium();
-				break;
-			}
-		}
-		if (premium == 0)
-			throw new NoResultantException();
-		return premium;
-	}
-
-	public int inquireCarPremium(String ssn, Long value){
-		int premium = 0;
-		int targetAge = CriterionSetUtil.setTargetAge(TargetInfoCalculator.targetAgeCalculator(ssn));
-		Long valueCriterion = CriterionSetUtil.setValueCriterion(value);
-
-		for (InsuranceDetail insuranceDetail : this.insuranceDetailList) {
-			CarDetail carDetail = (CarDetail) insuranceDetail;
-			if (carDetail.getTargetAge() == targetAge && carDetail.getValueCriterion() == valueCriterion) {
-				premium = carDetail.getPremium();
-				break;
-			}
-		}
-		if (premium == 0)
-			throw new NoResultantException();
-		return premium;
-	}
-
-	private static void validatePremiumCondition(StandardPremiumDto standardPremiumDto){
+	private static void validatePremiumConditionForCalculate(StandardPremiumDto standardPremiumDto){
 		if(standardPremiumDto.getDamageAmount() <=0 ||
 				standardPremiumDto.getCountContract() <=0 ||
 				standardPremiumDto.getBusinessExpense() <=0 ||
@@ -187,7 +136,7 @@ public class Insurance {
 	}
 
 	private static int calcStandardPremium(StandardPremiumDto standardPremiumDto){
-		validatePremiumCondition(standardPremiumDto);
+		validatePremiumConditionForCalculate(standardPremiumDto);
 
 		long damageAmount = standardPremiumDto.getDamageAmount() * 10000;
 		long businessExpense = standardPremiumDto.getBusinessExpense() * 10000;
@@ -272,7 +221,93 @@ public class Insurance {
 		return (int) (stPremium * weightRatio);
 	}
 
+	//////////////////////////////////////////////////////////////////////////////////////////////////////
+	public int inquireHealthPremium(String ssn, int riskCount){
+		int premium = 0;
+		int targetAge = CriterionSetUtil.setTargetAge((TargetInfoCalculator.targetAgeCalculator(ssn)));
+		boolean targetSex = TargetInfoCalculator.targetSexCalculator(ssn);
+		boolean riskCriterion = CriterionSetUtil.setRiskCriterion(riskCount);
 
+		for (InsuranceDetail insuranceDetail : this.insuranceDetailList) {
+			HealthDetail healthDetail = (HealthDetail) insuranceDetail;
+			if (healthDetail.getTargetAge() == targetAge && healthDetail.isTargetSex() == targetSex && (healthDetail.isRiskCriterion()) == riskCriterion) {
+				premium = healthDetail.getPremium();
+				break;
+			}
+		}
+		if (premium == 0)
+			throw new NoResultantException();
+		return premium;
+	}
 
+	public int inquireFirePremium(BuildingType buildingType, Long collateralAmount){
+		int premium = 0;
+		Long collateralAmountCriterion = CriterionSetUtil.setCollateralAmountCriterion(collateralAmount);
+
+		for (InsuranceDetail insuranceDetail : this.insuranceDetailList) {
+			FireDetail fireDetail = (FireDetail) insuranceDetail;
+			if (fireDetail.getTargetBuildingType() == buildingType && fireDetail.getCollateralAmountCriterion() == collateralAmountCriterion) {
+				premium = fireDetail.getPremium();
+				break;
+			}
+		}
+		if (premium == 0)
+			throw new NoResultantException();
+		return premium;
+	}
+
+	public int inquireCarPremium(String ssn, Long value){
+		int premium = 0;
+		int targetAge = CriterionSetUtil.setTargetAge(TargetInfoCalculator.targetAgeCalculator(ssn));
+		Long valueCriterion = CriterionSetUtil.setValueCriterion(value);
+
+		for (InsuranceDetail insuranceDetail : this.insuranceDetailList) {
+			CarDetail carDetail = (CarDetail) insuranceDetail;
+			if (carDetail.getTargetAge() == targetAge && carDetail.getValueCriterion() == valueCriterion) {
+				premium = carDetail.getPremium();
+				break;
+			}
+		}
+		if (premium == 0)
+			throw new NoResultantException();
+		return premium;
+	}
+
+	public UploadAuthFileResultDto uploadSalesAuthFile(SalesAuthFileType fileType, String fileUrl) {
+		return switch (fileType) {
+			case PROD -> getUploadFileResultDto(salesAuthorizationFile.setProdDeclaration(fileUrl));
+			case ISO -> getUploadFileResultDto(salesAuthorizationFile.setIsoVerification(fileUrl));
+			case SR_ACTUARY -> getUploadFileResultDto(salesAuthorizationFile.setSrActuaryVerification(fileUrl));
+			case FSS_OFFICIAL -> getUploadFileResultDto(salesAuthorizationFile.setFssOfficialDoc(fileUrl));
+		};
+	}
+
+	public String getOriginSalesAuthorizationFileUrl(SalesAuthFileType fileType) {
+		return switch (fileType) {
+			case PROD -> this.salesAuthorizationFile.getProdDeclaration();
+			case ISO -> this.salesAuthorizationFile.getIsoVerification();
+			case SR_ACTUARY -> this.salesAuthorizationFile.getSrActuaryVerification();
+			case FSS_OFFICIAL -> this.salesAuthorizationFile.getFssOfficialDoc();
+		};
+	}
+
+	public String deleteSalesAuthFile(SalesAuthFileType fileType) {
+		this.developInfo.setSalesAuthorizationState(SalesAuthorizationState.DISALLOWANCE);
+		return switch (fileType) {
+			case PROD -> this.salesAuthorizationFile.deleteProdDeclaration();
+			case ISO -> this.salesAuthorizationFile.deleteIsoVerification();
+			case SR_ACTUARY -> this.salesAuthorizationFile.deleteSrActuaryVerification();
+			case FSS_OFFICIAL -> this.salesAuthorizationFile.deleteFssOfficialDoc();
+		};
+	}
+
+	public void updateSalesAuthorizationState(SalesAuthorizationState updatedState) {
+		this.developInfo.setSalesAuthorizationState(updatedState);
+	}
+
+	private UploadAuthFileResultDto getUploadFileResultDto(SalesAuthorizationFile salesAuthorizationFile) {
+		return UploadAuthFileResultDto.builder()
+				.isExistAllFile(salesAuthorizationFile.isExistAllFile()).build();
+	}
 
 }

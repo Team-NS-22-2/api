@@ -1,10 +1,12 @@
 package com.mju.insuranceCompany.global.config;
 
+import com.mju.insuranceCompany.global.config.converter.SalesAuthFileTypeConverter;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-//@Configuration
+@Configuration
 public class WebConfig implements WebMvcConfigurer {
 
     @Override
@@ -14,4 +16,8 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedMethods("GET","POST","PUT","PATCH","DELETE");
     }
 
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        registry.addConverter(new SalesAuthFileTypeConverter());
+    }
 }

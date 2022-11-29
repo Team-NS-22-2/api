@@ -10,10 +10,13 @@ import com.mju.insuranceCompany.service.employee.controller.dto.ConditionOfUwOfC
 import com.mju.insuranceCompany.service.employee.controller.dto.UnderwritingRequest;
 import com.mju.insuranceCompany.service.insurance.controller.dto.*;
 import com.mju.insuranceCompany.service.insurance.domain.InsuranceType;
+import com.mju.insuranceCompany.service.insurance.domain.SalesAuthFileType;
+import com.mju.insuranceCompany.service.insurance.domain.SalesAuthorizationState;
 import com.mju.insuranceCompany.service.insurance.service.InsuranceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -145,6 +148,68 @@ public class EmployeeController {
     public ResponseEntity saveFireInsurance(@RequestBody SaveFireInsuranceDto saveFireInsuranceDto) {
         insuranceService.saveFireInsurance(saveFireInsuranceDto);
         return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * 인가파일 등록할 보험 정보 조회
+     * @param insId 보험 ID
+     * @return InsuranceForUploadAuthFileDto
+     */
+    @GetMapping("/dev/auth-file/{insId}")
+    public ResponseEntity<InsuranceForUploadAuthFileDto> getInsuranceInfoForUploadAuthFile(@PathVariable int insId) {
+        return ResponseEntity.ok(insuranceService.getInsuranceInfoForUploadAuthFile(insId));
+    }
+
+    /**
+     * 판매인가파일 등록
+     * @param type 판매인가파일 타입
+     * @param insId 보험 id
+     * @param multipartFile 등록할 판매인가파일
+     * @return UploadAuthFileResultDto(isExistAllFile)
+     */
+    @PostMapping("/dev/auth-file/{type}/{insId}")
+    public ResponseEntity<UploadAuthFileResultDto> uploadSalesAuthorizationFile(
+            @PathVariable SalesAuthFileType type, @PathVariable int insId, @RequestBody MultipartFile multipartFile) {
+        return ResponseEntity.ok(insuranceService.uploadAuthFile(insId, multipartFile, type));
+    }
+
+    /**
+     * 판매인가파일 수정
+     * @param type 판매인가파일 타입
+     * @param insId 보험 id
+     * @param multipartFile 수정할 판매인가파일
+     * @return UploadAuthFileResultDto(isExistAllFile)
+     */
+    @PatchMapping("/dev/auth-file/{type}/{insId}")
+    public ResponseEntity<UploadAuthFileResultDto> updateSalesAuthorizationFile(
+            @PathVariable SalesAuthFileType type, @PathVariable int insId, @RequestBody MultipartFile multipartFile) {
+        return ResponseEntity.ok(insuranceService.updateAuthFile(insId, multipartFile, type));
+    }
+
+    /**
+     * 판매인가파일 삭제
+     * @param type 판매인가파일 타입
+     * @param insId 보험 id
+     * @return no content
+     */
+    @DeleteMapping("/dev/auth-file/{type}/{insId}")
+    public ResponseEntity deleteSalesAuthorizationFile(@PathVariable SalesAuthFileType type, @PathVariable int insId) {
+        insuranceService.deleteAuthFile(insId, type);
+        return ResponseEntity.noContent().build();
+    }
+
+    //판매인가상태 변경
+
+    /**
+     * 판매인가상태 변경
+     * @param insuranceId 보험 id
+     * @param salesAuthorizationState 변경할 판매인가상태
+     * @return no content
+     */
+    @PatchMapping("/dev/update-auth-state/{insuranceId}")
+    public ResponseEntity updateSalesAuthorizationState(@PathVariable int insuranceId, @RequestBody SalesAuthorizationState salesAuthorizationState) {
+        insuranceService.updateSalesAuthorizationState(insuranceId, salesAuthorizationState);
+        return ResponseEntity.ok().build();
     }
 
 }
