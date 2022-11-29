@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.servlet.http.HttpServletRequest;
-
 import java.util.NoSuchElementException;
 
 import static com.mju.insuranceCompany.global.exception.ErrorResponse.createErrorResponse;
@@ -25,7 +24,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<ErrorResponse> handleNoSuchElementException(NoSuchElementException ex, HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(createErrorResponse(NO_SUCH_ELEMENT,request.getRequestURI()));
+                .body(createErrorResponse(NO_SUCH_ELEMENT, request.getRequestURI()));
     }
 
 }

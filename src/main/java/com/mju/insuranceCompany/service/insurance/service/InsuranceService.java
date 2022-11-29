@@ -8,6 +8,7 @@ import com.mju.insuranceCompany.service.employee.repository.EmployeeRepository;
 import com.mju.insuranceCompany.service.insurance.controller.dto.*;
 import com.mju.insuranceCompany.service.insurance.domain.Insurance;
 import com.mju.insuranceCompany.service.insurance.domain.SalesAuthorizationFile;
+import com.mju.insuranceCompany.service.insurance.domain.SalesAuthorizationState;
 import com.mju.insuranceCompany.service.insurance.exception.InsuranceIdNotFoundException;
 import com.mju.insuranceCompany.service.insurance.repository.InsuranceRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,11 @@ public class InsuranceService {
 
     private final InsuranceRepository insuranceRepository;
     private final EmployeeRepository employeeRepository;
+    private final S3Client s3Client;
+
+    private Insurance getInsuranceById(int insuranceId) {
+        return insuranceRepository.findById(insuranceId).orElseThrow(InsuranceIdNotFoundException::new);
+    }
 
     /*
     TODO 이 메소드는 모든 보험정보를 조회하는 메소드다. 하지만 체결을 위한 보험은 판매상태가 PERMISSION 상태여야 한다. 다른 메소드를 만들어서 판매할 때는 해당 메소드를 호출하도록 해야하는가?
@@ -33,24 +39,24 @@ public class InsuranceService {
     }
     
     public InsuranceGuaranteeDto getInsuranceGuaranteeById(int id) {
-        Insurance insurance = insuranceRepository.findById(id).orElseThrow(InsuranceIdNotFoundException::new);
+        Insurance insurance = getInsuranceById(id);
         return InsuranceGuaranteeDto.toDto(insurance);
     }
 
-    public InsurancePremiumDto inquireHealthPremium(int insId, InquireHealthPremiumDto requestDto) {
-        Insurance insurance = insuranceRepository.findById(insId).orElseThrow(InsuranceIdNotFoundException::new);
+    public InsurancePremiumDto inquireHealthPremium(int id, InquireHealthPremiumDto requestDto) {
+        Insurance insurance = getInsuranceById(id);
         int premium = insurance.inquireHealthPremium(requestDto.getSsn(), requestDto.getRiskCount());
         return InsurancePremiumDto.builder().premium(premium).build();
     }
 
-    public InsurancePremiumDto inquireFirePremium(int insId, InquireFirePremiumDto requestDto) {
-        Insurance insurance = insuranceRepository.findById(insId).orElseThrow(InsuranceIdNotFoundException::new);
+    public InsurancePremiumDto inquireFirePremium(int insuranceId, InquireFirePremiumDto requestDto) {
+        Insurance insurance = getInsuranceById(insuranceId);
         int premium = insurance.inquireFirePremium(requestDto.getBuildingType(), requestDto.getCollateralAmount());
         return InsurancePremiumDto.builder().premium(premium).build();
     }
 
-    public InsurancePremiumDto inquireCarPremium(int insId, InquireCarPremiumDto requestDto) {
-        Insurance insurance = insuranceRepository.findById(insId).orElseThrow(InsuranceIdNotFoundException::new);
+    public InsurancePremiumDto inquireCarPremium(int insuranceId, InquireCarPremiumDto requestDto) {
+        Insurance insurance = getInsuranceById(insuranceId);
         int premium = insurance.inquireCarPremium(requestDto.getSsn(), requestDto.getValue());
         return InsurancePremiumDto.builder().premium(premium).build();
     }
@@ -119,47 +125,57 @@ public class InsuranceService {
     }
 
     public InsuranceForUploadAuthFileDto getInsuranceInfoForUploadAuthFile(int insuranceId) {
-        Insurance insurance = insuranceRepository.findById(insuranceId).orElseThrow(InsuranceIdNotFoundException::new);
+        Insurance insurance = getInsuranceById(insuranceId);
         return InsuranceForUploadAuthFileDto.toDto(insurance);
     }
 
-    private final S3Client s3Client;
-
-    public UploadAuthFileResultDto uploadProdDeclarationFile(int insuranceId, MultipartFile multipartFile) {
-        Insurance insurance = insuranceRepository.findById(insuranceId).orElseThrow(InsuranceIdNotFoundException::new);
+    public UploadAuthFileResultDto uploadAuthFile(int insuranceId, MultipartFile multipartFile, SalesAuthorizationFile.SalesAuthFileType fileType) {
+        Insurance insurance = getInsuranceById(insuranceId);
         String fileUrl = s3Client.uploadFile(multipartFile);
         SalesAuthorizationFile salesAuthorizationFile = insurance.getSalesAuthorizationFile();
-        salesAuthorizationFile.setProdDeclaration(fileUrl);
-        return getUploadFileResultDto(salesAuthorizationFile);
+        return getUploadFileResultDto(fileType, salesAuthorizationFile, fileUrl);
     }
 
-    public UploadAuthFileResultDto uploadIsoVerificationFile(int insuranceId, MultipartFile multipartFile) {
-        Insurance insurance = insuranceRepository.findById(insuranceId).orElseThrow(InsuranceIdNotFoundException::new);
-        String fileUrl = s3Client.uploadFile(multipartFile);
+    public UploadAuthFileResultDto updateAuthFile(int insuranceId, MultipartFile multipartFile, SalesAuthorizationFile.SalesAuthFileType fileType) {
+        Insurance insurance = getInsuranceById(insuranceId);
         SalesAuthorizationFile salesAuthorizationFile = insurance.getSalesAuthorizationFile();
-        salesAuthorizationFile.setIsoVerification(fileUrl);
-        return getUploadFileResultDto(salesAuthorizationFile);
+        String fileUrl = s3Client.updateFile(multipartFile, salesAuthorizationFile.getProdDeclaration());
+        return getUploadFileResultDto(fileType, salesAuthorizationFile, fileUrl);
     }
 
-    public UploadAuthFileResultDto uploadSrActuaryVerificationFile(int insuranceId, MultipartFile multipartFile) {
-        Insurance insurance = insuranceRepository.findById(insuranceId).orElseThrow(InsuranceIdNotFoundException::new);
-        String fileUrl = s3Client.uploadFile(multipartFile);
+    public void deleteAuthFile(int insuranceId, SalesAuthorizationFile.SalesAuthFileType fileType) {
+        Insurance insurance = getInsuranceById(insuranceId);
         SalesAuthorizationFile salesAuthorizationFile = insurance.getSalesAuthorizationFile();
-        salesAuthorizationFile.setSrActuaryVerification(fileUrl);
-        return getUploadFileResultDto(salesAuthorizationFile);
+        switch (fileType) {
+            case PROD -> deleteAuthFile(salesAuthorizationFile.deleteProdDeclaration());
+            case ISO -> deleteAuthFile(salesAuthorizationFile.deleteIsoVerification());
+            case SR_ACTUARY -> deleteAuthFile(salesAuthorizationFile.deleteSrActuaryVerification());
+            case FSS_OFFICIAL -> deleteAuthFile(salesAuthorizationFile.deleteFssOfficialDoc());
+        }
+        insurance.getDevelopInfo().setSalesAuthorizationState(SalesAuthorizationState.DISALLOWANCE);
     }
 
-    public UploadAuthFileResultDto uploadFssOfficialDocFile(int insuranceId, MultipartFile multipartFile) {
-        Insurance insurance = insuranceRepository.findById(insuranceId).orElseThrow(InsuranceIdNotFoundException::new);
-        String fileUrl = s3Client.uploadFile(multipartFile);
-        SalesAuthorizationFile salesAuthorizationFile = insurance.getSalesAuthorizationFile();
-        salesAuthorizationFile.setFssOfficialDoc(fileUrl);
-        return getUploadFileResultDto(salesAuthorizationFile);
+    private void deleteAuthFile(String fileUrl) {
+        s3Client.deleteFile(fileUrl);
+    }
+
+    public void updateSalesAuthorizationState(int insuranceId, SalesAuthorizationState salesAuthorizationState) {
+        Insurance insurance = getInsuranceById(insuranceId);
+        if(salesAuthorizationState == SalesAuthorizationState.WAIT) return;
+        insurance.getDevelopInfo().setSalesAuthorizationState(salesAuthorizationState);
+    }
+
+    private UploadAuthFileResultDto getUploadFileResultDto(SalesAuthorizationFile.SalesAuthFileType fileType, SalesAuthorizationFile salesAuthorizationFile, String fileUrl) {
+        return switch (fileType) {
+            case PROD -> getUploadFileResultDto(salesAuthorizationFile.setProdDeclaration(fileUrl));
+            case ISO -> getUploadFileResultDto(salesAuthorizationFile.setIsoVerification(fileUrl));
+            case SR_ACTUARY -> getUploadFileResultDto(salesAuthorizationFile.setSrActuaryVerification(fileUrl));
+            case FSS_OFFICIAL -> getUploadFileResultDto(salesAuthorizationFile.setFssOfficialDoc(fileUrl));
+        };
     }
 
     private UploadAuthFileResultDto getUploadFileResultDto(SalesAuthorizationFile salesAuthorizationFile) {
         return UploadAuthFileResultDto.builder()
                 .isExistAllFile(salesAuthorizationFile.isExistAllFile()).build();
     }
-
 }

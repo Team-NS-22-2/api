@@ -273,19 +273,4 @@ public class Insurance {
 		return premium;
 	}
 
-	public void registerProdDeclaration(String fileUrl) {
-		this.getSalesAuthorizationFile().setProdDeclaration(fileUrl);
-	}
-
-	public void registerIsoVerification(String fileUrl) {
-		this.getSalesAuthorizationFile().setIsoVerification(fileUrl);
-	}
-
-	public void registerSrActuaryVerification(String fileUrl) {
-		this.getSalesAuthorizationFile().setSrActuaryVerification(fileUrl);
-	}
-
-	public void registerFssOfficialDoc(String fileUrl) {
-		this.getSalesAuthorizationFile().setFssOfficialDoc(fileUrl);
-	}
 }

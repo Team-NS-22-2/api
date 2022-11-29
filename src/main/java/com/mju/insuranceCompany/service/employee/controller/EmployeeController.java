@@ -10,6 +10,8 @@ import com.mju.insuranceCompany.service.employee.controller.dto.ConditionOfUwOfC
 import com.mju.insuranceCompany.service.employee.controller.dto.UnderwritingRequest;
 import com.mju.insuranceCompany.service.insurance.controller.dto.*;
 import com.mju.insuranceCompany.service.insurance.domain.InsuranceType;
+import com.mju.insuranceCompany.service.insurance.domain.SalesAuthorizationFile;
+import com.mju.insuranceCompany.service.insurance.domain.SalesAuthorizationState;
 import com.mju.insuranceCompany.service.insurance.service.InsuranceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -166,7 +168,7 @@ public class EmployeeController {
      */
     @PostMapping("/dev/auth-file/save/prod/{insId}")
     public ResponseEntity<UploadAuthFileResultDto> uploadProdDeclarationFile(@PathVariable int insId, @RequestBody MultipartFile multipartFile) {
-        return ResponseEntity.ok(insuranceService.uploadProdDeclarationFile(insId, multipartFile));
+        return ResponseEntity.ok(insuranceService.uploadAuthFile(insId, multipartFile, SalesAuthorizationFile.SalesAuthFileType.PROD));
     }
 
     /**
@@ -177,7 +179,7 @@ public class EmployeeController {
      */
     @PostMapping("/dev/auth-file/save/iso/{insId}")
     public ResponseEntity<UploadAuthFileResultDto> uploadIsoVerificationFile(@PathVariable int insId, @RequestBody MultipartFile multipartFile) {
-        return ResponseEntity.ok(insuranceService.uploadIsoVerificationFile(insId, multipartFile));
+        return ResponseEntity.ok(insuranceService.uploadAuthFile(insId, multipartFile, SalesAuthorizationFile.SalesAuthFileType.ISO));
     }
 
     /**
@@ -188,7 +190,7 @@ public class EmployeeController {
      */
     @PostMapping("/dev/auth-file/save/sractuary/{insId}")
     public ResponseEntity<UploadAuthFileResultDto> uploadSrActuaryVerificationFile(@PathVariable int insId, @RequestBody MultipartFile multipartFile) {
-            return ResponseEntity.ok(insuranceService.uploadSrActuaryVerificationFile(insId, multipartFile));
+        return ResponseEntity.ok(insuranceService.uploadAuthFile(insId, multipartFile, SalesAuthorizationFile.SalesAuthFileType.SR_ACTUARY));
         }
 
     /**
@@ -199,7 +201,59 @@ public class EmployeeController {
      */
     @PostMapping("/dev/auth-file/save/fssofficial/{insId}")
     public ResponseEntity<UploadAuthFileResultDto> uploadFssOfficialDocFile(@PathVariable int insId, @RequestBody MultipartFile multipartFile) {
-        return ResponseEntity.ok(insuranceService.uploadFssOfficialDocFile(insId, multipartFile));
+        return ResponseEntity.ok(insuranceService.uploadAuthFile(insId, multipartFile, SalesAuthorizationFile.SalesAuthFileType.FSS_OFFICIAL));
+    }
+
+    //보험상품신고서 수정
+    @PatchMapping("/dev/auth-file/update/prod/{insuranceId}")
+    public ResponseEntity<UploadAuthFileResultDto> updateProdDeclarationFile(@PathVariable int insuranceId, @RequestBody MultipartFile multipartFile) {
+        return ResponseEntity.ok(insuranceService.updateAuthFile(insuranceId, multipartFile, SalesAuthorizationFile.SalesAuthFileType.PROD));
+    }
+    //보험요율산출기관 검증확인서 수정
+    @PatchMapping("/dev/auth-file/update/iso/{insuranceId}")
+    public ResponseEntity<UploadAuthFileResultDto> updateIsoVerificationFile(@PathVariable int insuranceId, @RequestBody MultipartFile multipartFile) {
+        return ResponseEntity.ok(insuranceService.updateAuthFile(insuranceId, multipartFile, SalesAuthorizationFile.SalesAuthFileType.ISO));
+    }
+    //선임계리사 검증기초서류 수정
+    @PatchMapping("/dev/auth-file/update/sractuary/{insuranceId}")
+    public ResponseEntity<UploadAuthFileResultDto> updateSrActuaryVerificationFile(@PathVariable int insuranceId, @RequestBody MultipartFile multipartFile) {
+        return ResponseEntity.ok(insuranceService.updateAuthFile(insuranceId, multipartFile, SalesAuthorizationFile.SalesAuthFileType.SR_ACTUARY));
+    }
+    //금융감독원 인가허가파일 수정
+    @PatchMapping("/dev/auth-file/update/fssofficial/{insuranceId}")
+    public ResponseEntity<UploadAuthFileResultDto> updateSFssOfficialDocFile(@PathVariable int insuranceId, @RequestBody MultipartFile multipartFile) {
+        return ResponseEntity.ok(insuranceService.updateAuthFile(insuranceId, multipartFile, SalesAuthorizationFile.SalesAuthFileType.FSS_OFFICIAL));
+    }
+
+    //보험상품신고서 삭제
+    @DeleteMapping("/dev/auth-file/delete/prod/{insuranceId}")
+    public ResponseEntity deleteProdDeclarationFile(@PathVariable int insuranceId) {
+        insuranceService.deleteAuthFile(insuranceId, SalesAuthorizationFile.SalesAuthFileType.PROD);
+        return ResponseEntity.ok().build();
+    }
+    //보험요율산출기관 검증확인서 삭제
+    @DeleteMapping("/dev/auth-file/delete/iso/{insuranceId}")
+    public ResponseEntity deleteIsoVerificationFile(@PathVariable int insuranceId) {
+        insuranceService.deleteAuthFile(insuranceId, SalesAuthorizationFile.SalesAuthFileType.ISO);
+        return ResponseEntity.ok().build();
+    }
+    //선임계리사 검증기초서류 삭제
+    @DeleteMapping("/dev/auth-file/delete/sractuary/{insuranceId}")
+    public ResponseEntity deleteSrActuaryVerificationFile(@PathVariable int insuranceId) {
+        insuranceService.deleteAuthFile(insuranceId, SalesAuthorizationFile.SalesAuthFileType.SR_ACTUARY);
+        return ResponseEntity.ok().build();
+    }
+    //금융감독원 인가허가파일 삭제
+    @DeleteMapping("/dev/auth-file/delete/fssofficial/{insuranceId}")
+    public ResponseEntity deleteFssOfficialFile(@PathVariable int insuranceId) {
+        insuranceService.deleteAuthFile(insuranceId, SalesAuthorizationFile.SalesAuthFileType.FSS_OFFICIAL);
+        return ResponseEntity.ok().build();
+    }
+    //판매인가상태 변경
+    @PatchMapping("/dev/update-auth-state/{insuranceId}")
+    public ResponseEntity updateSalesAuthorizationState(@PathVariable int insuranceId, @RequestBody SalesAuthorizationState salesAuthorizationState) {
+        insuranceService.updateSalesAuthorizationState(insuranceId, salesAuthorizationState);
+        return ResponseEntity.ok().build();
     }
 
 }

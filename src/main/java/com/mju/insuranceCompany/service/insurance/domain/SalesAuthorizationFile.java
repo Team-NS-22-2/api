@@ -18,6 +18,10 @@ import java.time.LocalDateTime;
 @Entity
 public class SalesAuthorizationFile {
 
+	public enum SalesAuthFileType {
+		PROD, ISO, SR_ACTUARY, FSS_OFFICIAL
+	}
+
 	@Id
 	private int insuranceId;
 	@MapsId
@@ -34,6 +38,11 @@ public class SalesAuthorizationFile {
 		this.prodDeclaration = url;
 		this.modifiedProd = LocalDateTime.now();
 		return this;
+	}
+	public String deleteProdDeclaration() {
+		String returnUrl = prodDeclaration;
+		this.prodDeclaration = null;
+		return returnUrl;
 	}
 	public boolean isExistProd() {
 		if (prodDeclaration != null) {
@@ -52,6 +61,11 @@ public class SalesAuthorizationFile {
 		this.modifiedIso = LocalDateTime.now();
 		return this;
 	}
+	public String deleteIsoVerification() {
+		String returnUrl = isoVerification;
+		this.isoVerification = null;
+		return returnUrl;
+	}
 	public boolean isExistIso() {
 		if (isoVerification != null) {
 			return !isoVerification.isBlank();
@@ -69,6 +83,11 @@ public class SalesAuthorizationFile {
 		this.modifiedSrActuary = LocalDateTime.now();
 		return this;
 	}
+	public String deleteSrActuaryVerification() {
+		String returnUrl = srActuaryVerification;
+		this.srActuaryVerification = null;
+		return returnUrl;
+	}
 	public boolean isExistSrActuary() {
 		if (srActuaryVerification != null) {
 			return !srActuaryVerification.isBlank();
@@ -85,6 +104,11 @@ public class SalesAuthorizationFile {
 		this.fssOfficialDoc = url;
 		this.modifiedFss = LocalDateTime.now();
 		return this;
+	}
+	public String deleteFssOfficialDoc() {
+		String returnUrl = fssOfficialDoc;
+		this.fssOfficialDoc = null;
+		return returnUrl;
 	}
 	public boolean isExistFssOfficial() {
 		if (fssOfficialDoc != null) {
