@@ -8,7 +8,6 @@ import com.mju.insuranceCompany.service.employee.repository.EmployeeRepository;
 import com.mju.insuranceCompany.service.insurance.controller.dto.*;
 import com.mju.insuranceCompany.service.insurance.domain.Insurance;
 import com.mju.insuranceCompany.service.insurance.domain.SalesAuthFileType;
-import com.mju.insuranceCompany.service.insurance.domain.SalesAuthorizationFile;
 import com.mju.insuranceCompany.service.insurance.domain.SalesAuthorizationState;
 import com.mju.insuranceCompany.service.insurance.exception.InsuranceIdNotFoundException;
 import com.mju.insuranceCompany.service.insurance.repository.InsuranceRepository;
@@ -133,50 +132,25 @@ public class InsuranceService {
     public UploadAuthFileResultDto uploadAuthFile(int insuranceId, MultipartFile multipartFile, SalesAuthFileType fileType) {
         Insurance insurance = getInsuranceById(insuranceId);
         String fileUrl = s3Client.uploadFile(multipartFile);
-        SalesAuthorizationFile salesAuthorizationFile = insurance.getSalesAuthorizationFile();
-        return getUploadFileResultDto(fileType, salesAuthorizationFile, fileUrl);
+        return insurance.uploadSalesAuthFile(fileType, fileUrl);
     }
 
     public UploadAuthFileResultDto updateAuthFile(int insuranceId, MultipartFile multipartFile, SalesAuthFileType fileType) {
         Insurance insurance = getInsuranceById(insuranceId);
-        SalesAuthorizationFile salesAuthorizationFile = insurance.getSalesAuthorizationFile();
-        String fileUrl = s3Client.updateFile(multipartFile, salesAuthorizationFile.getProdDeclaration());
-        return getUploadFileResultDto(fileType, salesAuthorizationFile, fileUrl);
+        String originFileUrl = insurance.getOriginSalesAuthorizationFileUrl(fileType);
+        String updateFileUrl = s3Client.updateFile(multipartFile, originFileUrl);
+        return insurance.uploadSalesAuthFile(fileType, updateFileUrl);
     }
 
     public void deleteAuthFile(int insuranceId, SalesAuthFileType fileType) {
         Insurance insurance = getInsuranceById(insuranceId);
-        SalesAuthorizationFile salesAuthorizationFile = insurance.getSalesAuthorizationFile();
-        switch (fileType) {
-            case PROD -> deleteAuthFile(salesAuthorizationFile.deleteProdDeclaration());
-            case ISO -> deleteAuthFile(salesAuthorizationFile.deleteIsoVerification());
-            case SR_ACTUARY -> deleteAuthFile(salesAuthorizationFile.deleteSrActuaryVerification());
-            case FSS_OFFICIAL -> deleteAuthFile(salesAuthorizationFile.deleteFssOfficialDoc());
-        }
-        insurance.getDevelopInfo().setSalesAuthorizationState(SalesAuthorizationState.DISALLOWANCE);
-    }
-
-    private void deleteAuthFile(String fileUrl) {
-        s3Client.deleteFile(fileUrl);
+        String deleteFileUrl = insurance.deleteSalesAuthFile(fileType);
+        s3Client.deleteFile(deleteFileUrl);
     }
 
     public void updateSalesAuthorizationState(int insuranceId, SalesAuthorizationState salesAuthorizationState) {
         Insurance insurance = getInsuranceById(insuranceId);
-        if(salesAuthorizationState == SalesAuthorizationState.WAIT) return;
-        insurance.getDevelopInfo().setSalesAuthorizationState(salesAuthorizationState);
+        insurance.updateSalesAuthorizationState(salesAuthorizationState);
     }
 
-    private UploadAuthFileResultDto getUploadFileResultDto(SalesAuthFileType fileType, SalesAuthorizationFile salesAuthorizationFile, String fileUrl) {
-        return switch (fileType) {
-            case PROD -> getUploadFileResultDto(salesAuthorizationFile.setProdDeclaration(fileUrl));
-            case ISO -> getUploadFileResultDto(salesAuthorizationFile.setIsoVerification(fileUrl));
-            case SR_ACTUARY -> getUploadFileResultDto(salesAuthorizationFile.setSrActuaryVerification(fileUrl));
-            case FSS_OFFICIAL -> getUploadFileResultDto(salesAuthorizationFile.setFssOfficialDoc(fileUrl));
-        };
-    }
-
-    private UploadAuthFileResultDto getUploadFileResultDto(SalesAuthorizationFile salesAuthorizationFile) {
-        return UploadAuthFileResultDto.builder()
-                .isExistAllFile(salesAuthorizationFile.isExistAllFile()).build();
-    }
 }

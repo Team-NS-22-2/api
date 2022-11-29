@@ -273,4 +273,41 @@ public class Insurance {
 		return premium;
 	}
 
+	public UploadAuthFileResultDto uploadSalesAuthFile(SalesAuthFileType fileType, String fileUrl) {
+		return switch (fileType) {
+			case PROD -> getUploadFileResultDto(salesAuthorizationFile.setProdDeclaration(fileUrl));
+			case ISO -> getUploadFileResultDto(salesAuthorizationFile.setIsoVerification(fileUrl));
+			case SR_ACTUARY -> getUploadFileResultDto(salesAuthorizationFile.setSrActuaryVerification(fileUrl));
+			case FSS_OFFICIAL -> getUploadFileResultDto(salesAuthorizationFile.setFssOfficialDoc(fileUrl));
+		};
+	}
+
+	public String getOriginSalesAuthorizationFileUrl(SalesAuthFileType fileType) {
+		return switch (fileType) {
+			case PROD -> this.salesAuthorizationFile.getProdDeclaration();
+			case ISO -> this.salesAuthorizationFile.getIsoVerification();
+			case SR_ACTUARY -> this.salesAuthorizationFile.getSrActuaryVerification();
+			case FSS_OFFICIAL -> this.salesAuthorizationFile.getFssOfficialDoc();
+		};
+	}
+
+	public String deleteSalesAuthFile(SalesAuthFileType fileType) {
+		this.developInfo.setSalesAuthorizationState(SalesAuthorizationState.DISALLOWANCE);
+		return switch (fileType) {
+			case PROD -> this.salesAuthorizationFile.deleteProdDeclaration();
+			case ISO -> this.salesAuthorizationFile.deleteIsoVerification();
+			case SR_ACTUARY -> this.salesAuthorizationFile.deleteSrActuaryVerification();
+			case FSS_OFFICIAL -> this.salesAuthorizationFile.deleteFssOfficialDoc();
+		};
+	}
+
+	public void updateSalesAuthorizationState(SalesAuthorizationState updatedState) {
+		this.developInfo.setSalesAuthorizationState(updatedState);
+	}
+
+	private UploadAuthFileResultDto getUploadFileResultDto(SalesAuthorizationFile salesAuthorizationFile) {
+		return UploadAuthFileResultDto.builder()
+				.isExistAllFile(salesAuthorizationFile.isExistAllFile()).build();
+	}
+
 }
