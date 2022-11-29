@@ -10,7 +10,7 @@ import javax.persistence.*;
  * @version 1.0
  * @created 09-5-2022 ���� 4:39:00
  */
-@Getter @Setter @ToString
+@Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
