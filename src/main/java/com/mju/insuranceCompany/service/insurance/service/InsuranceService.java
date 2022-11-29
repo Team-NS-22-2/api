@@ -39,13 +39,13 @@ public class InsuranceService {
         return insuranceRepository.findAll().stream().map(InsuranceListDto::toDto).toList();
     }
     
-    public InsuranceGuaranteeDto getInsuranceGuaranteeById(int id) {
-        Insurance insurance = getInsuranceById(id);
+    public InsuranceGuaranteeDto getInsuranceGuaranteeById(int insuranceId) {
+        Insurance insurance = getInsuranceById(insuranceId);
         return InsuranceGuaranteeDto.toDto(insurance);
     }
 
-    public InsurancePremiumDto inquireHealthPremium(int id, InquireHealthPremiumDto requestDto) {
-        Insurance insurance = getInsuranceById(id);
+    public InsurancePremiumDto inquireHealthPremium(int insuranceId, InquireHealthPremiumDto requestDto) {
+        Insurance insurance = getInsuranceById(insuranceId);
         int premium = insurance.inquireHealthPremium(requestDto.getSsn(), requestDto.getRiskCount());
         return InsurancePremiumDto.builder().premium(premium).build();
     }
