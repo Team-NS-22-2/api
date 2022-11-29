@@ -6,6 +6,7 @@ import com.mju.insuranceCompany.global.utility.CriterionSetUtil;
 import com.mju.insuranceCompany.global.utility.TargetInfoCalculator;
 import com.mju.insuranceCompany.service.contract.domain.BuildingType;
 import com.mju.insuranceCompany.service.insurance.controller.dto.*;
+import com.mju.insuranceCompany.service.insurance.exception.SalesAuthStateInsufficientConditionException;
 import lombok.*;
 
 import javax.persistence.*;
@@ -302,6 +303,9 @@ public class Insurance {
 	}
 
 	public void updateSalesAuthorizationState(SalesAuthorizationState updatedState) {
+		if(updatedState==SalesAuthorizationState.PERMISSION && !this.salesAuthorizationFile.isExistAllFile()) {
+			throw new SalesAuthStateInsufficientConditionException();
+		}
 		this.developInfo.setSalesAuthorizationState(updatedState);
 	}
 
