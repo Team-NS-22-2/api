@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 @Getter @RequiredArgsConstructor
 public enum ContractErrorCode implements ErrorCode {
 
-    PAYMENT_NOT_REGISTERED(HttpStatus.NOT_FOUND,"결제수단이 등록되지 않았습니다."),
+    PAYMENT_NOT_REGISTERED(HttpStatus.NOT_FOUND,"[알림] 해당 계약에 대해 결제 수단 정보가 없습니다. 설정해주세요."),
 
 
     ;
