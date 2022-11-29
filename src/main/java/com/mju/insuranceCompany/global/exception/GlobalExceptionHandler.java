@@ -30,7 +30,10 @@ public class GlobalExceptionHandler {
                 .body(createErrorResponse(NO_SUCH_ELEMENT,request.getRequestURI()));
 
     }
-    //    DB 커넥션 에러 잡기
+
+    /**
+     * DB 커넥션 에러 잡기
+     */
     @ExceptionHandler(ConnectException.class)
     public ResponseEntity<ErrorResponse> handleConnectException(ConnectException ex, HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

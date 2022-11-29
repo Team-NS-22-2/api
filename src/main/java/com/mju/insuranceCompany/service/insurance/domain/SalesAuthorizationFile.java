@@ -18,10 +18,6 @@ import java.time.LocalDateTime;
 @Entity
 public class SalesAuthorizationFile {
 
-	public enum SalesAuthFileType {
-		PROD, ISO, SR_ACTUARY, FSS_OFFICIAL
-	}
-
 	@Id
 	private int insuranceId;
 	@MapsId

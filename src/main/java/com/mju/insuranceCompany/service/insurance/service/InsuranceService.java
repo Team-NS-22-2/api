@@ -7,6 +7,7 @@ import com.mju.insuranceCompany.service.employee.exception.EmployeeIdNotFoundExc
 import com.mju.insuranceCompany.service.employee.repository.EmployeeRepository;
 import com.mju.insuranceCompany.service.insurance.controller.dto.*;
 import com.mju.insuranceCompany.service.insurance.domain.Insurance;
+import com.mju.insuranceCompany.service.insurance.domain.SalesAuthFileType;
 import com.mju.insuranceCompany.service.insurance.domain.SalesAuthorizationFile;
 import com.mju.insuranceCompany.service.insurance.domain.SalesAuthorizationState;
 import com.mju.insuranceCompany.service.insurance.exception.InsuranceIdNotFoundException;
@@ -129,21 +130,21 @@ public class InsuranceService {
         return InsuranceForUploadAuthFileDto.toDto(insurance);
     }
 
-    public UploadAuthFileResultDto uploadAuthFile(int insuranceId, MultipartFile multipartFile, SalesAuthorizationFile.SalesAuthFileType fileType) {
+    public UploadAuthFileResultDto uploadAuthFile(int insuranceId, MultipartFile multipartFile, SalesAuthFileType fileType) {
         Insurance insurance = getInsuranceById(insuranceId);
         String fileUrl = s3Client.uploadFile(multipartFile);
         SalesAuthorizationFile salesAuthorizationFile = insurance.getSalesAuthorizationFile();
         return getUploadFileResultDto(fileType, salesAuthorizationFile, fileUrl);
     }
 
-    public UploadAuthFileResultDto updateAuthFile(int insuranceId, MultipartFile multipartFile, SalesAuthorizationFile.SalesAuthFileType fileType) {
+    public UploadAuthFileResultDto updateAuthFile(int insuranceId, MultipartFile multipartFile, SalesAuthFileType fileType) {
         Insurance insurance = getInsuranceById(insuranceId);
         SalesAuthorizationFile salesAuthorizationFile = insurance.getSalesAuthorizationFile();
         String fileUrl = s3Client.updateFile(multipartFile, salesAuthorizationFile.getProdDeclaration());
         return getUploadFileResultDto(fileType, salesAuthorizationFile, fileUrl);
     }
 
-    public void deleteAuthFile(int insuranceId, SalesAuthorizationFile.SalesAuthFileType fileType) {
+    public void deleteAuthFile(int insuranceId, SalesAuthFileType fileType) {
         Insurance insurance = getInsuranceById(insuranceId);
         SalesAuthorizationFile salesAuthorizationFile = insurance.getSalesAuthorizationFile();
         switch (fileType) {
@@ -165,7 +166,7 @@ public class InsuranceService {
         insurance.getDevelopInfo().setSalesAuthorizationState(salesAuthorizationState);
     }
 
-    private UploadAuthFileResultDto getUploadFileResultDto(SalesAuthorizationFile.SalesAuthFileType fileType, SalesAuthorizationFile salesAuthorizationFile, String fileUrl) {
+    private UploadAuthFileResultDto getUploadFileResultDto(SalesAuthFileType fileType, SalesAuthorizationFile salesAuthorizationFile, String fileUrl) {
         return switch (fileType) {
             case PROD -> getUploadFileResultDto(salesAuthorizationFile.setProdDeclaration(fileUrl));
             case ISO -> getUploadFileResultDto(salesAuthorizationFile.setIsoVerification(fileUrl));
