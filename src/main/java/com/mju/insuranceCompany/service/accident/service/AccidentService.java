@@ -3,10 +3,7 @@ package com.mju.insuranceCompany.service.accident.service;
 import com.mju.insuranceCompany.global.utility.AuthenticationExtractor;
 import com.mju.insuranceCompany.service.accident.controller.dto.*;
 import com.mju.insuranceCompany.service.accident.domain.*;
-import com.mju.insuranceCompany.service.accident.exception.CannotReportCarAccidentException;
-import com.mju.insuranceCompany.service.accident.exception.CannotReportFireAccidentException;
-import com.mju.insuranceCompany.service.accident.exception.CannotReportInjuryAccidentException;
-import com.mju.insuranceCompany.service.accident.exception.NotExistRequestedCarNoException;
+import com.mju.insuranceCompany.service.accident.exception.*;
 import com.mju.insuranceCompany.service.accident.repository.AccidentRepository;
 import com.mju.insuranceCompany.service.contract.domain.CarContract;
 import com.mju.insuranceCompany.service.contract.repository.ContractRepository;
@@ -50,6 +47,9 @@ public class AccidentService {
         AccidentWorkerDto accidentWorkerDto = null;
         if(accident.isRequestOnSite()) {
             accidentWorkerDto = AccidentWorkerDto.toDto(RequestOnSiteSystem.connectWorker());
+            if(accidentWorkerDto == null) { // TODO 시연을 위한 예외상황을 만들어줘야 하나?
+                throw new OnSiteSystemResponseErrorException();
+            }
         }
         return CarAccidentDto.toDto((CarAccident) accident, accidentWorkerDto);
     }
@@ -61,6 +61,9 @@ public class AccidentService {
         Accident accident = Accident.createAccident(AccidentType.CAR_BREAKDOWN, customerId, accidentReportDto);
         accidentRepository.save(accident);
         AccidentWorkerDto accidentWorkerDto = AccidentWorkerDto.toDto(RequestOnSiteSystem.connectWorker());
+        if(accidentWorkerDto == null) { // TODO 시연을 위한 예외상황을 만들어줘야 하나?
+            throw new OnSiteSystemResponseErrorException();
+        }
         return CarBreakdownDto.toDto((CarBreakdown) accident, accidentWorkerDto);
     }
 
