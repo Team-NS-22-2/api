@@ -16,10 +16,10 @@ public class InsuranceDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "insurance_detail_id")
-    private int id;
-    private int premium;
+    protected int id;
+    protected int premium;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "insurance_id")
-    private Insurance insurance;
+    protected Insurance insurance;
 
 }

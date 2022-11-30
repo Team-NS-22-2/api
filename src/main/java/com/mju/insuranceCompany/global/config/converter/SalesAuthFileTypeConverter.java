@@ -6,6 +6,6 @@ import org.springframework.core.convert.converter.Converter;
 public class SalesAuthFileTypeConverter implements Converter<String, SalesAuthFileType> {
     @Override
     public SalesAuthFileType convert(String source) {
-        return SalesAuthFileType.ofType(source);
+        return SalesAuthFileType.ofType(source.toLowerCase());
     }
 }
