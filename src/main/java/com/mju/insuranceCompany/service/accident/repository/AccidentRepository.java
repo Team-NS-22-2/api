@@ -1,4 +1,7 @@
 package com.mju.insuranceCompany.service.accident.repository;
 
-public interface AccidentRepository {
+import com.mju.insuranceCompany.service.accident.domain.Accident;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface AccidentRepository extends JpaRepository<Accident, Integer> {
 }

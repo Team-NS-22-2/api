@@ -37,5 +37,11 @@ public interface ContractRepository extends JpaRepository<Contract, Integer> {
 
     Optional<Contract> findContractByIdAndCustomerId(@Param("id") int id, @Param("customerId") int customerId);
 
+    Optional<List<CarContract>> findCarContractByCustomerId(int customerId);
+
+    Optional<List<FireContract>> findFireContractByCustomerId(int customerId);
+
+    Optional<List<HealthContract>> findHealthContractByCustomerId(int customerId);
+
 
 }

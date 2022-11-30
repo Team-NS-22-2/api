@@ -20,7 +20,7 @@ public abstract class MyException extends RuntimeException implements ErrorCode{
     private final HttpStatus httpStatus;
     private final String errorName;
     private final String errorMessage;
-    protected MyException(ErrorCode errorCode) {
+    public MyException(ErrorCode errorCode) {
         this.httpStatus = errorCode.getHttpStatus();
         this.errorName = errorCode.getErrorName();
         this.errorMessage = errorCode.getErrorMessage();

@@ -25,19 +25,19 @@ public class Contract {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "contract_id")
-	private int id;
-	private boolean isPublishStock;
-	private int premium;
-	private String reasonOfUw;
+	protected int id;
+	protected boolean isPublishStock;
+	protected int premium;
+	protected String reasonOfUw;
 	@Enumerated(value = EnumType.STRING)
-	private ConditionOfUw conditionOfUw;
+	protected ConditionOfUw conditionOfUw;
 
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "payment_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-	private Payment payment;
-	private int insuranceId;
-	private int customerId;
-	private int employeeId;
+	protected Payment payment;
+	protected int insuranceId;
+	protected int customerId;
+	protected int employeeId;
 
 	protected Contract(boolean isPublishStock, int premium,  int insuranceId, ConditionOfUw conditionOfUw, int customerId, int employeeId) {
 		this.isPublishStock = isPublishStock;
