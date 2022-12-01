@@ -2,11 +2,11 @@ package com.mju.insuranceCompany.service.accident.domain.accidentDocumentFile;
 
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -16,27 +16,30 @@ import java.util.Objects;
  * @created 09-5-2022 오전 2:42:22
  */
 @Data
+@Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
+@Builder
 public class AccidentDocumentFile {
 
-	private int accidentId;
-	private String fileAddress;
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "accident_document_file_id")
 	private int id;
+	@Enumerated(value = EnumType.STRING)
 	private AccDocType type;
-	private LocalDateTime lastModifedDate;
+	private String fileAddress;
+	private int accidentId;
+	private LocalDateTime lastModifiedDate;
 
-	@Override
-	public String toString() {
-		return "AccDocFile{" +
-				"accidentId=" + accidentId +
-				", fileAddress='" + fileAddress + '\'' +
-				", id=" + id +
-				", type=" + type +
-				", lastModifedDate=" + lastModifedDate +
-				'}';
+	public static AccidentDocumentFile createAccidentDocumentFile(
+			AccDocType docType, String fileAddress, int accidentId) {
+		return AccidentDocumentFile.builder()
+				.type(docType)
+				.fileAddress(fileAddress)
+				.accidentId(accidentId)
+				.lastModifiedDate(LocalDateTime.now())
+				.build();
 	}
 
 	@Override
