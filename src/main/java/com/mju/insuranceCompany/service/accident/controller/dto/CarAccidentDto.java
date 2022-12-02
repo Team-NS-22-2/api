@@ -17,6 +17,7 @@ public class CarAccidentDto {
     private String opposingDriverPhone;
     private Boolean isRequestOnSite;
     private AccidentWorkerDto accidentWorker;
+    // 이하 각 파일의 주소
 
     public static CarAccidentDto toDto(CarAccident accident, AccidentWorkerDto accidentWorkerDto){
         return new CarAccidentDto(

@@ -67,4 +67,5 @@ public class AccidentController {
         return ResponseEntity.ok(accidentService.claimCompensation(accidentId));
     }
 
+
 }
