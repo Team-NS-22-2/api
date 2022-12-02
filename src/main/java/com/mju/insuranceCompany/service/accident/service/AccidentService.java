@@ -10,12 +10,15 @@ import com.mju.insuranceCompany.service.accident.repository.AccidentRepository;
 import com.mju.insuranceCompany.service.contract.domain.CarContract;
 import com.mju.insuranceCompany.service.contract.repository.ContractRepository;
 import com.mju.insuranceCompany.service.employee.domain.Employee;
+import com.mju.insuranceCompany.service.employee.exception.EmployeeIdNotFoundException;
+import com.mju.insuranceCompany.service.employee.repository.EmployeeRepository;
 import com.mju.insuranceCompany.service.employee.service.AssignEmployeeService;
 import com.mju.outerSystem.RequestOnSiteSystem;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -26,6 +29,7 @@ public class AccidentService {
     private final ContractRepository contractRepository;
     private final S3Client s3Client;
     private final AssignEmployeeService assignEmployeeService;
+    private final EmployeeRepository employeeRepository;
 
     /**
      * 자동차 관련 사고 접수를 요청한 고객을 검증하는 메소드.
@@ -138,4 +142,21 @@ public class AccidentService {
         return CompEmployeeDto.toDto(employee); // 보상처리 담당자 정보 리턴
     }
 
+    public List<AccidentListInfoDto> getAccidentListOfCustomer() {
+        int customerId = AuthenticationExtractor.extractCustomerIdByAuthentication();
+        List<Accident> accidentList = accidentRepository.findAllByCustomerId(customerId);
+        if(accidentList.isEmpty()) throw new NotExistClientAccidentsException();
+
+        List<AccidentListInfoDto> accidentListInfoDtoList = new ArrayList<>();
+        for(Accident accident : accidentList) {
+            CompEmployeeDto compEmployee = null;
+            if(accident.getEmployeeId() != 0) {
+                Employee employee = employeeRepository.findById(accident.getEmployeeId())
+                        .orElseThrow(EmployeeIdNotFoundException::new);
+                compEmployee = CompEmployeeDto.toDto(employee);
+            }
+            accidentListInfoDtoList.add(AccidentListInfoDto.toDto(accident, compEmployee));
+        }
+        return accidentListInfoDtoList;
+    }
 }

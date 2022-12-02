@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/acc")
@@ -35,6 +37,11 @@ public class AccidentController {
     @PostMapping("/report/injury-accident")
     public ResponseEntity<InjuryAccidentDto> reportInjuryAccident(@RequestBody AccidentReportDto accidentReportDto) {
         return ResponseEntity.ok(accidentService.reportInjuryAccident(accidentReportDto));
+    }
+
+    @GetMapping("/info/list")
+    public ResponseEntity<List<AccidentListInfoDto>> getAccidentListOfCustomer() {
+        return ResponseEntity.ok(accidentService.getAccidentListOfCustomer());
     }
 
     @PostMapping("/submit/car-accident/{accidentId}/{docType}")

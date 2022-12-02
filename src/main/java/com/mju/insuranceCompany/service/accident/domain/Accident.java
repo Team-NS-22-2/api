@@ -27,7 +27,6 @@ import java.util.List;
 @Accessors(chain = true)
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Accident {
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "accident_id")

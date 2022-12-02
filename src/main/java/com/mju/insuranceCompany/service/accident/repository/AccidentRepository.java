@@ -8,4 +8,6 @@ import java.util.List;
 public interface AccidentRepository extends JpaRepository<Accident, Integer> {
 
     List<Accident> findAccidentByEmployeeId(int employeeId);
+
+    List<Accident> findAllByCustomerId(int customerId);
 }
