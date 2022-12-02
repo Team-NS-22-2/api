@@ -50,6 +50,18 @@ public class AccidentController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    @PostMapping("/submit/fire-accident/{accidentId}/{docType}")
+    public ResponseEntity<Void> submitFireAccidentClaimFile(@PathVariable int accidentId, @PathVariable AccDocType docType, @RequestBody MultipartFile multipartFile) {
+        accidentService.submitAccidentDocumentFile(accidentId, docType, multipartFile, AccidentType.FIRE_ACCIDENT);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @PostMapping("/submit/injury-accident/{accidentId}/{docType}")
+    public ResponseEntity<Void> submitInjuryAccidentClaimFile(@PathVariable int accidentId, @PathVariable AccDocType docType, @RequestBody MultipartFile multipartFile) {
+        accidentService.submitAccidentDocumentFile(accidentId, docType, multipartFile, AccidentType.INJURY_ACCIDENT);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
     @PatchMapping("/claim/{accidentId}")
     public ResponseEntity<CompEmployeeDto> claimCompensation(@PathVariable int accidentId) {
         return ResponseEntity.ok(accidentService.claimCompensation(accidentId));
