@@ -13,12 +13,14 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @SpringBootTest
 @Transactional
+@ActiveProfiles("prod")
 class ContractServiceTest {
 
     @Autowired ContractService contractService;
@@ -26,7 +28,7 @@ class ContractServiceTest {
     @Autowired ContractRepository contractRepository;
     @Autowired CustomerRepository customerRepository;
 
-    @Test
+//    @Test
     void getUwStateOfCustomer() {
         List<ConditionOfUwOfCustomerResponse> h = contractService.getUwStateOfCustomer(InsuranceType.HEALTH);
         List<ConditionOfUwOfCustomerResponse> c = contractService.getUwStateOfCustomer(InsuranceType.CAR);
