@@ -1,5 +1,6 @@
 package com.mju.insuranceCompany.global.config;
 
+import com.mju.insuranceCompany.global.config.converter.AccDocTypeConverter;
 import com.mju.insuranceCompany.global.config.converter.SalesAuthFileTypeConverter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
@@ -19,5 +20,6 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addFormatters(FormatterRegistry registry) {
         registry.addConverter(new SalesAuthFileTypeConverter());
+        registry.addConverter(new AccDocTypeConverter());
     }
 }

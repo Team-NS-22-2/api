@@ -25,11 +25,11 @@ public class S3Client {
 
     private final AmazonS3 amazonS3;
 
-    public String uploadFile(MultipartFile multipartFile) {
+    public String uploadFile(String fileDir, MultipartFile multipartFile) {
         if(multipartFile.isEmpty()) return null;
         try {
             File file = convertMultipartFileToFile(multipartFile).orElseThrow();
-            return upload(file);
+            return upload(fileDir, file);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -46,8 +46,8 @@ public class S3Client {
         return Optional.empty();
     }
 
-    private String upload(File file) {
-        String fileName = "upload/" + UUID.randomUUID();
+    private String upload(String dir, File file) {
+        String fileName = "upload/"+ dir +"/"+ UUID.randomUUID();
         return putS3(file, fileName);
     }
 
@@ -64,21 +64,21 @@ public class S3Client {
         return amazonS3.getUrl(bucket, key).toString();
     }
 
-    public String updateFile(MultipartFile multipartFile, String originFileUrl) {
+    public String updateFile(String fileDir, MultipartFile multipartFile, String originFileUrl) {
         if(multipartFile.isEmpty() || originFileUrl==null || originFileUrl.isBlank()) return null;
         try {
             File file = convertMultipartFileToFile(multipartFile).orElseThrow();
 
-            deleteFile(originFileUrl); // Delete S3 Object for update file
+            deleteFile(fileDir, originFileUrl); // Delete S3 Object for update file
 
-            return upload(file);
+            return upload(fileDir, file);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void deleteFile(String originFileUrl) {
-        int index = originFileUrl.lastIndexOf("upload/");
+    public void deleteFile(String fileDir, String originFileUrl) {
+        int index = originFileUrl.lastIndexOf("upload/"+ fileDir +"/");
         String key = originFileUrl.substring(index);
         deleteS3(key);
     }

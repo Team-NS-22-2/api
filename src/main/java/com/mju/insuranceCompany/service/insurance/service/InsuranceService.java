@@ -131,21 +131,22 @@ public class InsuranceService {
 
     public UploadAuthFileResultDto uploadAuthFile(int insuranceId, MultipartFile multipartFile, SalesAuthFileType fileType) {
         Insurance insurance = getInsuranceById(insuranceId);
-        String fileUrl = s3Client.uploadFile(multipartFile);
+        // TODO sales_auth -> Constants.
+        String fileUrl = s3Client.uploadFile("sales_auth", multipartFile);
         return insurance.uploadSalesAuthFile(fileType, fileUrl);
     }
 
     public UploadAuthFileResultDto updateAuthFile(int insuranceId, MultipartFile multipartFile, SalesAuthFileType fileType) {
         Insurance insurance = getInsuranceById(insuranceId);
         String originFileUrl = insurance.getOriginSalesAuthorizationFileUrl(fileType);
-        String updateFileUrl = s3Client.updateFile(multipartFile, originFileUrl);
+        String updateFileUrl = s3Client.updateFile("sales_auth", multipartFile, originFileUrl);
         return insurance.uploadSalesAuthFile(fileType, updateFileUrl);
     }
 
     public void deleteAuthFile(int insuranceId, SalesAuthFileType fileType) {
         Insurance insurance = getInsuranceById(insuranceId);
         String deleteFileUrl = insurance.deleteSalesAuthFile(fileType);
-        s3Client.deleteFile(deleteFileUrl);
+        s3Client.deleteFile("sales_auth", deleteFileUrl);
     }
 
     public void updateSalesAuthorizationState(int insuranceId, SalesAuthorizationState salesAuthorizationState) {

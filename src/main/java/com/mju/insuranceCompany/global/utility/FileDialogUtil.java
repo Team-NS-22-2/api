@@ -124,7 +124,7 @@ public class FileDialogUtil {
     public static void isExist(Accident accident, AccDocType accDocType) {
         String directory = getDirectory(accident);
         String extension = DocUtilConstants.HWP_EXTENSION;
-        if(accDocType==AccDocType.PICTUREOFSITE)
+        if(accDocType==AccDocType.PICTURE_OF_SITE)
             extension = DocUtilConstants.JPG_EXTENSION;
         File folder = new File(submitPath+directory+ CommonConstants.SLASH +accDocType.getDesc()+extension);
         try {
