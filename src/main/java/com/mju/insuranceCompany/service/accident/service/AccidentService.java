@@ -54,6 +54,7 @@ public class AccidentService {
                 .findAny().orElseThrow(NotExistRequestedCarNoException::new); // 요청 고객이 가입한 자동차보험 중 사고 접수 요청한 자동차보험이 없는 경우 예외 발생
     }
 
+    /** 자동차 사고 접수 */
     public CarAccidentDto reportCarAccident(AccidentReportDto accidentReportDto) {
         int customerId = AuthenticationExtractor.extractCustomerIdByAuthentication();
         validateCustomerCanReportOnCar(accidentReportDto, customerId);
@@ -71,6 +72,7 @@ public class AccidentService {
         return CarAccidentDto.toDto((CarAccident) accident, accidentWorkerDto, fileList);
     }
 
+    /** 자동차 고장 접수 */
     public CarBreakdownDto reportCarBreakdown(AccidentReportDto accidentReportDto) {
         int customerId = AuthenticationExtractor.extractCustomerIdByAuthentication();
         validateCustomerCanReportOnCar(accidentReportDto, customerId);
@@ -84,6 +86,7 @@ public class AccidentService {
         return CarBreakdownDto.toDto((CarBreakdown) accident, accidentWorkerDto);
     }
 
+    /** 화재 사고 접수 */
     public FireAccidentDto reportFireAccident(AccidentReportDto accidentReportDto) {
         int customerId = AuthenticationExtractor.extractCustomerIdByAuthentication();
         contractRepository.findFireContractByCustomerId(customerId)
@@ -98,6 +101,7 @@ public class AccidentService {
         return FireAccidentDto.toDto((FireAccident) accident, fileList);
     }
 
+    /** 상해 사고 접수 */
     public InjuryAccidentDto reportInjuryAccident(AccidentReportDto accidentReportDto) {
         int customerId = AuthenticationExtractor.extractCustomerIdByAuthentication();
         contractRepository.findHealthContractByCustomerId(customerId)
@@ -112,6 +116,10 @@ public class AccidentService {
         return InjuryAccidentDto.toDto((InjuryAccident) accident, fileList);
     }
 
+    /**
+     * 보상금 청구를 위해 자동차/화재/상해 사고에 대한 타입 검증(자동차 고장은 보상금 청구를 할 수 없음)과
+     * 해당 사고가 고객의 사고가 맞는지에 대한 검증을 수행하는 메소드.
+     */
     private Accident validateClientAndAccidentType(int accidentId, AccidentType accidentType) {
         if(accidentType == AccidentType.CAR_BREAKDOWN) {
             throw new CannotClaimCarBreakdownException();
@@ -126,6 +134,7 @@ public class AccidentService {
         return accident;
     }
 
+    /** 선택한 사고의 고객 ID와 요청 고객 ID를 검증하는 메소드. */
     private void validateClient(Accident accident) {
         int customerId = AuthenticationExtractor.extractCustomerIdByAuthentication();
         if(accident.getCustomerId() != customerId) {
@@ -133,6 +142,13 @@ public class AccidentService {
         }
     }
 
+    /**
+     * 사고 관련 파일을 S3에 업로드하는 메소드.
+     * @param accidentId 업로드하는 파일의 사고 ID
+     * @param docType 업로드하는 파일의 타입
+     * @param multipartFile 업로드하는 파일
+     * @param accidentType 업로드하는 파일의 사고의 타입
+     */
     public void submitAccidentDocumentFile(int accidentId, AccDocType docType,
                                            MultipartFile multipartFile, AccidentType accidentType) {
         Accident accident = validateClientAndAccidentType(accidentId, accidentType);
@@ -141,6 +157,7 @@ public class AccidentService {
         accidentRepository.save(accident);
     }
 
+    /** 보상금 청구 */
     public CompEmployeeDto claimCompensation(int accidentId) {
         Accident accident = accidentRepository.findById(accidentId)
                 .orElseThrow(AccidentIdNotFoundException::new);
@@ -154,6 +171,7 @@ public class AccidentService {
         return CompEmployeeDto.toDto(employee);
     }
 
+    /** 로그인 고객의 사고 접수 리스트 조회 */
     public List<AccidentListInfoDto> getAccidentListOfCustomer() {
         int customerId = AuthenticationExtractor.extractCustomerIdByAuthentication();
         List<Accident> accidentList = accidentRepository.findAllByCustomerId(customerId);
@@ -172,6 +190,7 @@ public class AccidentService {
         return accidentListInfoDtoList;
     }
 
+    /** 자동차 사고 정보 조회 */
     public CarAccidentDto getCarAccident(int accidentId) {
         Accident accident = accidentRepository.findById(accidentId).orElseThrow(AccidentIdNotFoundException::new);
         validateClient(accident);
@@ -179,12 +198,14 @@ public class AccidentService {
         return CarAccidentDto.toDto((CarAccident) accident, null, fileList);
     }
 
+    /** 자동차 고장 정보 조회 */
     public CarBreakdownDto getCarBreakdown(int accidentId) {
         Accident accident = accidentRepository.findById(accidentId).orElseThrow(AccidentIdNotFoundException::new);
         validateClient(accident);
         return CarBreakdownDto.toDto((CarBreakdown) accident, null);
     }
 
+    /** 화재 사고 정보 조회 */
     public FireAccidentDto getFireAccident(int accidentId) {
         Accident accident = accidentRepository.findById(accidentId).orElseThrow(AccidentIdNotFoundException::new);
         validateClient(accident);
@@ -192,6 +213,7 @@ public class AccidentService {
         return FireAccidentDto.toDto((FireAccident) accident, fileList);
     }
 
+    /** 상해 사고 정보 조회 */
     public InjuryAccidentDto getInjuryAccident(int accidentId) {
         Accident accident = accidentRepository.findById(accidentId).orElseThrow(AccidentIdNotFoundException::new);
         validateClient(accident);
@@ -199,6 +221,7 @@ public class AccidentService {
         return InjuryAccidentDto.toDto((InjuryAccident) accident, fileList);
     }
 
+    /** 보상처리담당 직원 변경 */
     public CompEmployeeDto changeCompEmployee(int accidentId, ComplainRequestDto dto) {
         Accident accident = accidentRepository.findById(accidentId).orElseThrow(AccidentIdNotFoundException::new);
         validateClient(accident);
