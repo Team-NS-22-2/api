@@ -5,10 +5,14 @@ import com.mju.insuranceCompany.global.utility.S3Client;
 import com.mju.insuranceCompany.service.accident.controller.dto.*;
 import com.mju.insuranceCompany.service.accident.domain.*;
 import com.mju.insuranceCompany.service.accident.domain.accidentDocumentFile.AccDocType;
+import com.mju.insuranceCompany.service.accident.domain.accidentDocumentFile.AccidentDocumentFile;
 import com.mju.insuranceCompany.service.accident.exception.*;
 import com.mju.insuranceCompany.service.accident.repository.AccidentRepository;
 import com.mju.insuranceCompany.service.contract.domain.CarContract;
 import com.mju.insuranceCompany.service.contract.repository.ContractRepository;
+import com.mju.insuranceCompany.service.customer.domain.Customer;
+import com.mju.insuranceCompany.service.customer.exception.CustomerNotFoundException;
+import com.mju.insuranceCompany.service.customer.repository.CustomerRepository;
 import com.mju.insuranceCompany.service.employee.domain.Employee;
 import com.mju.insuranceCompany.service.employee.exception.EmployeeIdNotFoundException;
 import com.mju.insuranceCompany.service.employee.repository.EmployeeRepository;
@@ -30,6 +34,7 @@ public class AccidentService {
     private final S3Client s3Client;
     private final AssignEmployeeService assignEmployeeService;
     private final EmployeeRepository employeeRepository;
+    private final CustomerRepository customerRepository;
 
     /**
      * 자동차 관련 사고 접수를 요청한 고객을 검증하는 메소드.
@@ -62,7 +67,8 @@ public class AccidentService {
                 throw new OnSiteSystemResponseErrorException();
             }
         }
-        return CarAccidentDto.toDto((CarAccident) accident, accidentWorkerDto);
+        List<AccidentDocumentFile> fileList = accident.getAccidentDocumentFileList();
+        return CarAccidentDto.toDto((CarAccident) accident, accidentWorkerDto, fileList);
     }
 
     public CarBreakdownDto reportCarBreakdown(AccidentReportDto accidentReportDto) {
@@ -88,7 +94,8 @@ public class AccidentService {
 
         Accident accident = Accident.createAccident(AccidentType.FIRE_ACCIDENT, customerId, accidentReportDto);
         accidentRepository.save(accident);
-        return FireAccidentDto.toDto((FireAccident) accident);
+        List<AccidentDocumentFile> fileList = accident.getAccidentDocumentFileList();
+        return FireAccidentDto.toDto((FireAccident) accident, fileList);
     }
 
     public InjuryAccidentDto reportInjuryAccident(AccidentReportDto accidentReportDto) {
@@ -101,7 +108,8 @@ public class AccidentService {
 
         Accident accident = Accident.createAccident(AccidentType.INJURY_ACCIDENT, customerId, accidentReportDto);
         accidentRepository.save(accident);
-        return InjuryAccidentDto.toDto((InjuryAccident) accident);
+        List<AccidentDocumentFile> fileList = accident.getAccidentDocumentFileList();
+        return InjuryAccidentDto.toDto((InjuryAccident) accident, fileList);
     }
 
     private Accident validateClientAndAccidentType(int accidentId, AccidentType accidentType) {
@@ -109,16 +117,20 @@ public class AccidentService {
             throw new CannotClaimCarBreakdownException();
         }
         // Read Accident
-        int customerId = AuthenticationExtractor.extractCustomerIdByAuthentication();
         Accident accident = accidentRepository.findById(accidentId)
                 .orElseThrow(AccidentIdNotFoundException::new);
-        if(accident.getCustomerId() != customerId) {
-            throw new MismatchRequestClientAndAccidentException();
-        }
+        validateClient(accident);
         if(accident.getAccidentType() != accidentType) {
             throw new MismatchAccidentTypeException();
         }
         return accident;
+    }
+
+    private void validateClient(Accident accident) {
+        int customerId = AuthenticationExtractor.extractCustomerIdByAuthentication();
+        if(accident.getCustomerId() != customerId) {
+            throw new MismatchRequestClientAndAccidentException();
+        }
     }
 
     public void submitAccidentDocumentFile(int accidentId, AccDocType docType,
@@ -133,19 +145,19 @@ public class AccidentService {
         Accident accident = accidentRepository.findById(accidentId)
                 .orElseThrow(AccidentIdNotFoundException::new);
         if(!accident.checkConditionForClaimCompensation(accident.getAccidentType())) {
-            throw new InsufficientSubmitAccDocFileException(); // 보상금 청구에 만족하는 파일이 모두 저장되어 있는지
+            throw new InsufficientSubmitAccDocFileException(); // 보상금 청구에 만족하는 파일이 모두 저장되어 있지 않는 경우
         }
 
-        Employee employee = assignEmployeeService.assignCompEmployee(); // 보상처리 담당자 배정
-        accident.assignEmployeeId(employee.getId()); // accident 담당자 배정
+        Employee employee = assignEmployeeService.assignCompEmployee();
+        accident.assignEmployeeId(employee.getId());
         accidentRepository.save(accident);
-        return CompEmployeeDto.toDto(employee); // 보상처리 담당자 정보 리턴
+        return CompEmployeeDto.toDto(employee);
     }
 
     public List<AccidentListInfoDto> getAccidentListOfCustomer() {
         int customerId = AuthenticationExtractor.extractCustomerIdByAuthentication();
         List<Accident> accidentList = accidentRepository.findAllByCustomerId(customerId);
-        if(accidentList.isEmpty()) throw new NotExistClientAccidentsException();
+        if(accidentList.isEmpty()) throw new NotExistClientAccidentsException(); // 고객이 접수한 사고가 없을 경우
 
         List<AccidentListInfoDto> accidentListInfoDtoList = new ArrayList<>();
         for(Accident accident : accidentList) {
@@ -158,5 +170,51 @@ public class AccidentService {
             accidentListInfoDtoList.add(AccidentListInfoDto.toDto(accident, compEmployee));
         }
         return accidentListInfoDtoList;
+    }
+
+    public CarAccidentDto getCarAccident(int accidentId) {
+        Accident accident = accidentRepository.findById(accidentId).orElseThrow(AccidentIdNotFoundException::new);
+        validateClient(accident);
+        List<AccidentDocumentFile> fileList = accident.getAccidentDocumentFileList();
+        return CarAccidentDto.toDto((CarAccident) accident, null, fileList);
+    }
+
+    public CarBreakdownDto getCarBreakdown(int accidentId) {
+        Accident accident = accidentRepository.findById(accidentId).orElseThrow(AccidentIdNotFoundException::new);
+        validateClient(accident);
+        return CarBreakdownDto.toDto((CarBreakdown) accident, null);
+    }
+
+    public FireAccidentDto getFireAccident(int accidentId) {
+        Accident accident = accidentRepository.findById(accidentId).orElseThrow(AccidentIdNotFoundException::new);
+        validateClient(accident);
+        List<AccidentDocumentFile> fileList = accident.getAccidentDocumentFileList();
+        return FireAccidentDto.toDto((FireAccident) accident, fileList);
+    }
+
+    public InjuryAccidentDto getInjuryAccident(int accidentId) {
+        Accident accident = accidentRepository.findById(accidentId).orElseThrow(AccidentIdNotFoundException::new);
+        validateClient(accident);
+        List<AccidentDocumentFile> fileList = accident.getAccidentDocumentFileList();
+        return InjuryAccidentDto.toDto((InjuryAccident) accident, fileList);
+    }
+
+    public CompEmployeeDto changeCompEmployee(int accidentId, ComplainRequestDto dto) {
+        Accident accident = accidentRepository.findById(accidentId).orElseThrow(AccidentIdNotFoundException::new);
+        validateClient(accident);
+        if(accident.getEmployeeId() == 0) { // validate of 보험직원을 변경할 사고에 보상담당직원이 배정되어 있지 않은 경우
+            throw new NotYetAssignedCompEmployeeException();
+        }
+        // 1. Complain 등록
+        Customer customer = customerRepository.findById(accident.getCustomerId())
+                .orElseThrow(CustomerNotFoundException::new);
+        customer.addComplain(dto);
+        customerRepository.save(customer);
+
+        // 2. 보상담당자 배정
+        Employee employee = assignEmployeeService.changeCompEmployee(accident.getEmployeeId());
+        accident.assignEmployeeId(employee.getId());
+        accidentRepository.save(accident);
+        return CompEmployeeDto.toDto(employee);
     }
 }

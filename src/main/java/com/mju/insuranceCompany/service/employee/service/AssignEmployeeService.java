@@ -4,6 +4,7 @@ import com.mju.insuranceCompany.service.accident.domain.Accident;
 import com.mju.insuranceCompany.service.accident.repository.AccidentRepository;
 import com.mju.insuranceCompany.service.employee.domain.Department;
 import com.mju.insuranceCompany.service.employee.domain.Employee;
+import com.mju.insuranceCompany.service.employee.exception.EmployeeIdNotFoundException;
 import com.mju.insuranceCompany.service.employee.repository.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,18 @@ public class AssignEmployeeService {
      */
     public Employee assignCompEmployee() {
         List<Employee> compEmployees = employeeRepository.findEmployeeByDepartmentEquals(Department.COMP);
+        return assignEmployee(compEmployees);
+    }
+
+    public Employee changeCompEmployee(int currentEmployeeId) {
+        Employee employee = employeeRepository.findById(currentEmployeeId)
+                .orElseThrow(EmployeeIdNotFoundException::new);
+        List<Employee> compEmployees = employeeRepository.findEmployeeByDepartmentEquals(Department.COMP);
+        compEmployees.remove(employee);
+        return assignEmployee(compEmployees);
+    }
+
+    private Employee assignEmployee(List<Employee> compEmployees) {
         List<Accident> accidents;
         int min = Integer.MAX_VALUE;
         int minId = 0;
@@ -36,5 +49,4 @@ public class AssignEmployeeService {
         minId = (minId == 0) ? compEmployees.get(0).getId() : minId;
         return employeeRepository.findById(minId).orElseThrow();
     }
-
 }

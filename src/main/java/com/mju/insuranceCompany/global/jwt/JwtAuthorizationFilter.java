@@ -1,5 +1,6 @@
 package com.mju.insuranceCompany.global.jwt;
 
+import com.mju.insuranceCompany.global.utility.AuthenticationExtractor;
 import com.mju.insuranceCompany.service.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

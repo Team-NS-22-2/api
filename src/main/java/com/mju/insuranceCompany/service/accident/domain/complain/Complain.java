@@ -1,11 +1,10 @@
 package com.mju.insuranceCompany.service.accident.domain.complain;
 
+import com.mju.insuranceCompany.service.accident.controller.dto.ComplainRequestDto;
 import lombok.*;
+import org.springframework.stereotype.Component;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /**
  * packageName :  domain.complain
@@ -19,29 +18,24 @@ import javax.persistence.Id;
  * 2022-05-23                규현             최초 생성
  */
 @Data
+@Entity
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
 public class Complain {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "complain_id")
     private int id;
     private int customerId;
     private String reason;
 
-    @Builder
-    public Complain(int customerId, String reason) {
-        this.customerId = customerId;
-        this.reason = reason;
+    public static Complain createComplain(ComplainRequestDto dto, int customerId) {
+        return Complain.builder()
+                .customerId(customerId)
+                .reason(dto.getReason())
+                .build();
     }
 
-    @Override
-    public String toString() {
-        return "Complain{" +
-                "id=" + id +
-                ", customerId=" + customerId +
-                ", reason='" + reason + '\'' +
-                '}';
-    }
 }

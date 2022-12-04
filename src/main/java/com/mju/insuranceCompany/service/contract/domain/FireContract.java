@@ -5,6 +5,8 @@ import com.mju.insuranceCompany.service.contract.controller.dto.FireContractDto;
 import lombok.*;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 
 /**
  * @author 규현
@@ -19,10 +21,11 @@ import javax.persistence.Entity;
 public class FireContract extends Contract{
 
 	private int buildingArea;
+	@Enumerated(value = EnumType.STRING)
 	private BuildingType buildingType;
-	private Long collateralAmount;
-	private Boolean isActualResidence;
-	private Boolean isSelfOwned;
+	private long collateralAmount;
+	private boolean isActualResidence;
+	private boolean isSelfOwned;
 
 	public FireContract(FireContractDto dto, int customerId) {
 		super(false,  dto.getPremium(), dto.getInsuranceId(), ConditionOfUw.WAIT, customerId, dto.getEmployeeId());
