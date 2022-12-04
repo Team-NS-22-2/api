@@ -88,4 +88,8 @@ public class AccidentController {
         return ResponseEntity.ok(accidentService.getInjuryAccident(accidentId));
     }
 
+    @PatchMapping("/change-comp-employee/{accidentId}")
+    public ResponseEntity<CompEmployeeDto> changeCompEmployee(@PathVariable int accidentId, @RequestBody ComplainRequestDto dto) {
+        return ResponseEntity.ok(accidentService.changeCompEmployee(accidentId, dto));
+    }
 }

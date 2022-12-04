@@ -10,6 +10,9 @@ import com.mju.insuranceCompany.service.accident.exception.*;
 import com.mju.insuranceCompany.service.accident.repository.AccidentRepository;
 import com.mju.insuranceCompany.service.contract.domain.CarContract;
 import com.mju.insuranceCompany.service.contract.repository.ContractRepository;
+import com.mju.insuranceCompany.service.customer.domain.Customer;
+import com.mju.insuranceCompany.service.customer.exception.CustomerNotFoundException;
+import com.mju.insuranceCompany.service.customer.repository.CustomerRepository;
 import com.mju.insuranceCompany.service.employee.domain.Employee;
 import com.mju.insuranceCompany.service.employee.exception.EmployeeIdNotFoundException;
 import com.mju.insuranceCompany.service.employee.repository.EmployeeRepository;
@@ -31,6 +34,7 @@ public class AccidentService {
     private final S3Client s3Client;
     private final AssignEmployeeService assignEmployeeService;
     private final EmployeeRepository employeeRepository;
+    private final CustomerRepository customerRepository;
 
     /**
      * 자동차 관련 사고 접수를 요청한 고객을 검증하는 메소드.
@@ -195,4 +199,22 @@ public class AccidentService {
         return InjuryAccidentDto.toDto((InjuryAccident) accident, fileList);
     }
 
+    public CompEmployeeDto changeCompEmployee(int accidentId, ComplainRequestDto dto) {
+        Accident accident = accidentRepository.findById(accidentId).orElseThrow(AccidentIdNotFoundException::new);
+        validateClient(accident);
+        if(accident.getEmployeeId() == 0) { // validate of 보험직원을 변경할 사고에 보상담당직원이 배정되어 있지 않은 경우
+            throw new NotYetAssignedCompEmployeeException();
+        }
+        // 1. Complain 등록
+        Customer customer = customerRepository.findById(accident.getCustomerId())
+                .orElseThrow(CustomerNotFoundException::new);
+        customer.addComplain(dto);
+        customerRepository.save(customer);
+
+        // 2. 보상담당자 배정
+        Employee employee = assignEmployeeService.changeCompEmployee(accident.getEmployeeId());
+        accident.assignEmployeeId(employee.getId());
+        accidentRepository.save(accident);
+        return CompEmployeeDto.toDto(employee);
+    }
 }

@@ -1,6 +1,7 @@
 package com.mju.insuranceCompany.service.customer.domain;
 
 
+import com.mju.insuranceCompany.service.accident.controller.dto.ComplainRequestDto;
 import com.mju.insuranceCompany.service.accident.domain.complain.Complain;
 import com.mju.insuranceCompany.service.customer.controller.dto.CustomerDto;
 import com.mju.insuranceCompany.service.customer.controller.dto.PaymentCreateDto;
@@ -39,9 +40,9 @@ public class Customer {
 	private String phone;
 	private String email;
 	private String job;
-	@OneToMany(mappedBy = "customerId",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "customerId", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Payment> paymentList = new ArrayList<>();
-	@OneToMany
+	@OneToMany(mappedBy = "customerId", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Complain> complainList;
 
 	public Customer(CustomerDto dto) {
@@ -99,21 +100,14 @@ public class Customer {
 		throw new PaymentNotFoundException();
 	}
 
-	// use-case: 보험료를 납부한다. -> Contract의 Method로 이전
-	/*
-
-	// use-case: 보상처리 담당자를 변경한다.
-	public Employee changeCompEmp(String reason, Employee compEmployee){
-		Complain complain = Complain.builder().reason(reason)
-				.customerId(this.id).build();
-
-		this.complainList.add(complain);
-		ComplainDao complainDao = new ComplainDaoImpl();
-		complainDao.create(complain);
-
-		return CompAssignUtil.changeCompEmployee(compEmployee);
+	// use-case: 보상처리담당자를 변경한다.
+	// Complain 인스턴스를 생성하여 하는 메소드.
+	public void addComplain(ComplainRequestDto dto) {
+		if(this.complainList.isEmpty()) {
+			this.complainList = new ArrayList<>();
+		}
+		Complain newComplain = Complain.createComplain(dto, this.id);
+		this.complainList.add(newComplain);
 	}
-
- */
 
 }

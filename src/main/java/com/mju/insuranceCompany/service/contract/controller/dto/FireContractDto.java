@@ -22,8 +22,8 @@ public class FireContractDto extends ContractDto {
                 fireContract.getBuildingArea(),
                 fireContract.getBuildingType(),
                 fireContract.getCollateralAmount(),
-                fireContract.getIsActualResidence(),
-                fireContract.getIsSelfOwned()
+                fireContract.isActualResidence(),
+                fireContract.isSelfOwned()
         );
     }
 

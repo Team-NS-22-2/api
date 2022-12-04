@@ -32,6 +32,7 @@ public class InjuryAccidentDto {
     }
 
     private static Map<String, String> getFileMap(List<AccidentDocumentFile> fileList) {
+        if(fileList == null) return null;
         Map<String, String> fileMap = null;
         if(!fileList.isEmpty()) {
             fileMap = new HashMap<>();
