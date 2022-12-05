@@ -1,5 +1,8 @@
 package com.mju.insuranceCompany.service.employee.controller;
 
+import com.mju.insuranceCompany.service.accident.controller.dto.*;
+import com.mju.insuranceCompany.service.accident.domain.accidentDocumentFile.AccDocType;
+import com.mju.insuranceCompany.service.accident.service.AccidentService;
 import com.mju.insuranceCompany.service.contract.controller.dto.CustomerCarContractDto;
 import com.mju.insuranceCompany.service.contract.controller.dto.CustomerFireContractDto;
 import com.mju.insuranceCompany.service.contract.controller.dto.CustomerHealthContractDto;
@@ -14,6 +17,7 @@ import com.mju.insuranceCompany.service.insurance.domain.SalesAuthFileType;
 import com.mju.insuranceCompany.service.insurance.domain.SalesAuthorizationState;
 import com.mju.insuranceCompany.service.insurance.service.InsuranceService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,6 +32,7 @@ public class EmployeeController {
     private final ContractCreateService contractCreateService;
     private final ContractService contractService;
     private final InsuranceService insuranceService;
+    private final AccidentService accidentService;
 
 //        건강보험 판매
     @PostMapping("/sales/health/{insId}")
@@ -49,7 +54,7 @@ public class EmployeeController {
 
 //        인수심사
     @PatchMapping("/uw/{contractId}")
-    public ResponseEntity underwriting(@PathVariable int contractId, @RequestBody UnderwritingRequest request) {
+    public ResponseEntity<Void> underwriting(@PathVariable int contractId, @RequestBody UnderwritingRequest request) {
         contractService.underwriting(contractId, request.getReasonOfUw(), request.getConditionOfUw());
         return ResponseEntity.ok().build();
     }
@@ -123,9 +128,9 @@ public class EmployeeController {
      * @return no contents
      */
     @PostMapping("/dev/save-health")
-    public ResponseEntity saveHealthInsurance(@RequestBody SaveHealthInsuranceDto saveHealthInsuranceDto) {
+    public ResponseEntity<Void> saveHealthInsurance(@RequestBody SaveHealthInsuranceDto saveHealthInsuranceDto) {
         insuranceService.saveHealthInsurance(saveHealthInsuranceDto);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     /**
@@ -134,9 +139,9 @@ public class EmployeeController {
      * @return no contents
      */
     @PostMapping("/dev/save-car")
-    public ResponseEntity saveCarInsurance(@RequestBody SaveCarInsuranceDto saveCarInsuranceDto) {
+    public ResponseEntity<Void> saveCarInsurance(@RequestBody SaveCarInsuranceDto saveCarInsuranceDto) {
         insuranceService.saveCarInsurance(saveCarInsuranceDto);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     /**
@@ -145,9 +150,9 @@ public class EmployeeController {
      * @return no contents
      */
     @PostMapping("/dev/save-fire")
-    public ResponseEntity saveFireInsurance(@RequestBody SaveFireInsuranceDto saveFireInsuranceDto) {
+    public ResponseEntity<Void> saveFireInsurance(@RequestBody SaveFireInsuranceDto saveFireInsuranceDto) {
         insuranceService.saveFireInsurance(saveFireInsuranceDto);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     /**
@@ -193,12 +198,10 @@ public class EmployeeController {
      * @return no content
      */
     @DeleteMapping("/dev/auth-file/{type}/{insId}")
-    public ResponseEntity deleteSalesAuthorizationFile(@PathVariable SalesAuthFileType type, @PathVariable int insId) {
+    public ResponseEntity<Void> deleteSalesAuthorizationFile(@PathVariable SalesAuthFileType type, @PathVariable int insId) {
         insuranceService.deleteAuthFile(insId, type);
         return ResponseEntity.noContent().build();
     }
-
-    //판매인가상태 변경
 
     /**
      * 판매인가상태 변경
@@ -207,9 +210,60 @@ public class EmployeeController {
      * @return no content
      */
     @PatchMapping("/dev/update-auth-state/{insuranceId}")
-    public ResponseEntity updateSalesAuthorizationState(@PathVariable int insuranceId, @RequestBody SalesAuthorizationState salesAuthorizationState) {
+    public ResponseEntity<Void> updateSalesAuthorizationState(@PathVariable int insuranceId, @RequestBody SalesAuthorizationState salesAuthorizationState) {
         insuranceService.updateSalesAuthorizationState(insuranceId, salesAuthorizationState);
         return ResponseEntity.ok().build();
+    }
+
+    /** 보상직원 할당 사고 리스트 조회 */
+    @GetMapping("/comp/list")
+    public ResponseEntity<List<AccidentListInfoDto>> getCompAccidentList(){
+        return ResponseEntity.ok(accidentService.getCompAccidentList());
+    }
+
+    /** 보상처리 자동차 사고 정보 조회 */
+    @GetMapping("/comp/car-accident/{accidentId}")
+    public ResponseEntity<CompCarAccidentDto> getCarAccidentOfCompEmployee(@PathVariable int accidentId) {
+        return ResponseEntity.ok(accidentService.getCarAccidentOfCompEmployee(accidentId));
+    }
+
+    /** 보상처리 화재 사고 정보 조회 */
+    @GetMapping("/comp/fire-accident/{accidentId}")
+    public ResponseEntity<CompFireAccidentDto> getFireAccidentOfCompEmployee(@PathVariable int accidentId) {
+        return ResponseEntity.ok(accidentService.getFireAccidentOfCompEmployee(accidentId));
+    }
+
+    /** 보상처리 상해 사고 정보 조회 */
+    @GetMapping("/comp/injury-accident/{accidentId}")
+    public ResponseEntity<CompInjuryAccidentDto> getInjuryAccidentOfCompEmployee(@PathVariable int accidentId) {
+        return ResponseEntity.ok(accidentService.getInjuryAccidentOfCompEmployee(accidentId));
+    }
+
+    /** 손해조사 */
+    @PostMapping("/comp/investigate/{accidentId}")
+    public ResponseEntity<Void> investigateAccident(@PathVariable int accidentId, @RequestBody InvestigateAccidentDto dto) {
+        accidentService.investigateAccident(accidentId, dto);
+        return ResponseEntity.noContent().build();
+    }
+
+    /** 사고조사 보고서 제출 */
+    @PostMapping("/comp/submit/investigate-accident/{accidentId}")
+    public ResponseEntity<Void> submitInvestigateAccidentFileByCompEmployee(@PathVariable int accidentId, @RequestBody MultipartFile multipartFile) {
+        accidentService.submitAccidentDocumentFileByCompEmployee(accidentId, multipartFile, AccDocType.INVESTIGATE_ACCIDENT);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    /** 손해사정서 제출 */
+    @PostMapping("/comp/submit/loss-assessment/{accidentId}")
+    public ResponseEntity<Void> submitLossAssessmentFileByCompEmployee(@PathVariable int accidentId, @RequestBody MultipartFile multipartFile) {
+        accidentService.submitAccidentDocumentFileByCompEmployee(accidentId, multipartFile, AccDocType.LOSS_ASSESSMENT);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    /** 보상금 지급 */
+    @PostMapping("/comp/pay/{accidentId}")
+    public ResponseEntity<PaymentOfCompensationResultDto> payCompensation(@PathVariable int accidentId, @RequestBody PaymentOfCompensationDto dto) {
+        return ResponseEntity.ok(accidentService.payCompensation(accidentId, dto));
     }
 
 }

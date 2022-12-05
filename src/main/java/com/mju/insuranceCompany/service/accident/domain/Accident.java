@@ -1,9 +1,12 @@
 package com.mju.insuranceCompany.service.accident.domain;
 
 import com.mju.insuranceCompany.service.accident.controller.dto.AccidentReportDto;
+import com.mju.insuranceCompany.service.accident.controller.dto.InvestigateAccidentDto;
+import com.mju.insuranceCompany.service.accident.controller.dto.PaymentOfCompensationDto;
 import com.mju.insuranceCompany.service.accident.domain.accidentDocumentFile.AccDocType;
 import com.mju.insuranceCompany.service.accident.domain.accidentDocumentFile.AccidentDocumentFile;
 import com.mju.insuranceCompany.service.accident.exception.CannotClaimCarBreakdownException;
+import com.mju.insuranceCompany.service.accident.exception.NotExistInvestigateAccidentFileException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -116,5 +119,26 @@ public abstract class Accident {
 			}
 		}
 		return true;
+	}
+
+	public abstract void investigate(InvestigateAccidentDto dto);
+
+	protected void checkExistInvestigateAccidentFile() {
+		for(AccidentDocumentFile file : this.accidentDocumentFileList) {
+			if(file.getType() == AccDocType.INVESTIGATE_ACCIDENT) {
+				return;
+			}
+		}
+		throw new NotExistInvestigateAccidentFileException();
+	}
+
+	public String checkForPayCompensation(PaymentOfCompensationDto dto) {
+		if(this.lossReserves * 1.5 < dto.getAmount()) {
+			return "손해사정서가 반려되었습니다.";
+		}
+		if(this instanceof CarAccident c && c.getErrorRate() == 0) {
+			return "고객 과실이 0이기 때문에 보상금을 지급하지 않습니다.";
+		}
+		return "";
 	}
 }

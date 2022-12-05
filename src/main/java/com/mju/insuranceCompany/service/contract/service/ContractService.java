@@ -14,9 +14,7 @@ import com.mju.insuranceCompany.service.insurance.controller.dto.InsuranceBasicI
 import com.mju.insuranceCompany.service.insurance.domain.Insurance;
 import com.mju.insuranceCompany.service.insurance.domain.InsuranceType;
 import com.mju.insuranceCompany.service.insurance.repository.InsuranceRepository;
-import com.mju.insuranceCompany.service.user.domain.Users;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,7 +38,7 @@ public class ContractService {
         Insurance insurance = insuranceRepository.findById(healthContract.getInsuranceId()).orElseThrow();
 
         return new CustomerHealthContractDto(
-                CustomerDto.toDtoFromEntity(customer),
+                CustomerDto.toDto(customer),
                 HealthContractDto.toDtoFromEntity(healthContract),
                 InsuranceBasicInfoDto.toDto(insurance)
         );
@@ -52,7 +50,7 @@ public class ContractService {
         Insurance insurance = insuranceRepository.findById(fireContract.getInsuranceId()).orElseThrow();
 
         return new CustomerFireContractDto(
-                CustomerDto.toDtoFromEntity(customer),
+                CustomerDto.toDto(customer),
                 FireContractDto.toDtoFromEntity(fireContract),
                 InsuranceBasicInfoDto.toDto(insurance)
         );
@@ -64,7 +62,7 @@ public class ContractService {
         Insurance insurance = insuranceRepository.findById(carContract.getInsuranceId()).orElseThrow();
 
         return new CustomerCarContractDto(
-                CustomerDto.toDtoFromEntity(customer),
+                CustomerDto.toDto(customer),
                 CarContractDto.toDtoFromEntity(carContract),
                 InsuranceBasicInfoDto.toDto(insurance)
         );

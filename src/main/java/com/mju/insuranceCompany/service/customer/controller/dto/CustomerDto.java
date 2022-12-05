@@ -16,7 +16,7 @@ public class CustomerDto {
     private String email;
     private String job;
 
-    public static CustomerDto toDtoFromEntity(Customer customer) {
+    public static CustomerDto toDto(Customer customer) {
         return new CustomerDto(
                 customer.getName(),
                 customer.getSsn(),
