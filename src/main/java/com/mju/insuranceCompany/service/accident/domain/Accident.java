@@ -36,6 +36,9 @@ public abstract class Accident {
 	protected int id;
 	@Enumerated(value = EnumType.STRING)
 	protected AccidentType accidentType;
+	@Enumerated(value = EnumType.STRING)
+	protected CompState compState;
+
 	protected int employeeId;
 	protected int customerId;
 	protected long lossReserves; // 지급준비금
@@ -70,7 +73,8 @@ public abstract class Accident {
 	private Accident createCommonAccident(int customerId, AccidentReportDto dto) {
 		return this.setCustomerId(customerId)
 				.setDateOfAccident(dto.getDateOfAccident())
-				.setDateOfReport(LocalDateTime.now());
+				.setDateOfReport(LocalDateTime.now()).
+				setCompState(CompState.WAIT);
 	}
 
 	public void addAccidentDocumentFile(AccDocType docType, String fileUrl) {
@@ -82,6 +86,7 @@ public abstract class Accident {
 
 	public void assignEmployeeId(int employeeId) {
 		this.setEmployeeId(employeeId);
+		this.compState = CompState.INVESTIGATING;
 	}
 
 	public boolean checkConditionForClaimCompensation(AccidentType accidentType) {
@@ -134,11 +139,16 @@ public abstract class Accident {
 
 	public String checkForPayCompensation(PaymentOfCompensationDto dto) {
 		if(this.lossReserves * 1.5 < dto.getAmount()) {
-			return "손해사정서가 반려되었습니다.";
+			throw new LossAssessmentRejectedException();
+			//
 		}
 		if(this instanceof CarAccident c && c.getErrorRate() == 0) {
+			this.compState = CompState.DONE;
 			return "고객 과실이 0이기 때문에 보상금을 지급하지 않습니다.";
+			//
 		}
+		this.compState = CompState.DONE;
+
 		return "";
 	}
 

@@ -1,6 +1,7 @@
 package com.mju.insuranceCompany.service.employee.controller;
 
 import com.mju.insuranceCompany.service.accident.controller.dto.*;
+import com.mju.insuranceCompany.service.accident.domain.CompState;
 import com.mju.insuranceCompany.service.accident.domain.accidentDocumentFile.AccDocType;
 import com.mju.insuranceCompany.service.accident.service.interfaces.AccidentFileService;
 import com.mju.insuranceCompany.service.accident.service.interfaces.AccidentReadService;
@@ -19,13 +20,14 @@ import com.mju.insuranceCompany.service.insurance.domain.SalesAuthFileType;
 import com.mju.insuranceCompany.service.insurance.domain.SalesAuthorizationState;
 import com.mju.insuranceCompany.service.insurance.service.InsuranceService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-
+@Slf4j
 @RestController
 @RequestMapping("/emp")
 @RequiredArgsConstructor
@@ -223,6 +225,12 @@ public class EmployeeController {
     @GetMapping("/comp/list")
     public ResponseEntity<List<AccidentListInfoDto>> getAccidentListOfCompEmployee(){
         return ResponseEntity.ok(accidentReadService.getAccidentListOfCompEmployee());
+    }
+
+    /** 보상직원 할당 사고 상태 별 리스트 조회 */
+    @GetMapping("/comp/list/{state}")
+    public ResponseEntity<List<AccidentListInfoDto>> getAccidentListOfCompEmployeeByCompState(@PathVariable("state")CompState compState){
+       return ResponseEntity.ok(accidentReadService.getAccidentListOfCompEmployeeByCompState(compState));
     }
 
     /** 보상처리 자동차 사고 정보 조회 */

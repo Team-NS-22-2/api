@@ -36,6 +36,7 @@ public class FireAccident extends Accident {
 	@Override
 	public void investigate(InvestigateAccidentDto dto) {
 		super.checkExistInvestigateAccidentFile();
+		this.compState = CompState.ASSESSMENT;
 		this.lossReserves = dto.getLossReserves();
 	}
 }

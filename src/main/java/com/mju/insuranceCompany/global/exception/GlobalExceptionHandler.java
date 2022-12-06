@@ -1,6 +1,7 @@
 package com.mju.insuranceCompany.global.exception;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -14,7 +15,7 @@ import java.util.NoSuchElementException;
 import static com.mju.insuranceCompany.global.exception.ErrorResponse.createErrorResponse;
 import static com.mju.insuranceCompany.global.exception.GlobalErrorCode.DB_CONNECT_FAIL;
 import static com.mju.insuranceCompany.global.exception.GlobalErrorCode.NO_SUCH_ELEMENT;
-
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 

@@ -2,6 +2,7 @@ package com.mju.insuranceCompany.service.accident.controller.dto;
 
 import com.mju.insuranceCompany.service.accident.domain.Accident;
 import com.mju.insuranceCompany.service.accident.domain.AccidentType;
+import com.mju.insuranceCompany.service.accident.domain.CompState;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,6 +18,7 @@ public class AccidentListInfoDto {
     private LocalDateTime dateOfAccident;
     private LocalDateTime dateOfReport;
     private CompEmployeeDto compEmployee;
+    private CompState compState;
 
     public static AccidentListInfoDto toDto(Accident accident) {
         return AccidentListInfoDto.builder()
@@ -24,6 +26,7 @@ public class AccidentListInfoDto {
                 .accidentType(accident.getAccidentType())
                 .dateOfAccident(accident.getDateOfAccident())
                 .dateOfReport(accident.getDateOfReport())
+                .compState(accident.getCompState())
                 .build();
     }
 
@@ -33,7 +36,8 @@ public class AccidentListInfoDto {
                 accident.getAccidentType(),
                 accident.getDateOfAccident(),
                 accident.getDateOfReport(),
-                compEmployee
+                compEmployee,
+                accident.getCompState()
         );
     }
 }
