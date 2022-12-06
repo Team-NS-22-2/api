@@ -6,6 +6,9 @@ import com.mju.insuranceCompany.service.contract.domain.BuildingType;
 import com.mju.insuranceCompany.service.contract.domain.ConditionOfUw;
 import com.mju.insuranceCompany.service.contract.domain.Contract;
 import com.mju.insuranceCompany.service.contract.repository.ContractRepository;
+import com.mju.insuranceCompany.service.contract.service.implement.ContractCreateServiceImpl;
+import com.mju.insuranceCompany.service.contract.service.interfaces.ContractReadService;
+import com.mju.insuranceCompany.service.contract.service.interfaces.ContractUpdateService;
 import com.mju.insuranceCompany.service.customer.repository.CustomerRepository;
 import com.mju.insuranceCompany.service.employee.controller.dto.ConditionOfUwOfCustomerResponse;
 import com.mju.insuranceCompany.service.insurance.domain.InsuranceType;
@@ -23,16 +26,20 @@ import java.util.List;
 @ActiveProfiles("prod")
 class ContractServiceTest {
 
-    @Autowired ContractService contractService;
-    @Autowired ContractCreateService contractCreateService;
+    @Autowired
+    ContractReadService contractReadService;
+    @Autowired
+    ContractUpdateService contractUpdateService;
+    @Autowired
+    ContractCreateServiceImpl contractCreateService;
     @Autowired ContractRepository contractRepository;
     @Autowired CustomerRepository customerRepository;
 
 //    @Test
     void getUwStateOfCustomer() {
-        List<ConditionOfUwOfCustomerResponse> h = contractService.getUwStateOfCustomer(InsuranceType.HEALTH);
-        List<ConditionOfUwOfCustomerResponse> c = contractService.getUwStateOfCustomer(InsuranceType.CAR);
-        List<ConditionOfUwOfCustomerResponse> f = contractService.getUwStateOfCustomer(InsuranceType.FIRE);
+        List<ConditionOfUwOfCustomerResponse> h = contractReadService.getUwStateOfCustomer(InsuranceType.HEALTH);
+        List<ConditionOfUwOfCustomerResponse> c = contractReadService.getUwStateOfCustomer(InsuranceType.CAR);
+        List<ConditionOfUwOfCustomerResponse> f = contractReadService.getUwStateOfCustomer(InsuranceType.FIRE);
 
         for(ConditionOfUwOfCustomerResponse r : h) {
             Assertions.assertThat(r.getConditionOfUw()).isNotEqualByComparingTo(ConditionOfUw.APPROVAL);
@@ -52,18 +59,18 @@ class ContractServiceTest {
 
     @Test
     void getHealthContractOfCustomer() {
-        System.out.println(contractService.getHealthContractOfCustomerByContractId(1));
+        System.out.println(contractReadService.getHealthContractOfCustomerByContractId(1));
     }
 
     @Test
     void getCarContractOfCustomer() {
-        System.out.println(contractService.getCarContractOfCustomerByContractId(11));
+        System.out.println(contractReadService.getCarContractOfCustomerByContractId(11));
     }
 
     @Test
     void getFireContractOfCustomer() {
         int contractId = 14;
-        CustomerFireContractDto dto = contractService.getFireContractOfCustomerByContractId(contractId);
+        CustomerFireContractDto dto = contractReadService.getFireContractOfCustomerByContractId(contractId);
         FireContractDto f = dto.getFireContractDto();
 
         int buildingArea = 300;
@@ -81,7 +88,7 @@ class ContractServiceTest {
 
     @Test
     void underwriting() {
-        contractService.underwriting(1, "Test Underwriting", ConditionOfUw.APPROVAL);
+        contractUpdateService.underwriting(1, "Test Underwriting", ConditionOfUw.APPROVAL);
 
         Contract contract = contractRepository.findById(1).orElseThrow();
 

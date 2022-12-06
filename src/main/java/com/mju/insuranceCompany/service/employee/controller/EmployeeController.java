@@ -9,8 +9,9 @@ import com.mju.insuranceCompany.service.contract.controller.dto.CustomerCarContr
 import com.mju.insuranceCompany.service.contract.controller.dto.CustomerFireContractDto;
 import com.mju.insuranceCompany.service.contract.controller.dto.CustomerHealthContractDto;
 import com.mju.insuranceCompany.service.contract.controller.dto.RegisterContractResponse;
-import com.mju.insuranceCompany.service.contract.service.ContractCreateService;
-import com.mju.insuranceCompany.service.contract.service.ContractService;
+import com.mju.insuranceCompany.service.contract.service.interfaces.ContractCreateService;
+import com.mju.insuranceCompany.service.contract.service.interfaces.ContractReadService;
+import com.mju.insuranceCompany.service.contract.service.interfaces.ContractUpdateService;
 import com.mju.insuranceCompany.service.employee.controller.dto.ConditionOfUwOfCustomerResponse;
 import com.mju.insuranceCompany.service.employee.controller.dto.UnderwritingRequest;
 import com.mju.insuranceCompany.service.insurance.controller.dto.*;
@@ -32,7 +33,8 @@ import java.util.List;
 public class EmployeeController {
 
     private final ContractCreateService contractCreateService;
-    private final ContractService contractService;
+    private final ContractReadService contractReadService;
+    private final ContractUpdateService contractUpdateService;
     private final InsuranceService insuranceService;
     private final AccidentUpdateService accidentService;
     private final AccidentReadService accidentReadService;
@@ -59,32 +61,32 @@ public class EmployeeController {
 //        인수심사
     @PatchMapping("/uw/{contractId}")
     public ResponseEntity<Void> underwriting(@PathVariable int contractId, @RequestBody UnderwritingRequest request) {
-        contractService.underwriting(contractId, request.getReasonOfUw(), request.getConditionOfUw());
+        contractUpdateService.underwriting(contractId, request.getReasonOfUw(), request.getConditionOfUw());
         return ResponseEntity.ok().build();
     }
 
 //        고객 인수심사상태 정보 조회
     @GetMapping("/uw/{insType}")
     public ResponseEntity<List<ConditionOfUwOfCustomerResponse>> getUwStateOfCustomer(@PathVariable InsuranceType insType) {
-        return ResponseEntity.ok(contractService.getUwStateOfCustomer(insType));
+        return ResponseEntity.ok(contractReadService.getUwStateOfCustomer(insType));
     }
 
 //        고객 건강보험 계약 조회
     @GetMapping("/uw/health/{contractId}")
     public ResponseEntity<CustomerHealthContractDto> getHealthContractOfCustomer(@PathVariable int contractId) {
-        return ResponseEntity.ok(contractService.getHealthContractOfCustomerByContractId(contractId));
+        return ResponseEntity.ok(contractReadService.getHealthContractOfCustomerByContractId(contractId));
     }
 
 //        고객 화재보험 계약 조회
     @GetMapping("/uw/fire/{contractId}")
     public ResponseEntity<CustomerFireContractDto> getFireContractOfCustomer(@PathVariable int contractId) {
-        return ResponseEntity.ok(contractService.getFireContractOfCustomerByContractId(contractId));
+        return ResponseEntity.ok(contractReadService.getFireContractOfCustomerByContractId(contractId));
     }
 
 //        고객 자동차보험 계약 조회
     @GetMapping("/uw/car/{contractId}")
     public ResponseEntity<CustomerCarContractDto> getCarContractOfCustomer(@PathVariable int contractId) {
-        return ResponseEntity.ok(contractService.getCarContractOfCustomerByContractId(contractId));
+        return ResponseEntity.ok(contractReadService.getCarContractOfCustomerByContractId(contractId));
     }
 
     /**
