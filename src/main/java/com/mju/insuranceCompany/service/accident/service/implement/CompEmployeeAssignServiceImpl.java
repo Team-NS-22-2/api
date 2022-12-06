@@ -8,11 +8,11 @@ import com.mju.insuranceCompany.service.employee.domain.Employee;
 import com.mju.insuranceCompany.service.employee.exception.EmployeeIdNotFoundException;
 import com.mju.insuranceCompany.service.employee.repository.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Component
+@Service
 @RequiredArgsConstructor
 public class CompEmployeeAssignServiceImpl implements CompEmployeeAssignService {
 
