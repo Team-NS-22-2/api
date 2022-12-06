@@ -1,4 +1,4 @@
-package com.mju.insuranceCompany.service.contract.service;
+package com.mju.insuranceCompany.service.contract.service.implement;
 
 
 import com.mju.insuranceCompany.global.utility.AuthenticationExtractor;
@@ -9,6 +9,7 @@ import com.mju.insuranceCompany.service.contract.domain.FireContract;
 import com.mju.insuranceCompany.service.contract.domain.HealthContract;
 import com.mju.insuranceCompany.service.contract.exception.MismatchInsuranceTypeAndRequestContractException;
 import com.mju.insuranceCompany.service.contract.repository.ContractRepository;
+import com.mju.insuranceCompany.service.contract.service.interfaces.ContractCreateService;
 import com.mju.insuranceCompany.service.customer.domain.Customer;
 import com.mju.insuranceCompany.service.customer.repository.CustomerRepository;
 import com.mju.insuranceCompany.service.employee.domain.Employee;
@@ -30,63 +31,65 @@ import static com.mju.insuranceCompany.service.user.domain.Users.anonymousUser;
 @Transactional
 @RequiredArgsConstructor
 @Slf4j
-public class ContractCreateService {
+public class ContractCreateServiceImpl implements ContractCreateService {
 
+    private final ContractRepository contractRepository;
     private final InsuranceRepository insuranceRepository;
     private final CustomerRepository customerRepository;
-    private final ContractRepository contractRepository;
     private final EmployeeRepository employeeRepository;
 
 
-    public RegisterContractResponse registerHealthContract(int insId, CustomerHealthContractDto request) {
-        request.setHealthContractDto(   // 판매직원이 보험을 체결할 경우, 직원ID를 주입하기 위함.
-                (HealthContractDto) injectEmployeeIdToContractDto(request.getHealthContractDto()));
-
-        InsuranceType insuranceType = insuranceRepository.findInsuranceTypeByInsuranceId(insId).orElseThrow(InsuranceIdNotFoundException::new);
+    @Override
+    public RegisterContractResponse registerHealthContract(int insuranceId, CustomerHealthContractDto dto) {
+        InsuranceType insuranceType = insuranceRepository.findInsuranceTypeByInsuranceId(insuranceId).orElseThrow(InsuranceIdNotFoundException::new);
         if(insuranceType != InsuranceType.HEALTH) {
             throw new MismatchInsuranceTypeAndRequestContractException();
         }
 
-        Customer customer = new Customer(request.getCustomerDto());
+        dto.setHealthContractDto(   // 판매직원이 보험을 체결할 경우, 직원ID를 주입하기 위함.
+                (HealthContractDto) injectEmployeeIdToContractDto(dto.getHealthContractDto()));
+
+        Customer customer = new Customer(dto.getCustomerDto());
         customerRepository.save(customer);
 
-        request.getHealthContractDto().setInsuranceId(insId);
-        Contract contract = new HealthContract(request.getHealthContractDto(), customer.getId());
+        dto.getHealthContractDto().setInsuranceId(insuranceId);
+        Contract contract = new HealthContract(dto.getHealthContractDto(), customer.getId());
         contractRepository.save(contract);
 
         return RegisterContractResponse.builder().customerId(customer.getId()).build();
     }
 
-    public RegisterContractResponse registerCarContract(int insId, CustomerCarContractDto request) {
-        request.setCarContractDto(   // 판매직원이 보험을 체결할 경우, 직원ID를 주입하기 위함.
-                (CarContractDto) injectEmployeeIdToContractDto(request.getCarContractDto()));
-
-        InsuranceType insuranceType = insuranceRepository.findInsuranceTypeByInsuranceId(insId).orElseThrow(InsuranceIdNotFoundException::new);
+    @Override
+    public RegisterContractResponse registerCarContract(int insuranceId, CustomerCarContractDto dto) {
+        InsuranceType insuranceType = insuranceRepository.findInsuranceTypeByInsuranceId(insuranceId).orElseThrow(InsuranceIdNotFoundException::new);
         if(insuranceType != InsuranceType.CAR) throw new MismatchInsuranceTypeAndRequestContractException();
 
-        Customer customer = new Customer(request.getCustomerDto());
+        dto.setCarContractDto(   // 판매직원이 보험을 체결할 경우, 직원ID를 주입하기 위함.
+                (CarContractDto) injectEmployeeIdToContractDto(dto.getCarContractDto()));
+
+        Customer customer = new Customer(dto.getCustomerDto());
         customerRepository.save(customer);
 
-        request.getCarContractDto().setInsuranceId(insId);
-
-        Contract contract = new CarContract(request.getCarContractDto(), customer.getId());
+        dto.getCarContractDto().setInsuranceId(insuranceId);
+        Contract contract = new CarContract(dto.getCarContractDto(), customer.getId());
         contractRepository.save(contract);
 
         return RegisterContractResponse.builder().customerId(customer.getId()).build();
     }
 
-    public RegisterContractResponse registerFireContract(int insId, CustomerFireContractDto request) {
-        request.setFireContractDto(   // 판매직원이 보험을 체결할 경우, 직원ID를 주입하기 위함.
-                (FireContractDto) injectEmployeeIdToContractDto(request.getFireContractDto()));
-
-        InsuranceType insuranceType = insuranceRepository.findInsuranceTypeByInsuranceId(insId).orElseThrow(InsuranceIdNotFoundException::new);
+    @Override
+    public RegisterContractResponse registerFireContract(int insuranceId, CustomerFireContractDto dto) {
+        InsuranceType insuranceType = insuranceRepository.findInsuranceTypeByInsuranceId(insuranceId).orElseThrow(InsuranceIdNotFoundException::new);
         if(insuranceType != InsuranceType.FIRE) throw new MismatchInsuranceTypeAndRequestContractException();
 
-        Customer customer = new Customer(request.getCustomerDto());
+        dto.setFireContractDto(   // 판매직원이 보험을 체결할 경우, 직원ID를 주입하기 위함.
+                (FireContractDto) injectEmployeeIdToContractDto(dto.getFireContractDto()));
+
+        Customer customer = new Customer(dto.getCustomerDto());
         customerRepository.save(customer);
 
-        request.getFireContractDto().setInsuranceId(insId);
-        Contract contract = new FireContract(request.getFireContractDto(), customer.getId());
+        dto.getFireContractDto().setInsuranceId(insuranceId);
+        Contract contract = new FireContract(dto.getFireContractDto(), customer.getId());
         contractRepository.save(contract);
 
         return RegisterContractResponse.builder().customerId(customer.getId()).build();

@@ -1,9 +1,10 @@
-package com.mju.insuranceCompany.service.contract.service;
+package com.mju.insuranceCompany.service.contract.service.implement;
 
 import com.mju.insuranceCompany.global.utility.AuthenticationExtractor;
 import com.mju.insuranceCompany.service.contract.controller.dto.*;
 import com.mju.insuranceCompany.service.contract.domain.*;
 import com.mju.insuranceCompany.service.contract.repository.ContractRepository;
+import com.mju.insuranceCompany.service.contract.service.interfaces.ContractReadService;
 import com.mju.insuranceCompany.service.customer.controller.dto.ContractReceiptDto;
 import com.mju.insuranceCompany.service.customer.controller.dto.CustomerDto;
 import com.mju.insuranceCompany.service.customer.domain.Customer;
@@ -20,18 +21,21 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Service @Transactional
+@Service
+@Transactional
 @RequiredArgsConstructor
-public class ContractService {
+public class ContractReadServiceImpl implements ContractReadService {
 
     private final ContractRepository contractRepository;
     private final CustomerRepository customerRepository;
     private final InsuranceRepository insuranceRepository;
 
+    @Override
     public List<ConditionOfUwOfCustomerResponse> getUwStateOfCustomer(InsuranceType insuranceType) {
         return contractRepository.findConditionOfUwOfCustomer(insuranceType);
     }
 
+    @Override
     public CustomerHealthContractDto getHealthContractOfCustomerByContractId(int contractId) {
         HealthContract healthContract = contractRepository.findHealthContractById(contractId).orElseThrow();
         Customer customer = customerRepository.findById(healthContract.getCustomerId()).orElseThrow();
@@ -44,6 +48,7 @@ public class ContractService {
         );
     }
 
+    @Override
     public CustomerFireContractDto getFireContractOfCustomerByContractId(int contractId) {
         FireContract fireContract = contractRepository.findFireContractById(contractId).orElseThrow();
         Customer customer = customerRepository.findById(fireContract.getCustomerId()).orElseThrow();
@@ -56,6 +61,7 @@ public class ContractService {
         );
     }
 
+    @Override
     public CustomerCarContractDto getCarContractOfCustomerByContractId(int contractId) {
         CarContract carContract = contractRepository.findCarContractById(contractId).orElseThrow();
         Customer customer = customerRepository.findById(carContract.getCustomerId()).orElseThrow();
@@ -68,11 +74,7 @@ public class ContractService {
         );
     }
 
-    public void underwriting(int contractId, String reasonOfUw, ConditionOfUw conditionOfUw) {
-        Contract contract = contractRepository.findById(contractId).orElseThrow();
-        contract.underwriting(reasonOfUw, conditionOfUw);
-    }
-
+    @Override
     public List<ContractReceiptDto> getAllContractReceipts(){
         int customerId = AuthenticationExtractor.extractCustomerIdByAuthentication();
         List<ContractReceiptDto> receipts = contractRepository.findAllContractReceipt(customerId);
@@ -80,8 +82,5 @@ public class ContractService {
             throw new ContractofCustomerNotFoundException();
         return receipts;
     }
-
-
-
 
 }

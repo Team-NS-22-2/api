@@ -1,9 +1,9 @@
 package com.mju.insuranceCompany.service.customer.controller;
 
 import com.mju.insuranceCompany.service.contract.controller.dto.PaymentRegisterOnContractDto;
-import com.mju.insuranceCompany.service.contract.service.ContractPayService;
-import com.mju.insuranceCompany.service.contract.service.ContractService;
-import com.mju.insuranceCompany.service.contract.service.PaymentRegisterService;
+import com.mju.insuranceCompany.service.contract.service.interfaces.ContractPayService;
+import com.mju.insuranceCompany.service.contract.service.interfaces.ContractReadService;
+import com.mju.insuranceCompany.service.contract.service.interfaces.PaymentRegisterService;
 import com.mju.insuranceCompany.service.customer.controller.dto.ContractReceiptDto;
 import com.mju.insuranceCompany.service.customer.controller.dto.PaymentBasicInfoDto;
 import com.mju.insuranceCompany.service.customer.controller.dto.PaymentCreateDto;
@@ -21,7 +21,7 @@ import java.util.List;
 @RestController
 public class CustomerController {
 
-    private final ContractService contractService;
+    private final ContractReadService contractService;
     private final CustomerService customerService;
     private final PaymentRegisterService paymentRegisterService;
     private final ContractPayService contractPayService;

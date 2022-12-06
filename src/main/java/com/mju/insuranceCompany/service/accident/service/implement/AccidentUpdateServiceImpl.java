@@ -7,11 +7,11 @@ import com.mju.insuranceCompany.service.accident.exception.InsufficientSubmitAcc
 import com.mju.insuranceCompany.service.accident.exception.NotYetAssignedCompEmployeeException;
 import com.mju.insuranceCompany.service.accident.repository.AccidentRepository;
 import com.mju.insuranceCompany.service.accident.service.interfaces.AccidentUpdateService;
+import com.mju.insuranceCompany.service.accident.service.interfaces.CompEmployeeAssignService;
 import com.mju.insuranceCompany.service.customer.domain.Customer;
 import com.mju.insuranceCompany.service.customer.exception.CustomerNotFoundException;
 import com.mju.insuranceCompany.service.customer.repository.CustomerRepository;
 import com.mju.insuranceCompany.service.employee.domain.Employee;
-import com.mju.insuranceCompany.service.employee.service.AssignEmployeeUtilComponent;
 import com.mju.outerSystem.Bank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,7 +24,7 @@ public class AccidentUpdateServiceImpl implements AccidentUpdateService {
 
     private final AccidentRepository accidentRepository;
     private final CustomerRepository customerRepository;
-    private final AssignEmployeeUtilComponent assignEmployeeUtilComponent;
+    private final CompEmployeeAssignService compEmployeeAssignService;
 
     @Override
     public CompEmployeeDto claimCompensation(int accidentId) {
@@ -33,7 +33,7 @@ public class AccidentUpdateServiceImpl implements AccidentUpdateService {
             throw new InsufficientSubmitAccDocFileException(); // 보상금 청구에 만족하는 파일이 모두 저장되어 있지 않는 경우
         }
 
-        Employee employee = assignEmployeeUtilComponent.assignCompEmployee();
+        Employee employee = compEmployeeAssignService.assignCompEmployee();
         accident.assignEmployeeId(employee.getId());
         accidentRepository.save(accident);
         return CompEmployeeDto.toDto(employee);
@@ -53,7 +53,7 @@ public class AccidentUpdateServiceImpl implements AccidentUpdateService {
         customerRepository.save(customer);
 
         // 2. 보상담당자 배정
-        Employee employee = assignEmployeeUtilComponent.changeCompEmployee(accident.getEmployeeId());
+        Employee employee = compEmployeeAssignService.changeCompEmployee(accident.getEmployeeId());
         accident.assignEmployeeId(employee.getId());
         accidentRepository.save(accident);
         return CompEmployeeDto.toDto(employee);
