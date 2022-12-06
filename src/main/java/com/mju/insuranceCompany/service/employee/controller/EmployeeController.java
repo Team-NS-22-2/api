@@ -2,7 +2,9 @@ package com.mju.insuranceCompany.service.employee.controller;
 
 import com.mju.insuranceCompany.service.accident.controller.dto.*;
 import com.mju.insuranceCompany.service.accident.domain.accidentDocumentFile.AccDocType;
-import com.mju.insuranceCompany.service.accident.service.AccidentService;
+import com.mju.insuranceCompany.service.accident.service.interfaces.AccidentFileService;
+import com.mju.insuranceCompany.service.accident.service.interfaces.AccidentReadService;
+import com.mju.insuranceCompany.service.accident.service.interfaces.AccidentUpdateService;
 import com.mju.insuranceCompany.service.contract.controller.dto.CustomerCarContractDto;
 import com.mju.insuranceCompany.service.contract.controller.dto.CustomerFireContractDto;
 import com.mju.insuranceCompany.service.contract.controller.dto.CustomerHealthContractDto;
@@ -32,7 +34,9 @@ public class EmployeeController {
     private final ContractCreateService contractCreateService;
     private final ContractService contractService;
     private final InsuranceService insuranceService;
-    private final AccidentService accidentService;
+    private final AccidentUpdateService accidentService;
+    private final AccidentReadService accidentReadService;
+    private final AccidentFileService accidentFileService;
 
 //        건강보험 판매
     @PostMapping("/sales/health/{insId}")
@@ -217,26 +221,26 @@ public class EmployeeController {
 
     /** 보상직원 할당 사고 리스트 조회 */
     @GetMapping("/comp/list")
-    public ResponseEntity<List<AccidentListInfoDto>> getCompAccidentList(){
-        return ResponseEntity.ok(accidentService.getCompAccidentList());
+    public ResponseEntity<List<AccidentListInfoDto>> getAccidentListOfCompEmployee(){
+        return ResponseEntity.ok(accidentReadService.getAccidentListOfCompEmployee());
     }
 
     /** 보상처리 자동차 사고 정보 조회 */
     @GetMapping("/comp/car-accident/{accidentId}")
     public ResponseEntity<CompCarAccidentDto> getCarAccidentOfCompEmployee(@PathVariable int accidentId) {
-        return ResponseEntity.ok(accidentService.getCarAccidentOfCompEmployee(accidentId));
+        return ResponseEntity.ok(accidentReadService.getCarAccidentOfCompEmployee(accidentId));
     }
 
     /** 보상처리 화재 사고 정보 조회 */
     @GetMapping("/comp/fire-accident/{accidentId}")
     public ResponseEntity<CompFireAccidentDto> getFireAccidentOfCompEmployee(@PathVariable int accidentId) {
-        return ResponseEntity.ok(accidentService.getFireAccidentOfCompEmployee(accidentId));
+        return ResponseEntity.ok(accidentReadService.getFireAccidentOfCompEmployee(accidentId));
     }
 
     /** 보상처리 상해 사고 정보 조회 */
     @GetMapping("/comp/injury-accident/{accidentId}")
     public ResponseEntity<CompInjuryAccidentDto> getInjuryAccidentOfCompEmployee(@PathVariable int accidentId) {
-        return ResponseEntity.ok(accidentService.getInjuryAccidentOfCompEmployee(accidentId));
+        return ResponseEntity.ok(accidentReadService.getInjuryAccidentOfCompEmployee(accidentId));
     }
 
     /** 손해조사 */
@@ -249,14 +253,14 @@ public class EmployeeController {
     /** 사고조사 보고서 제출 */
     @PostMapping("/comp/submit/investigate-accident/{accidentId}")
     public ResponseEntity<Void> submitInvestigateAccidentFileByCompEmployee(@PathVariable int accidentId, @RequestBody MultipartFile multipartFile) {
-        accidentService.submitAccidentDocumentFileByCompEmployee(accidentId, multipartFile, AccDocType.INVESTIGATE_ACCIDENT);
+        accidentFileService.submitAccDocFileByCompEmployee(accidentId, multipartFile, AccDocType.INVESTIGATE_ACCIDENT);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     /** 손해사정서 제출 */
     @PostMapping("/comp/submit/loss-assessment/{accidentId}")
     public ResponseEntity<Void> submitLossAssessmentFileByCompEmployee(@PathVariable int accidentId, @RequestBody MultipartFile multipartFile) {
-        accidentService.submitAccidentDocumentFileByCompEmployee(accidentId, multipartFile, AccDocType.LOSS_ASSESSMENT);
+        accidentFileService.submitAccDocFileByCompEmployee(accidentId, multipartFile, AccDocType.LOSS_ASSESSMENT);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 

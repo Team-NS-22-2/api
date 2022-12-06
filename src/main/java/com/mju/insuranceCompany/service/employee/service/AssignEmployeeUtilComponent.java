@@ -7,26 +7,24 @@ import com.mju.insuranceCompany.service.employee.domain.Employee;
 import com.mju.insuranceCompany.service.employee.exception.EmployeeIdNotFoundException;
 import com.mju.insuranceCompany.service.employee.repository.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Service
+@Component
 @RequiredArgsConstructor
-public class AssignEmployeeService {
+public class AssignEmployeeUtilComponent {
 
     private final EmployeeRepository employeeRepository;
     private final AccidentRepository accidentRepository;
 
-    /**
-     * 보상담당자 직원을 배정하는 메소드.
-     * @return 배정된 보상담당자 직원
-     */
+    /** 배정된 보상담당자를 리턴하는 메소드 */
     public Employee assignCompEmployee() {
         List<Employee> compEmployees = employeeRepository.findEmployeeByDepartmentEquals(Department.COMP);
         return assignEmployee(compEmployees);
     }
 
+    /** 보상담당자를 변경하여 다시 배정된 보상담당자를 리턴하는 메소드 */
     public Employee changeCompEmployee(int currentEmployeeId) {
         Employee employee = employeeRepository.findById(currentEmployeeId)
                 .orElseThrow(EmployeeIdNotFoundException::new);
@@ -35,6 +33,7 @@ public class AssignEmployeeService {
         return assignEmployee(compEmployees);
     }
 
+    /** 보상담당자 배정 */
     private Employee assignEmployee(List<Employee> compEmployees) {
         List<Accident> accidents;
         int min = Integer.MAX_VALUE;
