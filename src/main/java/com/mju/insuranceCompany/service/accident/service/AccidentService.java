@@ -10,13 +10,17 @@ import com.mju.insuranceCompany.service.accident.exception.*;
 import com.mju.insuranceCompany.service.accident.repository.AccidentRepository;
 import com.mju.insuranceCompany.service.contract.domain.CarContract;
 import com.mju.insuranceCompany.service.contract.repository.ContractRepository;
+import com.mju.insuranceCompany.service.customer.controller.dto.CustomerDto;
 import com.mju.insuranceCompany.service.customer.domain.Customer;
 import com.mju.insuranceCompany.service.customer.exception.CustomerNotFoundException;
 import com.mju.insuranceCompany.service.customer.repository.CustomerRepository;
+import com.mju.insuranceCompany.service.accident.controller.dto.CompFireAccidentDto;
+import com.mju.insuranceCompany.service.accident.controller.dto.CompInjuryAccidentDto;
 import com.mju.insuranceCompany.service.employee.domain.Employee;
 import com.mju.insuranceCompany.service.employee.exception.EmployeeIdNotFoundException;
 import com.mju.insuranceCompany.service.employee.repository.EmployeeRepository;
 import com.mju.insuranceCompany.service.employee.service.AssignEmployeeService;
+import com.mju.outerSystem.Bank;
 import com.mju.outerSystem.RequestOnSiteSystem;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -54,6 +58,7 @@ public class AccidentService {
                 .findAny().orElseThrow(NotExistRequestedCarNoException::new); // 요청 고객이 가입한 자동차보험 중 사고 접수 요청한 자동차보험이 없는 경우 예외 발생
     }
 
+    /** 자동차 사고 접수 */
     public CarAccidentDto reportCarAccident(AccidentReportDto accidentReportDto) {
         int customerId = AuthenticationExtractor.extractCustomerIdByAuthentication();
         validateCustomerCanReportOnCar(accidentReportDto, customerId);
@@ -71,6 +76,7 @@ public class AccidentService {
         return CarAccidentDto.toDto((CarAccident) accident, accidentWorkerDto, fileList);
     }
 
+    /** 자동차 고장 접수 */
     public CarBreakdownDto reportCarBreakdown(AccidentReportDto accidentReportDto) {
         int customerId = AuthenticationExtractor.extractCustomerIdByAuthentication();
         validateCustomerCanReportOnCar(accidentReportDto, customerId);
@@ -84,6 +90,7 @@ public class AccidentService {
         return CarBreakdownDto.toDto((CarBreakdown) accident, accidentWorkerDto);
     }
 
+    /** 화재 사고 접수 */
     public FireAccidentDto reportFireAccident(AccidentReportDto accidentReportDto) {
         int customerId = AuthenticationExtractor.extractCustomerIdByAuthentication();
         contractRepository.findFireContractByCustomerId(customerId)
@@ -98,6 +105,7 @@ public class AccidentService {
         return FireAccidentDto.toDto((FireAccident) accident, fileList);
     }
 
+    /** 상해 사고 접수 */
     public InjuryAccidentDto reportInjuryAccident(AccidentReportDto accidentReportDto) {
         int customerId = AuthenticationExtractor.extractCustomerIdByAuthentication();
         contractRepository.findHealthContractByCustomerId(customerId)
@@ -112,6 +120,10 @@ public class AccidentService {
         return InjuryAccidentDto.toDto((InjuryAccident) accident, fileList);
     }
 
+    /**
+     * 보상금 청구를 위해 자동차/화재/상해 사고에 대한 타입 검증(자동차 고장은 보상금 청구를 할 수 없음)과
+     * 해당 사고가 고객의 사고가 맞는지에 대한 검증을 수행하는 메소드.
+     */
     private Accident validateClientAndAccidentType(int accidentId, AccidentType accidentType) {
         if(accidentType == AccidentType.CAR_BREAKDOWN) {
             throw new CannotClaimCarBreakdownException();
@@ -126,6 +138,7 @@ public class AccidentService {
         return accident;
     }
 
+    /** 선택한 사고의 고객 ID와 요청 고객 ID를 검증하는 메소드. */
     private void validateClient(Accident accident) {
         int customerId = AuthenticationExtractor.extractCustomerIdByAuthentication();
         if(accident.getCustomerId() != customerId) {
@@ -133,14 +146,21 @@ public class AccidentService {
         }
     }
 
-    public void submitAccidentDocumentFile(int accidentId, AccDocType docType,
-                                           MultipartFile multipartFile, AccidentType accidentType) {
+    /**
+     * 사고 관련 파일을 S3에 업로드하는 메소드.
+     * @param accidentId 업로드하는 파일의 사고 ID
+     * @param docType 업로드하는 파일의 타입
+     * @param multipartFile 업로드하는 파일
+     * @param accidentType 업로드하는 파일의 사고의 타입
+     */
+    public void submitAccidentDocumentFileByCustomer(int accidentId, AccDocType docType, MultipartFile multipartFile, AccidentType accidentType) {
         Accident accident = validateClientAndAccidentType(accidentId, accidentType);
         String fileUrl = s3Client.uploadFile("acc_doc", multipartFile); // 파일 저장
         accident.addAccidentDocumentFile(docType, fileUrl); // accident's accident document file 추가
         accidentRepository.save(accident);
     }
 
+    /** 보상금 청구 */
     public CompEmployeeDto claimCompensation(int accidentId) {
         Accident accident = accidentRepository.findById(accidentId)
                 .orElseThrow(AccidentIdNotFoundException::new);
@@ -154,6 +174,7 @@ public class AccidentService {
         return CompEmployeeDto.toDto(employee);
     }
 
+    /** 로그인 고객의 사고 접수 리스트 조회 */
     public List<AccidentListInfoDto> getAccidentListOfCustomer() {
         int customerId = AuthenticationExtractor.extractCustomerIdByAuthentication();
         List<Accident> accidentList = accidentRepository.findAllByCustomerId(customerId);
@@ -172,6 +193,7 @@ public class AccidentService {
         return accidentListInfoDtoList;
     }
 
+    /** 자동차 사고 정보 조회 */
     public CarAccidentDto getCarAccident(int accidentId) {
         Accident accident = accidentRepository.findById(accidentId).orElseThrow(AccidentIdNotFoundException::new);
         validateClient(accident);
@@ -179,12 +201,14 @@ public class AccidentService {
         return CarAccidentDto.toDto((CarAccident) accident, null, fileList);
     }
 
+    /** 자동차 고장 정보 조회 */
     public CarBreakdownDto getCarBreakdown(int accidentId) {
         Accident accident = accidentRepository.findById(accidentId).orElseThrow(AccidentIdNotFoundException::new);
         validateClient(accident);
         return CarBreakdownDto.toDto((CarBreakdown) accident, null);
     }
 
+    /** 화재 사고 정보 조회 */
     public FireAccidentDto getFireAccident(int accidentId) {
         Accident accident = accidentRepository.findById(accidentId).orElseThrow(AccidentIdNotFoundException::new);
         validateClient(accident);
@@ -192,6 +216,7 @@ public class AccidentService {
         return FireAccidentDto.toDto((FireAccident) accident, fileList);
     }
 
+    /** 상해 사고 정보 조회 */
     public InjuryAccidentDto getInjuryAccident(int accidentId) {
         Accident accident = accidentRepository.findById(accidentId).orElseThrow(AccidentIdNotFoundException::new);
         validateClient(accident);
@@ -199,6 +224,7 @@ public class AccidentService {
         return InjuryAccidentDto.toDto((InjuryAccident) accident, fileList);
     }
 
+    /** 보상처리담당 직원 변경 */
     public CompEmployeeDto changeCompEmployee(int accidentId, ComplainRequestDto dto) {
         Accident accident = accidentRepository.findById(accidentId).orElseThrow(AccidentIdNotFoundException::new);
         validateClient(accident);
@@ -216,5 +242,83 @@ public class AccidentService {
         accident.assignEmployeeId(employee.getId());
         accidentRepository.save(accident);
         return CompEmployeeDto.toDto(employee);
+    }
+
+    /** 보상직원에게 할당된 사고 리스트 조회 */
+    public List<AccidentListInfoDto> getCompAccidentList() {
+        int compEmployeeId = AuthenticationExtractor.extractEmployeeIdByAuthentication();
+        List<AccidentListInfoDto> accidentList =
+                accidentRepository.findAccidentByEmployeeId(compEmployeeId).stream()
+                        .map(AccidentListInfoDto::toDto).toList();
+        if(accidentList.isEmpty()) {
+            throw new NotExistCompEmployeeAccidentsException();
+        }
+        return accidentList;
+    }
+
+    /** Read accident assigned to logged-in comp employee. */
+    private Accident getAccidentOfCompEmployee(int accidentId) {
+        int compEmployeeId = AuthenticationExtractor.extractEmployeeIdByAuthentication();
+        Accident accident = accidentRepository.findById(accidentId)
+                .orElseThrow(AccidentIdNotFoundException::new);
+        if(accident.getEmployeeId() != compEmployeeId) {
+            throw new MismatchRequestEmployeeAndAccidentException();
+        }
+        return accident;
+    }
+
+    /** 보상처리 자동차 사고 정보 조회 */
+    public CompCarAccidentDto getCarAccidentOfCompEmployee(int accidentId) {
+        Accident accident = this.getAccidentOfCompEmployee(accidentId);
+        CustomerDto customerDto = customerRepository.findById(accident.getCustomerId())
+                .map(CustomerDto::toDto)
+                .orElseThrow(CustomerNotFoundException::new);
+        List<AccidentDocumentFile> fileList = accident.getAccidentDocumentFileList();
+        return CompCarAccidentDto.toDto((CarAccident) accident, customerDto, fileList);
+    }
+
+    /** 보상처리 화재 사고 정보 조회 */
+    public CompFireAccidentDto getFireAccidentOfCompEmployee(int accidentId) {
+        Accident accident = this.getAccidentOfCompEmployee(accidentId);
+        CustomerDto customerDto = customerRepository.findById(accident.getCustomerId())
+                .map(CustomerDto::toDto)
+                .orElseThrow(CustomerNotFoundException::new);
+        List<AccidentDocumentFile> fileList = accident.getAccidentDocumentFileList();
+        return CompFireAccidentDto.toDto((FireAccident) accident, customerDto, fileList);
+    }
+
+    /** 보상처리 상해 사고 정보 조회 */
+    public CompInjuryAccidentDto getInjuryAccidentOfCompEmployee(int accidentId) {
+        Accident accident = this.getAccidentOfCompEmployee(accidentId);
+        CustomerDto customerDto = customerRepository.findById(accident.getCustomerId())
+                .map(CustomerDto::toDto)
+                .orElseThrow(CustomerNotFoundException::new);
+        List<AccidentDocumentFile> fileList = accident.getAccidentDocumentFileList();
+        return CompInjuryAccidentDto.toDto((InjuryAccident) accident, customerDto, fileList);
+    }
+
+    /** 손해조사 */
+    public void investigateAccident(int accidentId, InvestigateAccidentDto dto) {
+        Accident accident = this.getAccidentOfCompEmployee(accidentId);
+        accident.investigate(dto);
+        accidentRepository.save(accident);
+    }
+
+    /** 사고조사 보고서 제출 */
+    public void submitAccidentDocumentFileByCompEmployee(int accidentId, MultipartFile multipartFile, AccDocType docType) {
+        Accident accident = this.getAccidentOfCompEmployee(accidentId);
+        String fileUrl = s3Client.uploadFile("acc_doc", multipartFile);
+        accident.addAccidentDocumentFile(docType, fileUrl);
+        accidentRepository.save(accident);
+    }
+
+    /** 보상금 지급 */
+    public PaymentOfCompensationResultDto payCompensation(int accidentId, PaymentOfCompensationDto dto) {
+        Accident accident = this.getAccidentOfCompEmployee(accidentId);
+        String message = accident.checkForPayCompensation(dto);
+        if(message.isBlank()) {
+            message = Bank.pay(dto.getBank(), dto.getAccountNo(), dto.getAmount());
+        }
+        return new PaymentOfCompensationResultDto(message);
     }
 }

@@ -1,7 +1,5 @@
 package com.mju.outerSystem;
 
-import com.mju.insuranceCompany.service.customer.domain.payment.Account;
-
 /**
  * packageName :  outerSystem
  * fileName : Bank
@@ -13,9 +11,16 @@ import com.mju.insuranceCompany.service.customer.domain.payment.Account;
  * -----------------------------------------------------------
  * 2022-05-25                규현             최초 생성
  */
-public interface Bank {
+public class Bank {
 
-    public static void sendCompensation(Account account, long compensation) {
-//        System.out.println(ConsoleColors.YELLOW_BOLD+"[알림] ["+account.getBankType() + "]"+account.getAccountNo() + "로 "+compensation + "원이 지급되었습니다."+ ConsoleColors.RESET);
+    private static long INSURANCE_COMPANY_BALANCE = 100000000000L;
+
+    public static String pay(String bank, String accountNo, long amount) {
+        if(INSURANCE_COMPANY_BALANCE < amount) {
+            return "계좌의 잔액이 부족하여 송금에 실패하였습니다.";
+        }
+        INSURANCE_COMPANY_BALANCE -= amount;
+        return accountNo +"("+ bank +")"+ "에 정상적으로 송금하였습니다.";
     }
+
 }

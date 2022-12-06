@@ -5,7 +5,6 @@ import com.mju.insuranceCompany.service.accident.domain.AccidentType;
 import com.mju.insuranceCompany.service.accident.domain.accidentDocumentFile.AccDocType;
 import com.mju.insuranceCompany.service.accident.service.AccidentService;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -46,20 +45,20 @@ public class AccidentController {
     }
 
     @PostMapping("/submit/car-accident/{accidentId}/{docType}")
-    public ResponseEntity<Void> submitCarAccidentClaimFile(@PathVariable int accidentId, @PathVariable AccDocType docType, @RequestBody MultipartFile multipartFile) {
-        accidentService.submitAccidentDocumentFile(accidentId, docType, multipartFile, AccidentType.CAR_ACCIDENT);
+    public ResponseEntity<Void> submitCarAccidentDocumentFileByCustomer(@PathVariable int accidentId, @PathVariable AccDocType docType, @RequestBody MultipartFile multipartFile) {
+        accidentService.submitAccidentDocumentFileByCustomer(accidentId, docType, multipartFile, AccidentType.CAR_ACCIDENT);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PostMapping("/submit/fire-accident/{accidentId}/{docType}")
-    public ResponseEntity<Void> submitFireAccidentClaimFile(@PathVariable int accidentId, @PathVariable AccDocType docType, @RequestBody MultipartFile multipartFile) {
-        accidentService.submitAccidentDocumentFile(accidentId, docType, multipartFile, AccidentType.FIRE_ACCIDENT);
+    public ResponseEntity<Void> submitFireAccidentDocumentFileByCustomer(@PathVariable int accidentId, @PathVariable AccDocType docType, @RequestBody MultipartFile multipartFile) {
+        accidentService.submitAccidentDocumentFileByCustomer(accidentId, docType, multipartFile, AccidentType.FIRE_ACCIDENT);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PostMapping("/submit/injury-accident/{accidentId}/{docType}")
-    public ResponseEntity<Void> submitInjuryAccidentClaimFile(@PathVariable int accidentId, @PathVariable AccDocType docType, @RequestBody MultipartFile multipartFile) {
-        accidentService.submitAccidentDocumentFile(accidentId, docType, multipartFile, AccidentType.INJURY_ACCIDENT);
+    public ResponseEntity<Void> submitInjuryAccidentDocumentFileByCustomer(@PathVariable int accidentId, @PathVariable AccDocType docType, @RequestBody MultipartFile multipartFile) {
+        accidentService.submitAccidentDocumentFileByCustomer(accidentId, docType, multipartFile, AccidentType.INJURY_ACCIDENT);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 

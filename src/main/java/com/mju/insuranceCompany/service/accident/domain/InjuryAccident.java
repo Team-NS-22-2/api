@@ -2,6 +2,7 @@ package com.mju.insuranceCompany.service.accident.domain;
 
 
 import com.mju.insuranceCompany.service.accident.controller.dto.AccidentReportDto;
+import com.mju.insuranceCompany.service.accident.controller.dto.InvestigateAccidentDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,4 +32,11 @@ public class InjuryAccident extends Accident {
 	public boolean isRequestOnSite() {
 		return false;
 	}
+
+	@Override
+	public void investigate(InvestigateAccidentDto dto) {
+		super.checkExistInvestigateAccidentFile();
+		this.lossReserves = dto.getLossReserves();
+	}
+
 }

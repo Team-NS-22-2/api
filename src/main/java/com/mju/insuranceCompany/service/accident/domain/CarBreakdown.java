@@ -1,6 +1,8 @@
 package com.mju.insuranceCompany.service.accident.domain;
 
 import com.mju.insuranceCompany.service.accident.controller.dto.AccidentReportDto;
+import com.mju.insuranceCompany.service.accident.controller.dto.InvestigateAccidentDto;
+import com.mju.insuranceCompany.service.accident.exception.CannotInvestigateCarBreakdownException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,5 +37,10 @@ public class CarBreakdown extends Accident {
 	@Override
 	public boolean isRequestOnSite() {
 		return true;
+	}
+
+	@Override
+	public void investigate(InvestigateAccidentDto dto) {
+		throw new CannotInvestigateCarBreakdownException();
 	}
 }
