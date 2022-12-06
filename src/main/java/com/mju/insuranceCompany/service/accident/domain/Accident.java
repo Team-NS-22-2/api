@@ -1,12 +1,12 @@
 package com.mju.insuranceCompany.service.accident.domain;
 
+import com.mju.insuranceCompany.global.utility.AuthenticationExtractor;
 import com.mju.insuranceCompany.service.accident.controller.dto.AccidentReportDto;
 import com.mju.insuranceCompany.service.accident.controller.dto.InvestigateAccidentDto;
 import com.mju.insuranceCompany.service.accident.controller.dto.PaymentOfCompensationDto;
 import com.mju.insuranceCompany.service.accident.domain.accidentDocumentFile.AccDocType;
 import com.mju.insuranceCompany.service.accident.domain.accidentDocumentFile.AccidentDocumentFile;
-import com.mju.insuranceCompany.service.accident.exception.CannotClaimCarBreakdownException;
-import com.mju.insuranceCompany.service.accident.exception.NotExistInvestigateAccidentFileException;
+import com.mju.insuranceCompany.service.accident.exception.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -141,4 +141,28 @@ public abstract class Accident {
 		}
 		return "";
 	}
+
+	/** 사고의 고객 ID와 요청 고객 ID를 검증. */
+	public void validateClient() {
+		int customerId = AuthenticationExtractor.extractCustomerIdByAuthentication();
+		if(this.getCustomerId() != customerId) {
+			throw new MismatchRequestClientAndAccidentException();
+		}
+	}
+
+	/** 사고의 할당 직원 ID과 로그인 보상팀 직원 ID를 검증. */
+	public void validateCompEmployee() {
+		int compEmployeeId = AuthenticationExtractor.extractEmployeeIdByAuthentication();
+		if(this.employeeId != compEmployeeId) {
+			throw new MismatchRequestEmployeeAndAccidentException();
+		}
+	}
+
+	/** 사고의 사고 타입과 요청 사고의 타입을 검증. */
+	public void validateAccidentType(AccidentType requestAccidentType) {
+		if(this.accidentType != requestAccidentType) {
+			throw new MismatchAccidentTypeException();
+		}
+	}
+
 }
