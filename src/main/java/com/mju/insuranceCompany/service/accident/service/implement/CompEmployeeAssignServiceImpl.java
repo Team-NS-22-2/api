@@ -1,7 +1,8 @@
-package com.mju.insuranceCompany.service.employee.service;
+package com.mju.insuranceCompany.service.accident.service.implement;
 
 import com.mju.insuranceCompany.service.accident.domain.Accident;
 import com.mju.insuranceCompany.service.accident.repository.AccidentRepository;
+import com.mju.insuranceCompany.service.accident.service.interfaces.CompEmployeeAssignService;
 import com.mju.insuranceCompany.service.employee.domain.Department;
 import com.mju.insuranceCompany.service.employee.domain.Employee;
 import com.mju.insuranceCompany.service.employee.exception.EmployeeIdNotFoundException;
@@ -13,18 +14,20 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class AssignEmployeeUtilComponent {
+public class CompEmployeeAssignServiceImpl implements CompEmployeeAssignService {
 
     private final EmployeeRepository employeeRepository;
     private final AccidentRepository accidentRepository;
 
     /** 배정된 보상담당자를 리턴하는 메소드 */
+    @Override
     public Employee assignCompEmployee() {
         List<Employee> compEmployees = employeeRepository.findEmployeeByDepartmentEquals(Department.COMP);
         return assignEmployee(compEmployees);
     }
 
     /** 보상담당자를 변경하여 다시 배정된 보상담당자를 리턴하는 메소드 */
+    @Override
     public Employee changeCompEmployee(int currentEmployeeId) {
         Employee employee = employeeRepository.findById(currentEmployeeId)
                 .orElseThrow(EmployeeIdNotFoundException::new);

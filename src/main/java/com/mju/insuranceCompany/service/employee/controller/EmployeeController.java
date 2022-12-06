@@ -19,7 +19,10 @@ import com.mju.insuranceCompany.service.insurance.controller.dto.*;
 import com.mju.insuranceCompany.service.insurance.domain.InsuranceType;
 import com.mju.insuranceCompany.service.insurance.domain.SalesAuthFileType;
 import com.mju.insuranceCompany.service.insurance.domain.SalesAuthorizationState;
-import com.mju.insuranceCompany.service.insurance.service.InsuranceService;
+import com.mju.insuranceCompany.service.insurance.service.interfaces.InsuranceCreateService;
+import com.mju.insuranceCompany.service.insurance.service.interfaces.InsuranceFileService;
+import com.mju.insuranceCompany.service.insurance.service.interfaces.InsuranceReadService;
+import com.mju.insuranceCompany.service.insurance.service.interfaces.InsuranceUpdateService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -37,8 +40,11 @@ public class EmployeeController {
     private final ContractCreateService contractCreateService;
     private final ContractReadService contractReadService;
     private final ContractUpdateService contractUpdateService;
-    private final InsuranceService insuranceService;
-    private final AccidentUpdateService accidentService;
+    private final InsuranceCreateService insuranceCreateService;
+    private final InsuranceReadService insuranceReadService;
+    private final InsuranceUpdateService insuranceUpdateService;
+    private final InsuranceFileService insuranceFileService;
+    private final AccidentUpdateService accidentUpdateService;
     private final AccidentReadService accidentReadService;
     private final AccidentFileService accidentFileService;
 
@@ -97,7 +103,7 @@ public class EmployeeController {
      */
     @GetMapping("/dev/list")
     public ResponseEntity<List<InsuranceOfDeveloperDto>> getInsuranceListOfDeveloper() {
-        return ResponseEntity.ok(insuranceService.getInsuranceListOfDeveloper());
+        return ResponseEntity.ok(insuranceReadService.getInsuranceListOfDeveloper());
     }
 
     /**
@@ -107,7 +113,7 @@ public class EmployeeController {
      */
     @PostMapping("/dev/health-premium")
     public ResponseEntity<InsurancePremiumDto> calculateHealthPremium(@RequestBody CalculateHealthPremiumDto calculateHealthPremiumDto) {
-        return ResponseEntity.ok(insuranceService.calculateHealthPremium(calculateHealthPremiumDto));
+        return ResponseEntity.ok(insuranceReadService.calculateHealthPremium(calculateHealthPremiumDto));
     }
 
     /**
@@ -117,7 +123,7 @@ public class EmployeeController {
      */
     @PostMapping("/dev/car-premium")
     public ResponseEntity<InsurancePremiumDto> calculateCarPremium(@RequestBody CalculateCarPremiumDto calculateCarPremiumDto) {
-        return ResponseEntity.ok(insuranceService.calculateCarPremium(calculateCarPremiumDto));
+        return ResponseEntity.ok(insuranceReadService.calculateCarPremium(calculateCarPremiumDto));
     }
 
     /**
@@ -127,7 +133,7 @@ public class EmployeeController {
      */
     @PostMapping("/dev/fire-premium")
     public ResponseEntity<InsurancePremiumDto> calculateFirePremium(@RequestBody CalculateFirePremiumDto calculateFirePremiumDto) {
-        return ResponseEntity.ok(insuranceService.calculateFirePremium(calculateFirePremiumDto));
+        return ResponseEntity.ok(insuranceReadService.calculateFirePremium(calculateFirePremiumDto));
     }
 
     /**
@@ -137,7 +143,7 @@ public class EmployeeController {
      */
     @PostMapping("/dev/save-health")
     public ResponseEntity<Void> saveHealthInsurance(@RequestBody SaveHealthInsuranceDto saveHealthInsuranceDto) {
-        insuranceService.saveHealthInsurance(saveHealthInsuranceDto);
+        insuranceCreateService.saveHealthInsurance(saveHealthInsuranceDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -148,7 +154,7 @@ public class EmployeeController {
      */
     @PostMapping("/dev/save-car")
     public ResponseEntity<Void> saveCarInsurance(@RequestBody SaveCarInsuranceDto saveCarInsuranceDto) {
-        insuranceService.saveCarInsurance(saveCarInsuranceDto);
+        insuranceCreateService.saveCarInsurance(saveCarInsuranceDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -159,7 +165,7 @@ public class EmployeeController {
      */
     @PostMapping("/dev/save-fire")
     public ResponseEntity<Void> saveFireInsurance(@RequestBody SaveFireInsuranceDto saveFireInsuranceDto) {
-        insuranceService.saveFireInsurance(saveFireInsuranceDto);
+        insuranceCreateService.saveFireInsurance(saveFireInsuranceDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -170,7 +176,7 @@ public class EmployeeController {
      */
     @GetMapping("/dev/auth-file/{insId}")
     public ResponseEntity<InsuranceForUploadAuthFileDto> getInsuranceInfoForUploadAuthFile(@PathVariable int insId) {
-        return ResponseEntity.ok(insuranceService.getInsuranceInfoForUploadAuthFile(insId));
+        return ResponseEntity.ok(insuranceReadService.getInsuranceInfoForUploadAuthFile(insId));
     }
 
     /**
@@ -183,7 +189,7 @@ public class EmployeeController {
     @PostMapping("/dev/auth-file/{type}/{insId}")
     public ResponseEntity<UploadAuthFileResultDto> uploadSalesAuthorizationFile(
             @PathVariable SalesAuthFileType type, @PathVariable int insId, @RequestBody MultipartFile multipartFile) {
-        return ResponseEntity.ok(insuranceService.uploadAuthFile(insId, multipartFile, type));
+        return ResponseEntity.ok(insuranceFileService.uploadAuthFile(insId, multipartFile, type));
     }
 
     /**
@@ -196,7 +202,7 @@ public class EmployeeController {
     @PatchMapping("/dev/auth-file/{type}/{insId}")
     public ResponseEntity<UploadAuthFileResultDto> updateSalesAuthorizationFile(
             @PathVariable SalesAuthFileType type, @PathVariable int insId, @RequestBody MultipartFile multipartFile) {
-        return ResponseEntity.ok(insuranceService.updateAuthFile(insId, multipartFile, type));
+        return ResponseEntity.ok(insuranceFileService.updateAuthFile(insId, multipartFile, type));
     }
 
     /**
@@ -207,7 +213,7 @@ public class EmployeeController {
      */
     @DeleteMapping("/dev/auth-file/{type}/{insId}")
     public ResponseEntity<Void> deleteSalesAuthorizationFile(@PathVariable SalesAuthFileType type, @PathVariable int insId) {
-        insuranceService.deleteAuthFile(insId, type);
+        insuranceFileService.deleteAuthFile(insId, type);
         return ResponseEntity.noContent().build();
     }
 
@@ -219,7 +225,7 @@ public class EmployeeController {
      */
     @PatchMapping("/dev/update-auth-state/{insuranceId}")
     public ResponseEntity<Void> updateSalesAuthorizationState(@PathVariable int insuranceId, @RequestBody SalesAuthorizationState salesAuthorizationState) {
-        insuranceService.updateSalesAuthorizationState(insuranceId, salesAuthorizationState);
+        insuranceUpdateService.updateSalesAuthorizationState(insuranceId, salesAuthorizationState);
         return ResponseEntity.ok().build();
     }
 
@@ -256,7 +262,7 @@ public class EmployeeController {
     /** 손해조사 */
     @PostMapping("/comp/investigate/{accidentId}")
     public ResponseEntity<Void> investigateAccident(@PathVariable int accidentId, @RequestBody InvestigateAccidentDto dto) {
-        accidentService.investigateAccident(accidentId, dto);
+        accidentUpdateService.investigateAccident(accidentId, dto);
         return ResponseEntity.noContent().build();
     }
 
@@ -277,7 +283,7 @@ public class EmployeeController {
     /** 보상금 지급 */
     @PostMapping("/comp/pay/{accidentId}")
     public ResponseEntity<PaymentOfCompensationResultDto> payCompensation(@PathVariable int accidentId, @RequestBody PaymentOfCompensationDto dto) {
-        return ResponseEntity.ok(accidentService.payCompensation(accidentId, dto));
+        return ResponseEntity.ok(accidentUpdateService.payCompensation(accidentId, dto));
     }
 
 }
