@@ -1,12 +1,12 @@
 package com.mju.insuranceCompany.service.insurance.domain;
 
-import com.mju.insuranceCompany.global.exception.InputInvalidDataException;
-import com.mju.insuranceCompany.global.exception.NoResultantException;
 import com.mju.insuranceCompany.global.utility.CriterionSetUtil;
 import com.mju.insuranceCompany.global.utility.TargetInfoCalculator;
 import com.mju.insuranceCompany.service.contract.domain.BuildingType;
 import com.mju.insuranceCompany.service.insurance.controller.dto.*;
+import com.mju.insuranceCompany.service.insurance.exception.NotExistPremiumOfRequestConditionException;
 import com.mju.insuranceCompany.service.insurance.exception.SalesAuthStateInsufficientConditionException;
+import com.mju.insuranceCompany.service.insurance.exception.StandardPremiumConditionException;
 import lombok.*;
 
 import javax.persistence.*;
@@ -133,7 +133,7 @@ public class Insurance {
 				standardPremiumDto.getBusinessExpense() <=0 ||
 				standardPremiumDto.getProfitMargin() <= 0 ||
 				standardPremiumDto.getProfitMargin()>=100)
-			throw new InputInvalidDataException();
+			throw new StandardPremiumConditionException();
 	}
 
 	private static int calcStandardPremium(StandardPremiumDto standardPremiumDto){
@@ -238,7 +238,8 @@ public class Insurance {
 			}
 		}
 		if (premium == 0)
-			throw new NoResultantException();
+			throw new NotExistPremiumOfRequestConditionException();
+
 		return premium;
 	}
 
@@ -254,7 +255,7 @@ public class Insurance {
 			}
 		}
 		if (premium == 0)
-			throw new NoResultantException();
+			throw new NotExistPremiumOfRequestConditionException();
 		return premium;
 	}
 
@@ -271,7 +272,7 @@ public class Insurance {
 			}
 		}
 		if (premium == 0)
-			throw new NoResultantException();
+			throw new NotExistPremiumOfRequestConditionException();
 		return premium;
 	}
 
