@@ -126,7 +126,7 @@ contract_id int not null primary key,
 car_no varchar(15),
 car_type varchar(15),
 model_year int,
-name varchar(20),
+model_name varchar(20),
 owner varchar(20),
 value int,
 foreign key (contract_id) references contract(contract_id) on delete cascade
@@ -193,20 +193,20 @@ create table develop_info(
 insurance_id int primary key not null,
 employee_id int,
 develop_date date,
-sales_authorization_state varchar(10),
+sales_authorization_state varchar(50),
 sales_start_date date,
 foreign key(insurance_id) references insurance(insurance_id) on delete cascade
 );
 
 create table sales_authorization_file(
 insurance_id int primary key not null,
-fss_official_doc varchar(50),
+fss_official_doc varchar(255),
 modified_fss datetime,
-iso_verification varchar(50),
+iso_verification varchar(255),
 modified_iso datetime,
-prod_declaration varchar(50),
+prod_declaration varchar(255),
 modified_prod datetime,
-sr_actuary_verification varchar(50),
+sr_actuary_verification varchar(255),
 modified_sr_actuary datetime,
 foreign key(insurance_id) references insurance(insurance_id) on delete cascade
 );
@@ -215,5 +215,6 @@ create table user (
 id int primary key not null auto_increment,
 user_id varchar(255) not null,
 password varchar(255) not null,
+type varchar(30) not null,
 role_id int not null
 );
