@@ -16,14 +16,15 @@ import com.mju.insuranceCompany.service.employee.domain.Employee;
 import com.mju.insuranceCompany.service.employee.exception.EmployeeIdNotFoundException;
 import com.mju.insuranceCompany.service.employee.repository.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
-@Transactional
+@Service @Slf4j
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class AccidentReadServiceImpl implements AccidentReadService {
 
@@ -88,6 +89,20 @@ public class AccidentReadServiceImpl implements AccidentReadService {
         List<AccidentListInfoDto> accidentList =
                 accidentRepository.findAccidentByEmployeeId(compEmployeeId).stream()
                         .map(AccidentListInfoDto::toDto).toList();
+        if(accidentList.isEmpty()) {
+            throw new NotExistCompEmployeeAccidentsException();
+        }
+        return accidentList;
+    }
+
+    @Override
+    public List<AccidentListInfoDto> getAccidentListOfCompEmployeeByCompState(CompState compState) {
+        int compEmployeeId = AuthenticationExtractor.extractEmployeeIdByAuthentication();
+        List<AccidentListInfoDto> accidentList =
+                accidentRepository.findAccidentByEmployeeId(compEmployeeId).stream()
+                        .filter(a -> a.getCompState().equals(compState))
+                        .map(AccidentListInfoDto::toDto).toList();
+
         if(accidentList.isEmpty()) {
             throw new NotExistCompEmployeeAccidentsException();
         }

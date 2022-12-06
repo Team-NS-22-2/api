@@ -43,6 +43,7 @@ public class CarAccident extends Accident {
 	@Override
 	public void investigate(InvestigateAccidentDto dto) {
 		super.checkExistInvestigateAccidentFile();
+		this.compState = CompState.ASSESSMENT;
 		this.errorRate = dto.getErrorRate();
 		this.lossReserves = dto.getLossReserves();
 	}

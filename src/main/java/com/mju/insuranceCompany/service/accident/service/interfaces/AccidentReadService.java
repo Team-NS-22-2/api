@@ -1,6 +1,7 @@
 package com.mju.insuranceCompany.service.accident.service.interfaces;
 
 import com.mju.insuranceCompany.service.accident.controller.dto.*;
+import com.mju.insuranceCompany.service.accident.domain.CompState;
 
 import java.util.List;
 
@@ -23,6 +24,8 @@ public interface AccidentReadService {
 
     /** 보상직원에게 할당된 사고 리스트 조회 */
     List<AccidentListInfoDto> getAccidentListOfCompEmployee();
+
+    List<AccidentListInfoDto> getAccidentListOfCompEmployeeByCompState(CompState compState);
 
     /** 보상직원 자동차 사고 정보 조회 */
     CompCarAccidentDto getCarAccidentOfCompEmployee(int accidentId);

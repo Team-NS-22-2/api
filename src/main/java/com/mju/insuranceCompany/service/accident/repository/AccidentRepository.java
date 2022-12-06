@@ -13,4 +13,6 @@ public interface AccidentRepository extends JpaRepository<Accident, Integer> {
     List<Accident> findAllByCustomerId(int customerId);
 
     Optional<Accident> findCarAccidentById(int accidentId);
+
+
 }
