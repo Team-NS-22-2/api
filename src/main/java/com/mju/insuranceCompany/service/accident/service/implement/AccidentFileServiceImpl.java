@@ -27,7 +27,6 @@ public class AccidentFileServiceImpl implements AccidentFileService {
         Accident accident = validateClientAndAccidentType(accidentId, accidentType);
         String fileUrl = s3Client.uploadFile(StringConstant.S3_ACC_DOC_DIRECTORY, multipartFile); // 파일 저장
         accident.addAccidentDocumentFile(docType, fileUrl); // accident's accident document file 추가
-        accidentRepository.save(accident);
     }
 
     @Override
@@ -36,7 +35,6 @@ public class AccidentFileServiceImpl implements AccidentFileService {
         accident.validateCompEmployee();
         String fileUrl = s3Client.uploadFile(StringConstant.S3_ACC_DOC_DIRECTORY, multipartFile);
         accident.addAccidentDocumentFile(docType, fileUrl);
-        accidentRepository.save(accident);
     }
 
     /** Read accident from repository */

@@ -36,7 +36,6 @@ public class AccidentUpdateServiceImpl implements AccidentUpdateService {
 
         Employee employee = compEmployeeAssignService.assignCompEmployee();
         accident.assignEmployeeId(employee.getId());
-        accidentRepository.save(accident);
         return CompEmployeeDto.toDto(employee);
     }
 
@@ -51,12 +50,10 @@ public class AccidentUpdateServiceImpl implements AccidentUpdateService {
         Customer customer = customerRepository.findById(accident.getCustomerId())
                 .orElseThrow(CustomerNotFoundException::new);
         customer.addComplain(dto);
-        customerRepository.save(customer);
 
         // 2. 보상담당자 배정
         Employee employee = compEmployeeAssignService.changeCompEmployee(accident.getEmployeeId());
         accident.assignEmployeeId(employee.getId());
-        accidentRepository.save(accident);
         return CompEmployeeDto.toDto(employee);
     }
 
@@ -65,7 +62,6 @@ public class AccidentUpdateServiceImpl implements AccidentUpdateService {
         Accident accident = this.getAccidentById(accidentId);
         accident.validateCompEmployee();
         accident.investigate(dto);
-        accidentRepository.save(accident);
     }
 
     @Override
