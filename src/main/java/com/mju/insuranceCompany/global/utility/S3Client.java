@@ -28,11 +28,17 @@ public class S3Client {
     public String uploadFile(String fileDir, MultipartFile multipartFile) {
         if(multipartFile.isEmpty()) return null;
         try {
+            String extension = this.getExtension(multipartFile);
             File file = convertMultipartFileToFile(multipartFile).orElseThrow();
-            return upload(fileDir, file);
+            return upload(fileDir, file, extension);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private String getExtension(MultipartFile multipartFile) {
+        int extensionIndex = multipartFile.getOriginalFilename().lastIndexOf(".");
+        return multipartFile.getOriginalFilename().substring(extensionIndex);
     }
 
     private Optional<File> convertMultipartFileToFile(MultipartFile multipartFile) throws IOException {
@@ -46,8 +52,8 @@ public class S3Client {
         return Optional.empty();
     }
 
-    private String upload(String dir, File file) {
-        String fileName = "upload/"+ dir +"/"+ UUID.randomUUID();
+    private String upload(String dir, File file, String extension) {
+        String fileName = "upload/"+ dir +"/"+ UUID.randomUUID() + extension;
         return putS3(file, fileName);
     }
 
@@ -67,11 +73,12 @@ public class S3Client {
     public String updateFile(String fileDir, MultipartFile multipartFile, String originFileUrl) {
         if(multipartFile.isEmpty() || originFileUrl==null || originFileUrl.isBlank()) return null;
         try {
+            String extension = this.getExtension(multipartFile);
             File file = convertMultipartFileToFile(multipartFile).orElseThrow();
 
             deleteFile(fileDir, originFileUrl); // Delete S3 Object for update file
 
-            return upload(fileDir, file);
+            return upload(fileDir, file, extension);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

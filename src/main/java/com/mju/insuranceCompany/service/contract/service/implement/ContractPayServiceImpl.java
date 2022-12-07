@@ -20,6 +20,5 @@ public class ContractPayServiceImpl implements ContractPayService {
         int customerId = AuthenticationExtractor.extractCustomerIdByAuthentication();
         Contract contract = contractRepository.findContractByIdAndCustomerId(contractId, customerId).orElseThrow();
         contract.payPremium(electronicPaymentSystem);
-
     }
 }
