@@ -1,6 +1,7 @@
 package com.mju.insuranceCompany.global.exception;
 
 
+import com.amazonaws.services.s3.model.AmazonS3Exception;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,8 +14,8 @@ import java.net.ConnectException;
 import java.util.NoSuchElementException;
 
 import static com.mju.insuranceCompany.global.exception.ErrorResponse.createErrorResponse;
-import static com.mju.insuranceCompany.global.exception.GlobalErrorCode.DB_CONNECT_FAIL;
-import static com.mju.insuranceCompany.global.exception.GlobalErrorCode.NO_SUCH_ELEMENT;
+import static com.mju.insuranceCompany.global.exception.GlobalErrorCode.*;
+
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -29,7 +30,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleNoSuchElementException(NoSuchElementException ex, HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(createErrorResponse(NO_SUCH_ELEMENT,request.getRequestURI()));
+    }
 
+    @ExceptionHandler(AmazonS3Exception.class)
+    public ResponseEntity<ErrorResponse> handleAmazonS3Exception(NoSuchElementException ex, HttpServletRequest request) {
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
+                .body(createErrorResponse(S3_CONNECT_FAIL,request.getRequestURI()));
     }
 
     /**
