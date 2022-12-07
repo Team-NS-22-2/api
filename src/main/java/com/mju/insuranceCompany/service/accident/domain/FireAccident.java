@@ -39,4 +39,5 @@ public class FireAccident extends Accident {
 		this.compState = CompState.ASSESSMENT;
 		this.lossReserves = dto.getLossReserves();
 	}
+
 }

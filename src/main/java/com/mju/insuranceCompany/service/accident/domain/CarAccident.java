@@ -3,6 +3,7 @@ package com.mju.insuranceCompany.service.accident.domain;
 
 import com.mju.insuranceCompany.service.accident.controller.dto.AccidentReportDto;
 import com.mju.insuranceCompany.service.accident.controller.dto.InvestigateAccidentDto;
+import com.mju.insuranceCompany.service.accident.controller.dto.PaymentOfCompensationDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -46,5 +47,17 @@ public class CarAccident extends Accident {
 		this.compState = CompState.ASSESSMENT;
 		this.errorRate = dto.getErrorRate();
 		this.lossReserves = dto.getLossReserves();
+	}
+
+	@Override
+	public PaymentOfCompensationDto payCompensation(PaymentOfCompensationDto dto) {
+		dto.setPay(super.checkForPayCompensation(dto));
+		if(dto.isPay()) {
+			long changeAmount = dto.getAmount();
+			changeAmount *= ((double) errorRate /100);
+			dto.setAmount(changeAmount);
+		}
+		this.compState = CompState.DONE;
+		return dto;
 	}
 }

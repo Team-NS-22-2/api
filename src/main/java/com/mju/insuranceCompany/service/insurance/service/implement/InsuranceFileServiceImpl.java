@@ -1,5 +1,6 @@
 package com.mju.insuranceCompany.service.insurance.service.implement;
 
+import com.mju.insuranceCompany.global.constant.StringConstant;
 import com.mju.insuranceCompany.global.utility.S3Client;
 import com.mju.insuranceCompany.service.insurance.controller.dto.UploadAuthFileResultDto;
 import com.mju.insuranceCompany.service.insurance.domain.Insurance;
@@ -23,22 +24,21 @@ public class InsuranceFileServiceImpl implements InsuranceFileService {
 
     public UploadAuthFileResultDto uploadAuthFile(int insuranceId, MultipartFile multipartFile, SalesAuthFileType fileType) {
         Insurance insurance = getInsuranceById(insuranceId);
-        // TODO sales_auth -> Constants.
-        String fileUrl = s3Client.uploadFile("sales_auth", multipartFile);
+        String fileUrl = s3Client.uploadFile(StringConstant.S3_SALES_AUTH_DIRECTORY, multipartFile);
         return insurance.uploadSalesAuthFile(fileType, fileUrl);
     }
 
     public UploadAuthFileResultDto updateAuthFile(int insuranceId, MultipartFile multipartFile, SalesAuthFileType fileType) {
         Insurance insurance = getInsuranceById(insuranceId);
         String originFileUrl = insurance.getOriginSalesAuthorizationFileUrl(fileType);
-        String updateFileUrl = s3Client.updateFile("sales_auth", multipartFile, originFileUrl);
+        String updateFileUrl = s3Client.updateFile(StringConstant.S3_SALES_AUTH_DIRECTORY, multipartFile, originFileUrl);
         return insurance.uploadSalesAuthFile(fileType, updateFileUrl);
     }
 
     public void deleteAuthFile(int insuranceId, SalesAuthFileType fileType) {
         Insurance insurance = getInsuranceById(insuranceId);
         String deleteFileUrl = insurance.deleteSalesAuthFile(fileType);
-        s3Client.deleteFile("sales_auth", deleteFileUrl);
+        s3Client.deleteFile(StringConstant.S3_SALES_AUTH_DIRECTORY, deleteFileUrl);
     }
 
     private Insurance getInsuranceById(int insuranceId) {

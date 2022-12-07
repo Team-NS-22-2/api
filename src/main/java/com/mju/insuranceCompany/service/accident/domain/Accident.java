@@ -44,10 +44,11 @@ public abstract class Accident {
 	protected long lossReserves; // 지급준비금
 	protected LocalDateTime dateOfAccident;
 	protected LocalDateTime dateOfReport;
-	@OneToMany(mappedBy = "accidentId", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "accidentId", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	protected List<AccidentDocumentFile> accidentDocumentFileList;
 
 	public abstract boolean isRequestOnSite();
+	public abstract void investigate(InvestigateAccidentDto dto);
 
 	public static Accident createAccident(AccidentType accidentType, int customerId, AccidentReportDto dto) {
 		return switch (accidentType) {
@@ -81,6 +82,8 @@ public abstract class Accident {
 		if(this.accidentDocumentFileList == null) {
 			this.setAccidentDocumentFileList(new ArrayList<>());
 		}
+		// 이미 존재한다면 삭제
+		accidentDocumentFileList.remove(AccidentDocumentFile.createDummyForEquals(docType));
 		this.accidentDocumentFileList.add(AccidentDocumentFile.createAccidentDocumentFile(docType, fileUrl, this.id));
 	}
 
@@ -126,8 +129,7 @@ public abstract class Accident {
 		return true;
 	}
 
-	public abstract void investigate(InvestigateAccidentDto dto);
-
+	/** 사고조사 보고서 제출 여부 확인 */
 	protected void checkExistInvestigateAccidentFile() {
 		for(AccidentDocumentFile file : this.accidentDocumentFileList) {
 			if(file.getType() == AccDocType.INVESTIGATE_ACCIDENT) {
@@ -137,19 +139,37 @@ public abstract class Accident {
 		throw new NotExistInvestigateAccidentFileException();
 	}
 
-	public String checkForPayCompensation(PaymentOfCompensationDto dto) {
+	/** 손해사정서 제출 여부 확인 */
+	private void checkExistLossAssessmentFile() {
+		for(AccidentDocumentFile file : this.accidentDocumentFileList) {
+			if(file.getType() == AccDocType.LOSS_ASSESSMENT) {
+				return;
+			}
+		}
+		throw new NotExistLossAssessmentFileException();
+	}
+
+	/** 보상금 지급을 위한 Accident 검증 */
+	protected boolean checkForPayCompensation(PaymentOfCompensationDto dto) {
+		this.checkExistLossAssessmentFile();
+
 		if(this.lossReserves * 1.5 < dto.getAmount()) {
 			throw new LossAssessmentRejectedException();
-			//
 		}
 		if(this instanceof CarAccident c && c.getErrorRate() == 0) {
-			this.compState = CompState.DONE;
-			return "고객 과실이 0이기 때문에 보상금을 지급하지 않습니다.";
-			//
+			return false;
 		}
-		this.compState = CompState.DONE;
+		return true;
+	}
 
-		return "";
+	/** 보상금 지급 */
+	public PaymentOfCompensationDto payCompensation(PaymentOfCompensationDto dto) {
+		if(this.accidentType == AccidentType.CAR_BREAKDOWN) {
+			throw new CannotPayCompensationCarBreakdownException();
+		}
+		dto.setPay(this.checkForPayCompensation(dto));
+		this.compState = CompState.DONE;
+		return dto;
 	}
 
 	/** 사고의 고객 ID와 요청 고객 ID를 검증. */

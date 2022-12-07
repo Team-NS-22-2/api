@@ -20,7 +20,7 @@ public class Bank {
             return "계좌의 잔액이 부족하여 송금에 실패하였습니다.";
         }
         INSURANCE_COMPANY_BALANCE -= amount;
-        return accountNo +"("+ bank +")"+ "에 정상적으로 송금하였습니다.";
+        return accountNo +"("+ bank +")"+ "에 "+ amount +"원을 정상적으로 송금하였습니다.";
     }
 
 }

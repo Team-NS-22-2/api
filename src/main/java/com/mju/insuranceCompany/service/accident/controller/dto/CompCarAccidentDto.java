@@ -58,6 +58,7 @@ public class CompCarAccidentDto {
                     case CAR_ACCIDENT_FACT_CONFIRMATION -> fileMap.put(AccDocType.CAR_ACCIDENT_FACT_CONFIRMATION.getName(), file.getFileAddress());
                     case PAYMENT_RESOLUTION -> fileMap.put(AccDocType.PAYMENT_RESOLUTION.getName(), file.getFileAddress());
                     case INVESTIGATE_ACCIDENT -> fileMap.put(AccDocType.INVESTIGATE_ACCIDENT.getName(), file.getFileAddress());
+                    case LOSS_ASSESSMENT -> fileMap.put(AccDocType.LOSS_ASSESSMENT.getName(), file.getFileAddress());
                 }
             }
         }
