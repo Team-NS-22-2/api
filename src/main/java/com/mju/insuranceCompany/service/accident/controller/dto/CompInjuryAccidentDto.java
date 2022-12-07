@@ -47,6 +47,7 @@ public class CompInjuryAccidentDto {
                     case MEDICAL_CERTIFICATION -> fileMap.put(AccDocType.MEDICAL_CERTIFICATION.getName(), file.getFileAddress());
                     case CONFIRM_ADMISSION_DISCHARGE -> fileMap.put(AccDocType.CONFIRM_ADMISSION_DISCHARGE.getName(), file.getFileAddress());
                     case INVESTIGATE_ACCIDENT -> fileMap.put(AccDocType.INVESTIGATE_ACCIDENT.getName(), file.getFileAddress());
+                    case LOSS_ASSESSMENT -> fileMap.put(AccDocType.LOSS_ASSESSMENT.getName(), file.getFileAddress());
                 }
             }
         }
