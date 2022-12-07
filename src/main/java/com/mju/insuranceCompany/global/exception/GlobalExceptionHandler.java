@@ -38,12 +38,10 @@ public class GlobalExceptionHandler {
                 .body(createErrorResponse(S3_CONNECT_FAIL,request.getRequestURI()));
     }
 
-    /**
-     * DB 커넥션 에러 잡기
-     */
+    /** DB 커넥션 에러 핸들 */
     @ExceptionHandler(ConnectException.class)
     public ResponseEntity<ErrorResponse> handleConnectException(ConnectException ex, HttpServletRequest request) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
                 .body(createErrorResponse(DB_CONNECT_FAIL,request.getRequestURI()));
     }
 
