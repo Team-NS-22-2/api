@@ -1,5 +1,6 @@
 package com.mju.insuranceCompany.service.accident.service.implement;
 
+import com.mju.insuranceCompany.global.constant.StringConstant;
 import com.mju.insuranceCompany.service.accident.controller.dto.*;
 import com.mju.insuranceCompany.service.accident.domain.Accident;
 import com.mju.insuranceCompany.service.accident.exception.AccidentIdNotFoundException;
@@ -71,9 +72,12 @@ public class AccidentUpdateServiceImpl implements AccidentUpdateService {
     public PaymentOfCompensationResultDto payCompensation(int accidentId, PaymentOfCompensationDto dto) {
         Accident accident = this.getAccidentById(accidentId);
         accident.validateCompEmployee();
-        String message = accident.checkForPayCompensation(dto);
-        if(message.isBlank()) {
+        dto = accident.payCompensation(dto);
+        String message;
+        if(dto.isPay()) {
             message = Bank.pay(dto.getBank(), dto.getAccountNo(), dto.getAmount());
+        } else {
+            message = StringConstant.MESSAGE_DO_NOT_NEED_PAY_COMPENSATION;
         }
         return new PaymentOfCompensationResultDto(message);
     }

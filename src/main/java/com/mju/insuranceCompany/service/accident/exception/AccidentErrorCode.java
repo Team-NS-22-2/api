@@ -25,12 +25,10 @@ public enum AccidentErrorCode implements ErrorCode {
     NOT_EXIST_COMP_EMPLOYEE_ACCIDENTS(HttpStatus.NOT_FOUND, "아직 할당된 사고가 없습니다."),
     MISMATCH_REQUEST_EMPLOYEE_AND_ACCIDENT(HttpStatus.BAD_REQUEST, "해당 사고는 직원분께 할당된 사고가 아닙니다."),
     CANNOT_INVESTIGATE_CAR_BREAKDOWN(HttpStatus.BAD_REQUEST, "자동차 고장은 손해조사할 수 없습니다."),
+    CANNOT_PAY_COMPENSATION_CAR_BREAKDOWN(HttpStatus.BAD_REQUEST, "자동차 고장은 보상금을 지급할 수 없습니다."),
     NOT_EXIST_INVESTIGATE_ACCIDENT_FILE(HttpStatus.BAD_REQUEST, "사고조사보고서를 제출하지 않으셨습니다."),
-
+    NOT_EXIST_LOSS_ASSESSMENT_FILE(HttpStatus.BAD_REQUEST, "손해사정서를 제출하지 않으셨습니다."),
     LOSS_ASSESSMENT_REJECTED(HttpStatus.BAD_REQUEST, "손해 사정서가 반려되었습니다. 사유 : [보상금 금액]")
-
-
-
     ;
 
 

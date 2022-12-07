@@ -43,4 +43,5 @@ public class CarBreakdown extends Accident {
 	public void investigate(InvestigateAccidentDto dto) {
 		throw new CannotInvestigateCarBreakdownException();
 	}
+
 }

@@ -7,4 +7,5 @@ public class PaymentOfCompensationDto {
     private String bank;
     private String accountNo;
     private long amount;
+    private boolean isPay;
 }

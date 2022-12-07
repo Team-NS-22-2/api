@@ -1,5 +1,6 @@
 package com.mju.insuranceCompany.service.accident.service.implement;
 
+import com.mju.insuranceCompany.global.constant.StringConstant;
 import com.mju.insuranceCompany.global.utility.S3Client;
 import com.mju.insuranceCompany.service.accident.domain.Accident;
 import com.mju.insuranceCompany.service.accident.domain.AccidentType;
@@ -24,7 +25,7 @@ public class AccidentFileServiceImpl implements AccidentFileService {
     @Override
     public void submitAccDocFileByCustomer(int accidentId, AccDocType docType, MultipartFile multipartFile, AccidentType accidentType) {
         Accident accident = validateClientAndAccidentType(accidentId, accidentType);
-        String fileUrl = s3Client.uploadFile("acc_doc", multipartFile); // 파일 저장
+        String fileUrl = s3Client.uploadFile(StringConstant.S3_ACC_DOC_DIRECTORY, multipartFile); // 파일 저장
         accident.addAccidentDocumentFile(docType, fileUrl); // accident's accident document file 추가
         accidentRepository.save(accident);
     }
@@ -33,7 +34,7 @@ public class AccidentFileServiceImpl implements AccidentFileService {
     public void submitAccDocFileByCompEmployee(int accidentId, MultipartFile multipartFile, AccDocType docType) {
         Accident accident = this.getAccidentById(accidentId);
         accident.validateCompEmployee();
-        String fileUrl = s3Client.uploadFile("acc_doc", multipartFile);
+        String fileUrl = s3Client.uploadFile(StringConstant.S3_ACC_DOC_DIRECTORY, multipartFile);
         accident.addAccidentDocumentFile(docType, fileUrl);
         accidentRepository.save(accident);
     }
