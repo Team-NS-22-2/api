@@ -48,6 +48,7 @@ public class CompFireAccidentDto {
                     case REPAIR_ESTIMATE -> fileMap.put(AccDocType.REPAIR_ESTIMATE.getName(), file.getFileAddress());
                     case REPAIR_RECEIPT -> fileMap.put(AccDocType.REPAIR_RECEIPT.getName(), file.getFileAddress());
                     case INVESTIGATE_ACCIDENT -> fileMap.put(AccDocType.INVESTIGATE_ACCIDENT.getName(), file.getFileAddress());
+                    case LOSS_ASSESSMENT -> fileMap.put(AccDocType.LOSS_ASSESSMENT.getName(), file.getFileAddress());
                 }
             }
         }

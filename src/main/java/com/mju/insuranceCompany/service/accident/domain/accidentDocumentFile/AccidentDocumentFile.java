@@ -42,16 +42,21 @@ public class AccidentDocumentFile {
 				.build();
 	}
 
+	public static AccidentDocumentFile createDummyForEquals(AccDocType accDocType) {
+		return AccidentDocumentFile.builder()
+				.type(accDocType).build();
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		AccidentDocumentFile that = (AccidentDocumentFile) o;
-		return Objects.equals(getFileAddress(), that.getFileAddress()) && getType() == that.getType();
+		return type == that.type;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(getFileAddress(), getType());
+		return Objects.hash(type);
 	}
 }

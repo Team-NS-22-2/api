@@ -44,7 +44,7 @@ public abstract class Accident {
 	protected long lossReserves; // 지급준비금
 	protected LocalDateTime dateOfAccident;
 	protected LocalDateTime dateOfReport;
-	@OneToMany(mappedBy = "accidentId", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "accidentId", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	protected List<AccidentDocumentFile> accidentDocumentFileList;
 
 	public abstract boolean isRequestOnSite();
@@ -82,6 +82,8 @@ public abstract class Accident {
 		if(this.accidentDocumentFileList == null) {
 			this.setAccidentDocumentFileList(new ArrayList<>());
 		}
+		// 이미 존재한다면 삭제
+		accidentDocumentFileList.remove(AccidentDocumentFile.createDummyForEquals(docType));
 		this.accidentDocumentFileList.add(AccidentDocumentFile.createAccidentDocumentFile(docType, fileUrl, this.id));
 	}
 
