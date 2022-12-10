@@ -1,8 +1,8 @@
 package com.mju.insuranceCompany.global.config;
 
 import com.mju.insuranceCompany.global.jwt.*;
-import com.mju.insuranceCompany.service.user.domain.UserType;
-import com.mju.insuranceCompany.service.user.service.UserService;
+import com.mju.insuranceCompany.service.auth.domain.AuthType;
+import com.mju.insuranceCompany.service.auth.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,7 +25,7 @@ import java.util.List;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final UserService userDetailsService;
+    private final AuthService userDetailsService;
     private final JwtProvider jwtProvider;
     private final PasswordEncoder encoder;
 //    private final RefreshTokenService refreshTokenService;
@@ -46,11 +46,11 @@ public class SecurityConfig {
                 .headers().frameOptions().disable()
                 .and()
                 .authorizeRequests()
-                .antMatchers("/emp/uw/**").hasRole(UserType.ROLE_UW.getRole())
-                .antMatchers("/emp/sales/**").hasRole(UserType.ROLE_SALES.getRole())
-                .antMatchers("/emp/dev/**").hasRole(UserType.ROLE_DEV.getRole())
-                .antMatchers("/emp/comp/**").hasRole(UserType.ROLE_COMP.getRole())
-                .antMatchers("/acc/report/**", "/acc/submit/**", "/acc/claim/**").hasRole(UserType.ROLE_CUSTOMER.getRole())
+                .antMatchers("/emp/uw/**").hasRole(AuthType.ROLE_UW.getRole())
+                .antMatchers("/emp/sales/**").hasRole(AuthType.ROLE_SALES.getRole())
+                .antMatchers("/emp/dev/**").hasRole(AuthType.ROLE_DEV.getRole())
+                .antMatchers("/emp/comp/**").hasRole(AuthType.ROLE_COMP.getRole())
+                .antMatchers("/acc/report/**", "/acc/submit/**", "/acc/claim/**").hasRole(AuthType.ROLE_CUSTOMER.getRole())
                 .antMatchers("/**/**").permitAll()
                 .antMatchers("/**").authenticated()
                 .anyRequest().authenticated()

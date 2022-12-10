@@ -14,8 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static com.mju.insuranceCompany.global.exception.GlobalErrorCode.DB_CONNECT_FAIL;
-import static com.mju.insuranceCompany.service.user.exception.UserErrorCode.LOGIN_FAILED;
-import static com.mju.insuranceCompany.service.user.exception.UserErrorCode.USER_ID_NOT_FOUND;
+import static com.mju.insuranceCompany.service.auth.exception.AuthErrorCode.LOGIN_FAILED;
 
 @Slf4j
 public class CustomAuthenticationFailureHandler implements AuthenticationFailureHandler {

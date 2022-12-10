@@ -1,7 +1,6 @@
 package com.mju.insuranceCompany.global.jwt;
 
-import com.mju.insuranceCompany.global.utility.AuthenticationExtractor;
-import com.mju.insuranceCompany.service.user.service.UserService;
+import com.mju.insuranceCompany.service.auth.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,7 +18,7 @@ import java.io.IOException;
 @RequiredArgsConstructor @Slf4j
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
     private final JwtProvider jwtProvider;
-    private final UserService userService;
+    private final AuthService authService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -42,7 +41,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request,response);
     }
     private UsernamePasswordAuthenticationToken getAuthentication(String loginId) {
-        UserDetails users = userService.loadUserByUsername(loginId);
+        UserDetails users = authService.loadUserByUsername(loginId);
         return new UsernamePasswordAuthenticationToken(users, users.getPassword(), users.getAuthorities());
     }
 }
