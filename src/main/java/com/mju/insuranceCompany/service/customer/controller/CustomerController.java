@@ -7,7 +7,8 @@ import com.mju.insuranceCompany.service.contract.service.interfaces.PaymentRegis
 import com.mju.insuranceCompany.service.customer.controller.dto.ContractReceiptDto;
 import com.mju.insuranceCompany.service.customer.controller.dto.PaymentBasicInfoDto;
 import com.mju.insuranceCompany.service.customer.controller.dto.PaymentCreateDto;
-import com.mju.insuranceCompany.service.customer.service.CustomerService;
+import com.mju.insuranceCompany.service.customer.service.interfaces.CustomerReadService;
+import com.mju.insuranceCompany.service.customer.service.interfaces.CustomerUpdateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,8 @@ import java.util.List;
 public class CustomerController {
 
     private final ContractReadService contractService;
-    private final CustomerService customerService;
+    private final CustomerReadService customerReadService;
+    private final CustomerUpdateService customerUpdateService;
     private final PaymentRegisterService paymentRegisterService;
     private final ContractPayService contractPayService;
 
@@ -33,12 +35,12 @@ public class CustomerController {
 
     @GetMapping("/payment")
     public ResponseEntity<List<PaymentBasicInfoDto>> getAllPaymentInfos(){
-        return ResponseEntity.ok(customerService.getAllPaymentInfos());
+        return ResponseEntity.ok(customerReadService.getAllPaymentInfos());
     }
 
     @PostMapping("/payment")
     public ResponseEntity<Void> addNewPayment(@RequestBody PaymentCreateDto dto){
-        customerService.addNewPayment(dto);
+        customerUpdateService.addNewPayment(dto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
     @PatchMapping("/payment")

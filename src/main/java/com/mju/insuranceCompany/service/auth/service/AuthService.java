@@ -1,11 +1,11 @@
-package com.mju.insuranceCompany.service.user.service;
+package com.mju.insuranceCompany.service.auth.service;
 
-import com.mju.insuranceCompany.service.user.controller.dto.UserBasicRequest;
-import com.mju.insuranceCompany.service.user.domain.UserType;
-import com.mju.insuranceCompany.service.user.domain.Users;
-import com.mju.insuranceCompany.service.user.exception.DuplicateUserIdException;
-import com.mju.insuranceCompany.service.user.exception.UserIdNotFoundException;
-import com.mju.insuranceCompany.service.user.repository.UserRepository;
+import com.mju.insuranceCompany.service.auth.controller.dto.AuthBasicRequest;
+import com.mju.insuranceCompany.service.auth.domain.AuthType;
+import com.mju.insuranceCompany.service.auth.domain.Auth;
+import com.mju.insuranceCompany.service.auth.exception.DuplicateUserIdException;
+import com.mju.insuranceCompany.service.auth.exception.UserIdNotFoundException;
+import com.mju.insuranceCompany.service.auth.repository.AuthRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,35 +18,35 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Slf4j @Transactional
-public class UserService implements UserDetailsService {
+public class AuthService implements UserDetailsService {
 
-    private final UserRepository userRepository;
+    private final AuthRepository userRepository;
     private final PasswordEncoder encoder;
 
-    public void signUp(int cId, UserBasicRequest request) {
+    public void signUp(int cId, AuthBasicRequest request) {
         checkDuplicateUserId(request.getUserId());
 
         String encodePassword = encoder.encode(request.getPassword());
-        Users user = Users.builder()
+        Auth auth = Auth.builder()
                 .userId(request.getUserId())
                 .password(encodePassword)
                 .roleId(cId)
-                .type(UserType.ROLE_CUSTOMER)
+                .type(AuthType.ROLE_CUSTOMER)
                 .build();
-        userRepository.save(user);
+        userRepository.save(auth);
     }
 
-    public void signUpEmployee(int eId, UserBasicRequest request, UserType type) {
+    public void signUpEmployee(int eId, AuthBasicRequest request, AuthType type) {
         checkDuplicateUserId(request.getUserId());
 
         String encodePassword = encoder.encode(request.getPassword());
-        Users user = Users.builder()
+        Auth auth = Auth.builder()
                 .userId(request.getUserId())
                 .password(encodePassword)
                 .roleId(eId)
                 .type(type)
                 .build();
-        userRepository.save(user);
+        userRepository.save(auth);
     }
 
     /**

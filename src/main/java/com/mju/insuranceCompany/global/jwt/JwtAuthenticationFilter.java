@@ -1,8 +1,8 @@
 package com.mju.insuranceCompany.global.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mju.insuranceCompany.service.user.controller.dto.UserBasicRequest;
-import com.mju.insuranceCompany.service.user.domain.Users;
+import com.mju.insuranceCompany.service.auth.controller.dto.AuthBasicRequest;
+import com.mju.insuranceCompany.service.auth.domain.Auth;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -31,9 +31,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         log.info("[JwtAuthenticationFilter] - attemptAuthentication 시작");
         ObjectMapper mapper = new ObjectMapper();
-        UserBasicRequest dto;
+        AuthBasicRequest dto;
         try {
-            dto = mapper.readValue(request.getInputStream(), UserBasicRequest.class);
+            dto = mapper.readValue(request.getInputStream(), AuthBasicRequest.class);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -48,9 +48,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         log.info("[JwtAuthenticationFilter] - successfulAuthentication 시작");
-        Users user = (Users) authResult.getPrincipal();
-        log.info("[JwtAuthenticationFilter] - User = {}", user);
-        String accessToken = jwtProvider.createAccessToken(user.getUserId());
+        Auth auth = (Auth) authResult.getPrincipal();
+        log.info("[JwtAuthenticationFilter] - User = {}", auth);
+        String accessToken = jwtProvider.createAccessToken(auth.getUserId());
 //        String refreshToken = jwtProvider.createRefreshToken(user.getUserId());
 
 //        TokenResponseDto dto = TokenResponseDto.builder()

@@ -1,34 +1,24 @@
-package com.mju.insuranceCompany.service.customer.service;
+package com.mju.insuranceCompany.service.customer.service.implement;
 
 import com.mju.insuranceCompany.global.utility.AuthenticationExtractor;
-import com.mju.insuranceCompany.service.customer.controller.dto.PaymentBasicInfoDto;
 import com.mju.insuranceCompany.service.customer.controller.dto.PaymentCreateDto;
 import com.mju.insuranceCompany.service.customer.domain.Customer;
 import com.mju.insuranceCompany.service.customer.exception.CustomerNotFoundException;
 import com.mju.insuranceCompany.service.customer.repository.CustomerRepository;
+import com.mju.insuranceCompany.service.customer.service.interfaces.CustomerUpdateService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
-@Slf4j
-@Service @Transactional @RequiredArgsConstructor
-public class CustomerService {
+@Service
+@Transactional
+@RequiredArgsConstructor
+public class CustomerUpdateServiceImpl implements CustomerUpdateService {
 
     private final CustomerRepository customerRepository;
 
-    public List<PaymentBasicInfoDto> getAllPaymentInfos(){
-        Customer customer = getCustomerByExtractedId();
-        return customer.readPayments()
-                .stream()
-                .map(PaymentBasicInfoDto::toDto)
-                .toList();
-    }
-
-
-    public void addNewPayment(PaymentCreateDto paymentCreateDto){
+    @Override
+    public void addNewPayment(PaymentCreateDto paymentCreateDto) {
         Customer customer = getCustomerByExtractedId();
         customer.addPayment(paymentCreateDto);
     }
@@ -38,6 +28,4 @@ public class CustomerService {
         return customerRepository.findById(customerId)
                 .orElseThrow(CustomerNotFoundException::new);
     }
-
-
 }

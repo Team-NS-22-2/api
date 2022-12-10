@@ -32,7 +32,7 @@ public class S3Client {
             File file = convertMultipartFileToFile(multipartFile).orElseThrow();
             return upload(fileDir, file, extension);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new AmazonS3Exception("S3 upload error");
         }
     }
 
@@ -80,7 +80,7 @@ public class S3Client {
 
             return upload(fileDir, file, extension);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new AmazonS3Exception("S3 update error");
         }
     }
 

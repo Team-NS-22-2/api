@@ -11,13 +11,13 @@ import com.mju.insuranceCompany.service.contract.exception.MismatchInsuranceType
 import com.mju.insuranceCompany.service.contract.repository.ContractRepository;
 import com.mju.insuranceCompany.service.contract.service.interfaces.ContractCreateService;
 import com.mju.insuranceCompany.service.customer.domain.Customer;
-import com.mju.insuranceCompany.service.customer.repository.CustomerRepository;
+import com.mju.insuranceCompany.service.customer.service.interfaces.CustomerCreateService;
 import com.mju.insuranceCompany.service.employee.domain.Employee;
 import com.mju.insuranceCompany.service.employee.repository.EmployeeRepository;
 import com.mju.insuranceCompany.service.insurance.domain.InsuranceType;
 import com.mju.insuranceCompany.service.insurance.exception.InsuranceIdNotFoundException;
 import com.mju.insuranceCompany.service.insurance.repository.InsuranceRepository;
-import com.mju.insuranceCompany.service.user.domain.Users;
+import com.mju.insuranceCompany.service.auth.domain.Auth;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,7 +25,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
-import static com.mju.insuranceCompany.service.user.domain.Users.anonymousUser;
+import static com.mju.insuranceCompany.service.auth.domain.Auth.anonymousUser;
 
 @Service
 @Transactional
@@ -35,9 +35,9 @@ public class ContractCreateServiceImpl implements ContractCreateService {
 
     private final ContractRepository contractRepository;
     private final InsuranceRepository insuranceRepository;
-    private final CustomerRepository customerRepository;
     private final EmployeeRepository employeeRepository;
 
+    private final CustomerCreateService customerCreateService;
 
     @Override
     public RegisterContractResponse registerHealthContract(int insuranceId, CustomerHealthContractDto dto) {
@@ -49,8 +49,7 @@ public class ContractCreateServiceImpl implements ContractCreateService {
         dto.setHealthContractDto(   // 판매직원이 보험을 체결할 경우, 직원ID를 주입하기 위함.
                 (HealthContractDto) injectEmployeeIdToContractDto(dto.getHealthContractDto()));
 
-        Customer customer = new Customer(dto.getCustomerDto());
-        customerRepository.save(customer);
+        Customer customer = customerCreateService.createCustomer(dto.getCustomerDto());
 
         dto.getHealthContractDto().setInsuranceId(insuranceId);
         Contract contract = new HealthContract(dto.getHealthContractDto(), customer.getId());
@@ -67,8 +66,7 @@ public class ContractCreateServiceImpl implements ContractCreateService {
         dto.setCarContractDto(   // 판매직원이 보험을 체결할 경우, 직원ID를 주입하기 위함.
                 (CarContractDto) injectEmployeeIdToContractDto(dto.getCarContractDto()));
 
-        Customer customer = new Customer(dto.getCustomerDto());
-        customerRepository.save(customer);
+        Customer customer = customerCreateService.createCustomer(dto.getCustomerDto());
 
         dto.getCarContractDto().setInsuranceId(insuranceId);
         Contract contract = new CarContract(dto.getCarContractDto(), customer.getId());
@@ -85,8 +83,7 @@ public class ContractCreateServiceImpl implements ContractCreateService {
         dto.setFireContractDto(   // 판매직원이 보험을 체결할 경우, 직원ID를 주입하기 위함.
                 (FireContractDto) injectEmployeeIdToContractDto(dto.getFireContractDto()));
 
-        Customer customer = new Customer(dto.getCustomerDto());
-        customerRepository.save(customer);
+        Customer customer = customerCreateService.createCustomer(dto.getCustomerDto());
 
         dto.getFireContractDto().setInsuranceId(insuranceId);
         Contract contract = new FireContract(dto.getFireContractDto(), customer.getId());
@@ -95,14 +92,14 @@ public class ContractCreateServiceImpl implements ContractCreateService {
         return RegisterContractResponse.builder().customerId(customer.getId()).build();
     }
 
-    private Users getUsers(){
+    private Auth getAuth(){
         return SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser")
-                ? anonymousUser() : (Users) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+                ? anonymousUser() : (Auth) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
     private ContractDto injectEmployeeIdToContractDto(ContractDto dto) {
         // 만일 지정된 직원 타입이 없다면(비회원 보험 가입 case), 기존 ContractDto를 리턴
-        if (getUsers().getType() == null) return dto;
+        if (getAuth().getType() == null) return dto;
         else {
             int employeeId = AuthenticationExtractor.extractEmployeeIdByAuthentication();
             Employee employee = employeeRepository.findById(employeeId).orElseThrow();
