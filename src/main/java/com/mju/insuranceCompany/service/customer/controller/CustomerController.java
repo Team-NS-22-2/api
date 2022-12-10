@@ -1,14 +1,14 @@
 package com.mju.insuranceCompany.service.customer.controller;
 
 import com.mju.insuranceCompany.service.contract.controller.dto.PaymentRegisterOnContractDto;
-import com.mju.insuranceCompany.service.contract.service.interfaces.ContractPayService;
-import com.mju.insuranceCompany.service.contract.service.interfaces.ContractReadService;
-import com.mju.insuranceCompany.service.contract.service.interfaces.PaymentRegisterService;
+import com.mju.insuranceCompany.service.contract.applicationservice.interfaces.ContractPayService;
+import com.mju.insuranceCompany.service.contract.applicationservice.interfaces.ContractReadService;
+import com.mju.insuranceCompany.service.contract.applicationservice.interfaces.PaymentRegisterService;
 import com.mju.insuranceCompany.service.customer.controller.dto.ContractReceiptDto;
 import com.mju.insuranceCompany.service.customer.controller.dto.PaymentBasicInfoDto;
 import com.mju.insuranceCompany.service.customer.controller.dto.PaymentCreateDto;
-import com.mju.insuranceCompany.service.customer.service.interfaces.CustomerReadService;
-import com.mju.insuranceCompany.service.customer.service.interfaces.CustomerUpdateService;
+import com.mju.insuranceCompany.service.customer.applicationservice.interfaces.CustomerReadService;
+import com.mju.insuranceCompany.service.customer.applicationservice.interfaces.CustomerUpdateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

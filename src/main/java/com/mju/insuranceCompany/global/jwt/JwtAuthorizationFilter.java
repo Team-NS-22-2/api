@@ -1,6 +1,6 @@
 package com.mju.insuranceCompany.global.jwt;
 
-import com.mju.insuranceCompany.service.auth.service.AuthService;
+import com.mju.insuranceCompany.service.auth.applicationservice.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

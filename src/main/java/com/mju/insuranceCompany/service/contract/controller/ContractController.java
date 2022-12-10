@@ -4,7 +4,7 @@ import com.mju.insuranceCompany.service.contract.controller.dto.CustomerCarContr
 import com.mju.insuranceCompany.service.contract.controller.dto.CustomerFireContractDto;
 import com.mju.insuranceCompany.service.contract.controller.dto.CustomerHealthContractDto;
 import com.mju.insuranceCompany.service.contract.controller.dto.RegisterContractResponse;
-import com.mju.insuranceCompany.service.contract.service.interfaces.ContractCreateService;
+import com.mju.insuranceCompany.service.contract.applicationservice.interfaces.ContractCreateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

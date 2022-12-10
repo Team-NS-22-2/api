@@ -1,7 +1,7 @@
 package com.mju.insuranceCompany.service.insurance.controller;
 
 import com.mju.insuranceCompany.service.insurance.controller.dto.*;
-import com.mju.insuranceCompany.service.insurance.service.interfaces.InsuranceReadService;
+import com.mju.insuranceCompany.service.insurance.applicationservice.interfaces.InsuranceReadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

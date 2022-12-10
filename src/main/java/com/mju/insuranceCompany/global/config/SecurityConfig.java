@@ -2,7 +2,7 @@ package com.mju.insuranceCompany.global.config;
 
 import com.mju.insuranceCompany.global.jwt.*;
 import com.mju.insuranceCompany.service.auth.domain.AuthType;
-import com.mju.insuranceCompany.service.auth.service.AuthService;
+import com.mju.insuranceCompany.service.auth.applicationservice.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

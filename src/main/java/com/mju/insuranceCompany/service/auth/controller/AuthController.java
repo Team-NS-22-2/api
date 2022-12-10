@@ -1,7 +1,7 @@
 package com.mju.insuranceCompany.service.auth.controller;
 
 import com.mju.insuranceCompany.service.auth.controller.dto.AuthBasicRequest;
-import com.mju.insuranceCompany.service.auth.service.AuthService;
+import com.mju.insuranceCompany.service.auth.applicationservice.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
