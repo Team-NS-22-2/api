@@ -1,4 +1,4 @@
-package com.mju.insuranceCompany.service.user.domain;
+package com.mju.insuranceCompany.service.auth.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,7 +19,7 @@ import java.util.Objects;
 @Table(name = "User")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Users implements UserDetails {
+public class Auth implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,14 +27,14 @@ public class Users implements UserDetails {
     private String userId;
     private String password;
     @Enumerated(value = EnumType.STRING)
-    private UserType type;
+    private AuthType type;
     private int roleId;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Users user = (Users) o;
+        Auth user = (Auth) o;
         return id == user.id;
     }
 
@@ -79,8 +79,8 @@ public class Users implements UserDetails {
     }
 
 
-    public static Users anonymousUser(){
-        return new Users();
+    public static Auth anonymousUser(){
+        return new Auth();
     }
 
 }

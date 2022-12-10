@@ -1,6 +1,6 @@
 package com.mju.insuranceCompany.global.utility;
 
-import com.mju.insuranceCompany.service.user.domain.Users;
+import com.mju.insuranceCompany.service.auth.domain.Auth;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 public class AuthenticationExtractor {
@@ -14,7 +14,7 @@ public class AuthenticationExtractor {
     }
 
     private static int extractIdByAuthentication(){
-        Users users = (Users) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Auth users = (Auth) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return users.getRoleId();
     }
 }

@@ -1,6 +1,5 @@
-package com.mju.insuranceCompany.service.user.controller.dto;
+package com.mju.insuranceCompany.service.auth.controller.dto;
 
-import com.mju.insuranceCompany.service.user.domain.UserType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserBasicRequest {
+public class AuthBasicRequest {
     private String userId;
     private String password;
 }
