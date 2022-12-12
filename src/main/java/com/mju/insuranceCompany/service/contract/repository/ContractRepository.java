@@ -20,7 +20,7 @@ public interface ContractRepository extends JpaRepository<Contract, Integer> {
             "select new com.mju.insuranceCompany.service.employee.controller.dto.ConditionOfUwOfCustomerResponse(ct.id, cs.name, ct.conditionOfUw) " +
                     "from Customer cs, Contract ct where cs.id = ct.customerId " +
                     "and (ct.conditionOfUw = 'WAIT' or ct.conditionOfUw = 'RE_AUDIT') " +
-                    "and ct.insuranceId = (select i.id from Insurance i where i.insuranceType = :insuranceType)"
+                    "and ct.insuranceId = any(select i.id from Insurance i where i.insuranceType = :insuranceType)"
     )
     List<ConditionOfUwOfCustomerResponse> findConditionOfUwOfCustomer(InsuranceType insuranceType);
 
