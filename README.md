@@ -5,16 +5,19 @@
 
 ### <p align="center"> Back-end </p>
 
-<p align="center"><img src="https://user-images.githubusercontent.com/76154390/207018903-32320a1e-abd0-4564-9d09-b042ef39c665.png"/><p>
-  
+<p align="center"><img src="https://user-images.githubusercontent.com/76154390/207030535-48174966-081f-4dcd-b17b-072650214f1e.png"/><p>
+
+
 ### <p align="center"> Front-end </p>
-<p align="center"><img src="https://user-images.githubusercontent.com/76154390/207020811-d77d8d23-1d2f-4547-b2ff-cca8ed960efb.png"/><p>
+<p align="center"><img src="https://user-images.githubusercontent.com/76154390/207030672-99819ca4-2802-4e5c-9109-0db1dcb24a72.png"/><p>
+
 
 ## <p align="center"> 🏗 Project Architecture </p>
 
-<p align="center"><img src="https://user-images.githubusercontent.com/76154390/207024373-2ed95734-9abd-4b90-aa22-ae4b8f88feb7.png"/><p>
+<p align="center"><img src="https://user-images.githubusercontent.com/76154390/207030380-20ac5c3c-dcd1-4fef-9e90-2ecde0ad7edf.png"/><p>
 
-  
+
+
 ## <p align="center"> 👨‍💻 Member</p>
 
 
