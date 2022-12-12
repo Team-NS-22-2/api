@@ -15,7 +15,7 @@
 <p align="center"><img src="https://user-images.githubusercontent.com/76154390/207024373-2ed95734-9abd-4b90-aa22-ae4b8f88feb7.png"/><p>
 
   
-## <p align="center"> 🌈 Member</p>
+## <p align="center"> 👨‍💻 Member</p>
 
 
 
